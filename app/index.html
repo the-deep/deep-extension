@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title><%= process.env.MY_APP %></title>
+        <style>
+            html, body {
+                position: relative;
+                margin: 0;
+                padding: 0;
+                font-family: 'Source Sans Pro', sans-serif;
+                background-color: 'var(--dui-color-background)';
+            }
+
+            body {
+                display: flex;
+                overflow-y: auto;
+                min-height: 600px;
+                min-width: 480px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            ::-webkit-scrollbar {
+                width: var(--dui-width-scrollbar);
+                height: var(--dui-width-scrollbar);
+                background-color: var(--dui-color-background-scrollbar);
+            }
+
+            ::-webkit-scrollbar-track {
+                background-color: var(--dui-color-background-scrollbar);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                border-radius: var(--dui-radius-scrollbar-border);
+                background-color: var(--dui-color-foreground-scrollbar);
+            }
+
+            #app-container {
+                flex-grow: 1;
+                display: flex;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <noscript>
+            <%= process.env.MY_APP %> needs JS.
+        </noscript>
+        <div id="app-container"></div>
+
+        <link href="https://fonts.googleapis.com/css?family=Oxygen+Mono|Source+Sans+Pro:300,400,600" rel="stylesheet">
+    </body>
+</html>
