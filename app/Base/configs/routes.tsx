@@ -3,16 +3,16 @@ import { lazy } from 'react';
 import { wrap } from '#base/utils/routes';
 
 const fourHundredFour = wrap({
-    path: '*',
+    path: '#',
     title: '404',
-    component: lazy(() => import('#base/components/PreloadMessage')),
+    component: lazy(() => import('#views/FourHundredFour')),
     componentProps: {
-        heading: '404',
-        content: 'What you are looking for does not exist.',
+        className: undefined,
     },
     visibility: 'is-anything',
     navbarVisibility: true,
 });
+
 const login = wrap({
     path: '/login/',
     title: 'Login',
@@ -25,7 +25,7 @@ const login = wrap({
 });
 const home = wrap({
     // NOTE: the first url is /index.html for addons
-    path: '/index.html',
+    path: '/',
     title: 'Home',
     navbarVisibility: true,
     component: lazy(() => import('#views/Template')),
@@ -45,10 +45,34 @@ const myProfile = wrap({
     visibility: 'is-authenticated',
 });
 
+const successForm = wrap({
+    path: '/success',
+    title: 'Success Submission',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SuccessForm')),
+    componentProps: {
+        className: undefined,
+    },
+    visibility: 'is-authenticated',
+});
+
+const failureForm = wrap({
+    path: '/failure',
+    title: 'Failure Submission',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/FailureForm')),
+    componentProps: {
+        className: undefined,
+    },
+    visibility: 'is-authenticated',
+});
+
 const routes = {
     login,
     home,
     myProfile,
     fourHundredFour,
+    successForm,
+    failureForm,
 };
 export default routes;

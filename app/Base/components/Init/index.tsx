@@ -56,7 +56,7 @@ function Init(props: Props) {
     */
     useEffect(
         () => {
-            setUser({ id: '1', displayName: 'Ram' });
+            setUser({ id: '1', displayName: 'deep-user' });
             setProject({ id: '1', title: 'Ramayan', allowedPermissions: [] });
             setErrored(false);
             setReady(true);

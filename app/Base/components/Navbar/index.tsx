@@ -9,10 +9,10 @@ import {
 import {
     IoHelp,
     IoLogOutOutline,
-    IoRocketSharp,
+    // IoRocketSharp,
 } from 'react-icons/io5';
 
-import SmartNavLink from '#base/components/SmartNavLink';
+// import SmartNavLink from '#base/components/SmartNavLink';
 import { UserContext } from '#base/context/UserContext';
 import route from '#base/configs/routes';
 
@@ -63,20 +63,20 @@ function Navbar(props: Props) {
 
     return (
         <nav className={_cs(className, styles.navbar)}>
-            <div className={styles.appBrand}>
+            {/* <div className={styles.appBrand}>
                 <IoRocketSharp className={styles.logo} />
-            </div>
+            </div> */}
             <div className={styles.main}>
-                <div className={styles.navLinks}>
+                {/* <div className={styles.navLinks}>
                     <SmartNavLink
                         exact
                         route={route.home}
                         className={styles.link}
                     />
-                </div>
+                </div> */}
                 <div className={styles.actions}>
                     <QuickActionLink
-                        to="https://togglecorp.com"
+                        to="https://www.google.com"
                     >
                         <IoHelp />
                     </QuickActionLink>
@@ -84,7 +84,7 @@ function Navbar(props: Props) {
             </div>
             {authenticated && user && (
                 <DropdownMenu
-                    label={user.displayName ?? 'Anon'}
+                    label={user.displayName ?? 'Deep-user'}
                     className={styles.userDisplay}
                     variant="transparent"
                 >
