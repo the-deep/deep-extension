@@ -6,8 +6,8 @@ import {
 import {
     Card,
     Button,
-    Modal,
     useAlert,
+    Container,
 } from '@the-deep/deep-ui';
 import {
     removeNull,
@@ -30,7 +30,7 @@ import {
     LeadCreateMutation,
     LeadCreateMutationVariables,
 } from '#generated/types';
-import { ProjectContext } from '../../Base/context/ProjectContext';
+// import { ProjectContext } from '../../Base/context/ProjectContext';
 import { UserContext } from '../../Base/context/UserContext';
 import { BasicOrganization } from '../../components/selections/NewOrganizationSelectInput';
 import { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
@@ -216,7 +216,6 @@ const LEAD_CREATE = gql`
 
 interface Props {
     className?: string;
-    onClose: () => void;
     leadId?: string;
     projectId: string;
     onLeadSaveSuccess: () => void;
@@ -225,13 +224,12 @@ interface Props {
 function LeadEditModal(props: Props) {
     const {
         className,
-        onClose,
         projectId,
         leadId,
         onLeadSaveSuccess,
     } = props;
     const alert = useAlert();
-    const { project } = useContext(ProjectContext);
+    // const { project } = useContext(ProjectContext);
     const { user } = useContext(UserContext);
 
     const initialValue: PartialFormType = useMemo(() => ({
@@ -455,11 +453,9 @@ function LeadEditModal(props: Props) {
     }, [setValue]);
 
     return (
-        <Modal
-            className={_cs(className, styles.leadEditModal)}
-            onCloseButtonClick={onClose}
-            heading={leadId ? 'Edit source' : 'Add a source'}
-            bodyClassName={styles.modalBody}
+        <Container
+            className={_cs(className, styles.leadUrlBox)}
+            heading="Add a source"
             footerActions={(
                 <Button
                     name="save"
@@ -491,10 +487,10 @@ function LeadEditModal(props: Props) {
                     onLeadGroupOptionsChange={setLeadGroupOptions}
                     assigneeOptions={projectUserOptions}
                     onAssigneeOptionChange={setProjectUserOptions}
-                    hasAssessment={project?.hasAssessmentTemplate}
+                    hasAssessment={false}
                 />
             </Card>
-        </Modal>
+        </Container>
     );
 }
 

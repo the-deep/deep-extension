@@ -11,7 +11,6 @@ import {
     DateInput,
     SegmentInput,
     Checkbox,
-    TextArea,
     QuickActionButton,
     useBooleanState,
 } from '@the-deep/deep-ui';
@@ -28,13 +27,13 @@ import {
 } from 'react-icons/io5';
 
 import { useLazyRequest } from '../../Base/utils/restRequest';
-import NewOrganizationSelectInput, { BasicOrganization } from '../../components/selections/NewOrganizationSelectInput';
-import ProjectUserSelectInput, { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
-import LeadGroupSelectInput, { BasicLeadGroup } from '../../components/selections/LeadGroupSelectInput';
-import NewOrganizationMultiSelectInput from '../../components/selections/NewOrganizationMultiSelectInput';
-import AddOrganizationModal from '../../components/general/AddOrganizationModal';
-import NonFieldError from '../../components/NonFieldError';
-import AddLeadGroupModal from '../../components/general/AddLeadGroupModal';
+import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
+import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
+import LeadGroupSelectInput, { BasicLeadGroup } from '../selections/LeadGroupSelectInput';
+import NewOrganizationMultiSelectInput from '../selections/NewOrganizationMultiSelectInput';
+import AddOrganizationModal from '../general/AddOrganizationModal';
+import NonFieldError from '../NonFieldError';
+import AddLeadGroupModal from '../general/AddLeadGroupModal';
 import {
     enumKeySelector,
     enumLabelSelector,
@@ -394,18 +393,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                         disabled={disabled}
                     />
                 </>
-            )}
-            {value.sourceType === 'TEXT' && (
-                <TextArea
-                    className={styles.input}
-                    label="Text"
-                    name="text"
-                    value={value.text}
-                    onChange={setFieldValue}
-                    rows={10}
-                    error={error?.text}
-                    disabled={disabled}
-                />
             )}
             <TextInput
                 className={styles.input}

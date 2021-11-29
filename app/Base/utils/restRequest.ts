@@ -11,7 +11,7 @@ import {
     serverlessEndpoint,
     wsEndpoint,
     // reactAppApiHttps,
-} from '../../Base/configs/restRequest';
+} from '../configs/restRequest';
 
 function getCookie(name: string) {
     const value = `; ${document.cookie}`;

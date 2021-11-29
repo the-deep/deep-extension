@@ -16,8 +16,7 @@ import {
 
 import ProjectContext from '#base/context/ProjectContext';
 import { useLazyRequest } from '#base/utils/restRequest';
-import { LeadGroup } from '#types';
-import _ts from '#ts';
+import { LeadGroup } from '../../../types';
 
 type FormType = Partial<Pick<LeadGroup, 'title' | 'project'>>
 type FormSchema = ObjectSchema<FormType>;
@@ -60,7 +59,7 @@ function AddLeadGroupModal(props: Props) {
             }
             onModalClose();
         },
-        failureHeader: _ts('addLeadGroup', 'title'),
+        failureHeader: 'Title',
     });
 
     const defaultFormValue: FormType = useMemo(() => ({
@@ -92,7 +91,7 @@ function AddLeadGroupModal(props: Props) {
 
     return (
         <Modal
-            heading={_ts('addLeadGroup', 'addLeadGroupHeading')}
+            heading="addLeadGroupHeading"
             onCloseButtonClick={onModalClose}
             footerActions={(
                 <Button
@@ -102,7 +101,7 @@ function AddLeadGroupModal(props: Props) {
                     disabled={pristine || leadGroupAddPending}
                     onClick={handleSubmit}
                 >
-                    {_ts('addOrganizationModal', 'save')}
+                    Save
                 </Button>
             )}
         >
@@ -112,8 +111,8 @@ function AddLeadGroupModal(props: Props) {
                 value={value?.title}
                 error={error?.title}
                 onChange={setFieldValue}
-                label={_ts('addLeadGroup', 'titleLabel')}
-                placeholder={_ts('addLeadGroup', 'titlePlaceholder')}
+                label="titleLabel"
+                placeholder="titlePlaceholder"
             />
         </Modal>
     );

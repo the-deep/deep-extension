@@ -28,9 +28,9 @@ const home = wrap({
     path: '/',
     title: 'Home',
     navbarVisibility: true,
-    component: lazy(() => import('#views/Template')),
+    component: lazy(() => import('#views/LeadEditModal')),
     componentProps: {
-        name: 'Home Page',
+        className: undefined,
     },
     visibility: 'is-authenticated',
 });

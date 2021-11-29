@@ -15,8 +15,6 @@ import {
     Button,
     Modal,
 } from '@the-deep/deep-ui';
-
-import _ts from '#ts';
 import {
     useRequest,
     useLazyRequest,
@@ -25,7 +23,7 @@ import {
     MultiResponse,
     Organization,
     OrganizationType,
-} from '#types';
+} from '../../../types';
 
 import styles from './styles.css';
 
@@ -64,7 +62,7 @@ function AddOrganizationModal(props: Props) {
     } = useRequest<MultiResponse<OrganizationType>>({
         url: 'server://organization-types/',
         method: 'GET',
-        failureHeader: _ts('addOrganizationModal', 'title'),
+        failureHeader: 'addOrganizationModal',
     });
     const {
         pending: organizationPostPending,
@@ -79,7 +77,7 @@ function AddOrganizationModal(props: Props) {
             }
             onModalClose();
         },
-        failureHeader: _ts('addOrganizationModal', 'title'),
+        failureHeader: 'addOrganizationModal',
     });
 
     const {
@@ -109,7 +107,7 @@ function AddOrganizationModal(props: Props) {
     return (
         <Modal
             className={styles.addOrganizationModal}
-            heading={_ts('addOrganizationModal', 'title')}
+            heading="Title"
             onCloseButtonClick={onModalClose}
             bodyClassName={styles.modalBody}
             footerActions={(
@@ -120,7 +118,7 @@ function AddOrganizationModal(props: Props) {
                     disabled={pristine || pending}
                     onClick={handleSubmit}
                 >
-                    {_ts('addOrganizationModal', 'save')}
+                    save
                 </Button>
             )}
         >
@@ -131,8 +129,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.title}
                 error={error?.title}
-                label={_ts('addOrganizationModal', 'titleLabel')}
-                placeholder={_ts('addOrganizationModal', 'titleLabel')}
+                label="titleLabel"
+                placeholder="titleLabel"
                 autoFocus
             />
             <TextInput
@@ -141,8 +139,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.shortName}
                 error={error?.shortName}
-                label={_ts('addOrganizationModal', 'shortName')}
-                placeholder={_ts('addOrganizationModal', 'shortName')}
+                label="shortName"
+                placeholder="shortName"
             />
             <TextInput
                 name="url"
@@ -150,8 +148,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.url}
                 error={error?.url}
-                label={_ts('addOrganizationModal', 'url')}
-                placeholder={_ts('addOrganizationModal', 'url')}
+                label="url"
+                placeholder="url"
             />
             <SelectInput
                 name="organizationType"
@@ -161,8 +159,8 @@ function AddOrganizationModal(props: Props) {
                 error={error?.organizationType}
                 keySelector={organizationTypeKeySelector}
                 labelSelector={organizationTypeLabelSelector}
-                label={_ts('addOrganizationModal', 'organizationType')}
-                placeholder={_ts('addOrganizationModal', 'organizationType')}
+                label="organizationType"
+                placeholder="organizationType"
             />
         </Modal>
     );
