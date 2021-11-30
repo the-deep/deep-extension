@@ -9,4 +9,8 @@
         border: var(--dui-width-separator-thin) solid var(--dui-color-separator);
         overflow-y: auto;
     }
+
+    .save-lead {
+        float: right;
+    }
 }

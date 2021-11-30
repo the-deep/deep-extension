@@ -10,7 +10,7 @@ import {
     ProjectUserQueryVariables,
 } from '#generated/types';
 
-import useDebouncedValue from '../../../hooks/useDebouncedValue';
+import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
 
 const PROJECT_USERS = gql`
     query ProjectUser($search: String, $projectId: ID!) {
@@ -40,7 +40,7 @@ type ProjectUserSelectInputProps<K extends string> = SearchSelectInputProps<
     BasicProjectUser,
     Def,
     'keySelector' | 'labelSelector' | 'searchOptions' | 'onSearchValueChange' | 'optionsPending' | 'totalOptionsCount' | 'onShowDropdownChange'
-> & { projectId: string };
+> & { projectId: string | undefined };
 
 function ProjectUserSelectInput<K extends string>(props: ProjectUserSelectInputProps<K>) {
     const {

@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import UserContext from '#base/context/UserContext';
-import ProjectContext from '#base/context/ProjectContext';
-import { wrap } from '#base/utils/routes';
+import UserContext from '../context/UserContext';
+import ProjectContext from '../context/ProjectContext';
+import { wrap } from '../utils/routes';
 
 export interface Attrs {
     [key: string]: string | number | undefined;

@@ -27,13 +27,13 @@ import {
 } from 'react-icons/io5';
 
 import { useLazyRequest } from '../../Base/utils/restRequest';
+import ProjectContext from '../../Base/context/ProjectContext';
+import ProjectSelectInput from '../selections/ProjectSelectInput';
 import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
 import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
-import LeadGroupSelectInput, { BasicLeadGroup } from '../selections/LeadGroupSelectInput';
 import NewOrganizationMultiSelectInput from '../selections/NewOrganizationMultiSelectInput';
 import AddOrganizationModal from '../general/AddOrganizationModal';
 import NonFieldError from '../NonFieldError';
-import AddLeadGroupModal from '../general/AddLeadGroupModal';
 import {
     enumKeySelector,
     enumLabelSelector,
@@ -42,7 +42,6 @@ import {
     OrganizationDetails,
 } from '../../types';
 import {
-    LeadType,
     TokenQuery,
     LeadOptionsQuery,
 } from '#generated/types';
@@ -104,7 +103,7 @@ interface Props<N extends string | number | undefined> {
     value: PartialFormType;
     error: Error<PartialFormType> | undefined;
     pending?: boolean;
-    projectId: string;
+    projectId: string | undefined;
     disabled?: boolean;
     defaultValue: PartialFormType;
     priorityOptions: NonNullable<LeadOptionsQuery['leadPriorityOptions']>['enumValues'] | undefined;
@@ -114,14 +113,11 @@ interface Props<N extends string | number | undefined> {
     authorOrganizationOptions: BasicOrganization[] | undefined | null;
     // eslint-disable-next-line max-len
     onAuthorOrganizationOptionsChange: React.Dispatch<React.SetStateAction<BasicOrganization[] | undefined | null>>;
-    leadGroupOptions: BasicLeadGroup[] | undefined | null;
     // eslint-disable-next-line max-len
-    onLeadGroupOptionsChange: React.Dispatch<React.SetStateAction<BasicLeadGroup[] | undefined | null>>;
     assigneeOptions: BasicProjectUser[] | undefined | null;
     // eslint-disable-next-line max-len
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
-    attachment: LeadType['attachment'];
     hasAssessment?: boolean;
 }
 
@@ -138,17 +134,16 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         disabled,
         priorityOptions,
         pendingLeadOptions,
-        attachment,
         sourceOrganizationOptions,
         onSourceOrganizationOptionsChange,
         authorOrganizationOptions,
         onAuthorOrganizationOptionsChange,
-        leadGroupOptions,
-        onLeadGroupOptionsChange,
         assigneeOptions,
         onAssigneeOptionChange,
         hasAssessment,
     } = props;
+
+    const { project } = React.useContext(ProjectContext);
 
     const error = getErrorObject(riskyError);
     const setFieldValue = useFormObject(name, onChange, defaultValue);
@@ -162,12 +157,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         showAddOrganizationModal,
         setShowAddOrganizationModalTrue,
         setShowAddOrganizationModalFalse,
-    ] = useBooleanState(false);
-
-    const [
-        showAddLeadGroupModal,
-        setShowAddLeadAddGroupModal,
-        setShowAddLeadGroupModalFalse,
     ] = useBooleanState(false);
 
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
@@ -294,12 +283,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                         isFile: false,
                         token,
                     });
-                } else if (attachment?.file?.url) {
-                    getRawWebInfo({
-                        url: attachment.file.url,
-                        isFile: true,
-                        token,
-                    });
                 } else {
                     // eslint-disable-next-line no-console
                     console.error('No attachment or URL found in lead to be extracted');
@@ -322,10 +305,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         getUserToken();
     }, [getUserToken]);
 
-    const handleFileExtractClick = useCallback(() => {
-        getUserToken();
-    }, [getUserToken]);
-
     const handleOrganizationAdd = useCallback((val: { id: number; title: string }) => {
         const transformedVal = {
             id: String(val.id),
@@ -344,15 +323,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         onSourceOrganizationOptionsChange,
         onAuthorOrganizationOptionsChange,
     ]);
-
-    const handleAddLeadGroupClick = useCallback(() => {
-        setShowAddLeadAddGroupModal();
-    }, [setShowAddLeadAddGroupModal]);
-
-    const handleLeadGroupAdd = useCallback((val: BasicLeadGroup) => {
-        setFieldValue(val.id, 'leadGroup');
-        onLeadGroupOptionsChange((oldVal) => [...oldVal ?? [], val]);
-    }, [setFieldValue, onLeadGroupOptionsChange]);
 
     const pending = pendingFromProps || pendingUserToken || webInfoPending || rawWebInfoPending;
 
@@ -394,61 +364,18 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     />
                 </>
             )}
-            <TextInput
-                className={styles.input}
-                label="Title"
-                name="title"
-                value={value.title}
-                onChange={setFieldValue}
-                error={error?.title}
-                disabled={disabled}
-                actions={
-                    (
-                        value.sourceType === 'DISK'
-                        || value.sourceType === 'DROPBOX'
-                        || value.sourceType === 'GOOGLE_DRIVE'
-                    ) && attachment?.file && (
-                        <>
-                            <QuickActionButton
-                                name="fileExtract"
-                                title="Auto-fill lead information"
-                                variant="action"
-                                onClick={handleFileExtractClick}
-                                disabled={disabled}
-                            >
-                                <IoEye />
-                            </QuickActionButton>
-                        </>
-                    )
-                }
-            />
-            {hasAssessment && (
-                <LeadGroupSelectInput
-                    // FIXME: Filter this out based on if the project has assessment or not
-                    name="leadGroup"
+            <div className={styles.row}>
+                <ProjectSelectInput
                     className={styles.input}
-                    value={value.leadGroup}
+                    label="Recent Project"
+                    name="clientId"
+                    value={value.clientId}
                     onChange={setFieldValue}
-                    options={leadGroupOptions}
-                    onOptionsChange={onLeadGroupOptionsChange}
-                    disabled={disabled}
-                    label="Lead Group"
-                    error={error?.leadGroup}
-                    projectId={projectId}
-                    actions={(
-                        <QuickActionButton
-                            name="add-lead-group"
-                            variant="transparent"
-                            onClick={handleAddLeadGroupClick}
-                            disabled={disabled}
-                            title="Add lead group"
-                        >
-                            <IoAdd />
-
-                        </QuickActionButton>
-                    )}
+                    options={project ? [project] : undefined}
+                    variant="general"
+                    nonClearable
                 />
-            )}
+            </div>
             <div className={styles.row}>
                 <DateInput
                     className={styles.input}
@@ -566,12 +493,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                 <AddOrganizationModal
                     onModalClose={setShowAddOrganizationModalFalse}
                     onOrganizationAdd={handleOrganizationAdd}
-                />
-            )}
-            {showAddLeadGroupModal && (
-                <AddLeadGroupModal
-                    onModalClose={setShowAddLeadGroupModalFalse}
-                    onLeadGroupAdd={handleLeadGroupAdd}
                 />
             )}
         </div>

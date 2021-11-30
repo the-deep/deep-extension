@@ -9,7 +9,7 @@ import {
     LeadGroupsQuery,
     LeadGroupsQueryVariables,
 } from '#generated/types';
-import useDebouncedValue from '../../../hooks/useDebouncedValue';
+import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
 
 const LEAD_GROUPS = gql`
     query LeadGroups($search: String, $projectId: ID!) {
@@ -36,7 +36,7 @@ type LeadGroupSelectInputProps<K extends string> = SearchSelectInputProps<
     BasicLeadGroup,
     Def,
     'keySelector' | 'labelSelector' | 'searchOptions' | 'onSearchValueChange' | 'optionsPending' | 'totalOptionsCount' | 'onShowDropdownChange'
-> & { projectId: string };
+> & { projectId: string | undefined };
 
 function LeadGroupSelectInput<K extends string>(props: LeadGroupSelectInputProps<K>) {
     const {

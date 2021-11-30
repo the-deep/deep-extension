@@ -6,7 +6,7 @@ import {
     OrganizationOptionsQueryVariables,
 } from '#generated/types';
 
-import useDebouncedValue from '../../../hooks/useDebouncedValue';
+import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
 
 const ORGANIZATIONS = gql`
     query OrganizationOptions($search: String) {
