@@ -23,7 +23,7 @@ const MY_PROJECTS = gql`
     }
 `;
 
-type BasicProject = NonNullable<NonNullable<NonNullable<MyProjectsQuery['projects']>['results']>[number]>;
+export type BasicProject = NonNullable<NonNullable<NonNullable<MyProjectsQuery['projects']>['results']>[number]>;
 
 type Def = { containerClassName?: string };
 type ProjectSelectInputProps<K extends string> = SearchSelectInputProps<

@@ -29,9 +29,7 @@ const home = wrap({
     title: 'Home',
     navbarVisibility: true,
     component: lazy(() => import('#views/LeadModal')),
-    componentProps: {
-        projectId: '',
-    },
+    componentProps: {},
     visibility: 'is-authenticated',
 });
 const myProfile = wrap({

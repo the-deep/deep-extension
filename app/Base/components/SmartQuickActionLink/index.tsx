@@ -4,7 +4,7 @@ import { QuickActionLink, QuickActionLinkProps } from '@the-deep/deep-ui';
 import useRouteMatching, {
     RouteData,
     Attrs,
-} from '../../../Base/hooks/useRouteMatching';
+} from '../../hooks/useRouteMatching';
 
 export type Props = Omit<QuickActionLinkProps, 'to'> & {
     route: RouteData;

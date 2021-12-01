@@ -40,7 +40,7 @@ type ProjectUserSelectInputProps<K extends string> = SearchSelectInputProps<
     BasicProjectUser,
     Def,
     'keySelector' | 'labelSelector' | 'searchOptions' | 'onSearchValueChange' | 'optionsPending' | 'totalOptionsCount' | 'onShowDropdownChange'
-> & { projectId: string | undefined };
+> & { projectId: string };
 
 function ProjectUserSelectInput<K extends string>(props: ProjectUserSelectInputProps<K>) {
     const {

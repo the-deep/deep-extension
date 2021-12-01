@@ -10,7 +10,6 @@ import {
     TextInput,
     DateInput,
     SegmentInput,
-    Checkbox,
     QuickActionButton,
     useBooleanState,
 } from '@the-deep/deep-ui';
@@ -27,8 +26,7 @@ import {
 } from 'react-icons/io5';
 
 import { useLazyRequest } from '../../Base/utils/restRequest';
-import ProjectContext from '../../Base/context/ProjectContext';
-import ProjectSelectInput from '../selections/ProjectSelectInput';
+import ProjectSelectInput, { BasicProject } from '../selections/ProjectSelectInput';
 import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
 import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
 import NewOrganizationMultiSelectInput from '../selections/NewOrganizationMultiSelectInput';
@@ -104,6 +102,9 @@ interface Props<N extends string | number | undefined> {
     error: Error<PartialFormType> | undefined;
     pending?: boolean;
     projectId: string | undefined;
+    setProjectId: React.Dispatch<React.SetStateAction<string | undefined>>;
+    projectOptions: BasicProject[];
+    setProjectOptions: React.Dispatch<React.SetStateAction<BasicProject[] | undefined | null>>;
     disabled?: boolean;
     defaultValue: PartialFormType;
     priorityOptions: NonNullable<LeadOptionsQuery['leadPriorityOptions']>['enumValues'] | undefined;
@@ -113,12 +114,10 @@ interface Props<N extends string | number | undefined> {
     authorOrganizationOptions: BasicOrganization[] | undefined | null;
     // eslint-disable-next-line max-len
     onAuthorOrganizationOptionsChange: React.Dispatch<React.SetStateAction<BasicOrganization[] | undefined | null>>;
-    // eslint-disable-next-line max-len
     assigneeOptions: BasicProjectUser[] | undefined | null;
     // eslint-disable-next-line max-len
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
-    hasAssessment?: boolean;
 }
 
 function LeadInput<N extends string | number | undefined>(props: Props<N>) {
@@ -130,7 +129,10 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         error: riskyError,
         defaultValue,
         pending: pendingFromProps,
+        projectOptions,
+        setProjectOptions,
         projectId,
+        setProjectId,
         disabled,
         priorityOptions,
         pendingLeadOptions,
@@ -140,10 +142,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         onAuthorOrganizationOptionsChange,
         assigneeOptions,
         onAssigneeOptionChange,
-        hasAssessment,
     } = props;
-
-    const { project } = React.useContext(ProjectContext);
 
     const error = getErrorObject(riskyError);
     const setFieldValue = useFormObject(name, onChange, defaultValue);
@@ -215,6 +214,11 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         onSourceOrganizationOptionsChange,
         onAuthorOrganizationOptionsChange,
     ]);
+
+    const handleProjectChange = useCallback((projectVal) => {
+        setProjectId(projectVal);
+        setFieldValue(null, 'assignee');
+    }, [setFieldValue, setProjectId]);
 
     const {
         pending: webInfoPending,
@@ -330,6 +334,19 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         <div className={_cs(styles.leadEditForm, className)}>
             {pending && <PendingMessage />}
             <NonFieldError error={error} />
+            <div className={styles.row}>
+                <ProjectSelectInput
+                    name="project"
+                    className={styles.input}
+                    label="Project"
+                    value={projectId}
+                    onChange={handleProjectChange}
+                    variant="general"
+                    options={projectOptions}
+                    onOptionsChange={setProjectOptions}
+                    nonClearable
+                />
+            </div>
             {value.sourceType === 'WEBSITE' && (
                 <>
                     <TextInput
@@ -364,18 +381,15 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     />
                 </>
             )}
-            <div className={styles.row}>
-                <ProjectSelectInput
-                    className={styles.input}
-                    label="Recent Project"
-                    name="clientId"
-                    value={value.clientId}
-                    onChange={setFieldValue}
-                    options={project ? [project] : undefined}
-                    variant="general"
-                    nonClearable
-                />
-            </div>
+            <TextInput
+                className={styles.input}
+                label="Title"
+                name="title"
+                value={value.title}
+                onChange={setFieldValue}
+                error={error?.title}
+                disabled={disabled}
+            />
             <div className={styles.row}>
                 <DateInput
                     className={styles.input}
@@ -396,7 +410,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     onOptionsChange={onAssigneeOptionChange}
                     options={assigneeOptions}
                     value={value.assignee}
-                    projectId={projectId}
+                    projectId={projectId as string}
                 />
             </div>
             <div className={styles.row}>
@@ -473,16 +487,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                         label="Confidential"
                         disabled={disabled}
                     />
-                    {hasAssessment && (
-                        <Checkbox
-                            className={styles.nestedInput}
-                            name="isAssessmentLead"
-                            value={value.isAssessmentLead}
-                            onChange={setFieldValue}
-                            label="Is Assessment"
-                            disabled={disabled}
-                        />
-                    )}
                 </div>
             </div>
             <EmmStats

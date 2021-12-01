@@ -8,17 +8,19 @@ interface FourHundredThreeProps {
 
 function FourHundredThree(props: FourHundredThreeProps) {
     const {
-        className
+        className,
     } = props;
 
-    <div className={_cs(className, styles.fourHundredThree)}>
-        <h1 className={styles.heading}>
-            403
-        </h1>
-        <p className={styles.message}>
-            You do not have access to this page!
-        </p>
-    </div>
+    return (
+        <div className={_cs(className, styles.fourHundredThree)}>
+            <h1 className={styles.heading}>
+                403
+            </h1>
+            <p className={styles.message}>
+                You do not have access to this page!
+            </p>
+        </div>
+    );
 }
 
 export default FourHundredThree;

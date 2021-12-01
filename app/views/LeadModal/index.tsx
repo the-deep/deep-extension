@@ -30,6 +30,7 @@ import {
 } from '#generated/types';
 import { UserContext } from '../../Base/context/UserContext';
 import { BasicOrganization } from '../../components/selections/NewOrganizationSelectInput';
+import { BasicProject } from '../../components/selections/ProjectSelectInput';
 import { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
 import LeadInput from '../../components/LeadInput';
 import { transformToFormError, ObjectError } from '../../Base/utils/errorTransform';
@@ -133,6 +134,7 @@ const RECENT_PROJECT = gql`
             lastActiveProject {
                 id
                 title
+                isPrivate
             }
         }
     }
@@ -147,7 +149,6 @@ function LeadModal(props: Props) {
         className,
     } = props;
     const alert = useAlert();
-    // const { project } = useContext(ProjectContext);
     const { user } = useContext(UserContext);
 
     const initialValue: PartialFormType = useMemo(() => ({
@@ -158,6 +159,16 @@ function LeadModal(props: Props) {
         isAssessmentLead: false,
         assignee: user?.id,
     }), [user]);
+
+    const [
+        recentProjectId,
+        setRecentProjectId,
+    ] = useState<string | undefined>();
+
+    const [
+        projectOptions,
+        setProjectOptions,
+    ] = useState<BasicProject[] | undefined | null>();
 
     const [
         projectUserOptions,
@@ -175,12 +186,12 @@ function LeadModal(props: Props) {
     ] = useState<BasicOrganization[] | undefined | null>();
 
     const {
-        // pristine,
         value,
         setValue,
         error: riskyError,
         validate,
         setError,
+        pristine,
     } = useForm(schema, initialValue);
 
     const {
@@ -192,9 +203,17 @@ function LeadModal(props: Props) {
 
     const {
         loading: recentProjectLoading,
-        data: recentProject,
     } = useQuery<RecentProjectQuery, RecentProjectQueryVariables>(
         RECENT_PROJECT,
+        {
+            onCompleted: (response) => {
+                if (response) {
+                    const recentProjectInfo = response.me?.lastActiveProject;
+                    setRecentProjectId(recentProjectInfo?.id);
+                    setProjectOptions(recentProjectInfo ? [recentProjectInfo] : undefined);
+                }
+            },
+        },
     );
 
     const [
@@ -237,12 +256,13 @@ function LeadModal(props: Props) {
         },
     );
 
-    const recentProjectID = recentProject?.me?.lastActiveProject?.id;
-    console.log('Check Recent projects::>>', recentProjectID);
-
-    const pending = leadOptionsLoading || leadCreatePending;
+    const pending = recentProjectLoading || leadOptionsLoading || leadCreatePending;
 
     const handleSubmit = useCallback(() => {
+        if (!recentProjectId) {
+            console.error('No project defined.');
+            return;
+        }
         const submit = createSubmitHandler(
             validate,
             setError,
@@ -251,13 +271,13 @@ function LeadModal(props: Props) {
                 createLead({
                     variables: {
                         data,
-                        projectId: recentProjectID as string,
+                        projectId: recentProjectId,
                     },
                 });
             },
         );
         submit();
-    }, [setError, validate, createLead, recentProjectID]);
+    }, [setError, validate, createLead, recentProjectId]);
 
     const handleLeadChange = useCallback((newValue: SetValueArg<PartialFormType>) => {
         setValue(newValue, true);
@@ -269,32 +289,39 @@ function LeadModal(props: Props) {
             heading="Add a source"
         >
             <Card className={styles.formContainer}>
-                <LeadInput
-                    name={undefined}
-                    pending={pending}
-                    value={value}
-                    onChange={handleLeadChange}
-                    projectId={recentProjectID}
-                    error={riskyError}
-                    defaultValue={initialValue}
-                    priorityOptions={leadOptions?.leadPriorityOptions?.enumValues}
-                    sourceOrganizationOptions={sourceOrganizationOptions}
-                    onSourceOrganizationOptionsChange={setSourceOrganizationOptions}
-                    authorOrganizationOptions={authorOrganizationOptions}
-                    onAuthorOrganizationOptionsChange={setAuthorOrganizationOptions}
-                    assigneeOptions={projectUserOptions}
-                    onAssigneeOptionChange={setProjectUserOptions}
-                    hasAssessment={false}
-                />
-                <Button
-                    className={styles.saveLead}
-                    name="save"
-                    // FIXME: Add disabled during pristine later
-                    // disabled={pristine || pending}
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
+                {projectOptions && (
+                    <>
+                        <LeadInput
+                            name={undefined}
+                            pending={pending}
+                            value={value}
+                            onChange={handleLeadChange}
+                            projectId={recentProjectId}
+                            setProjectId={setRecentProjectId}
+                            projectOptions={projectOptions}
+                            setProjectOptions={setProjectOptions}
+                            error={riskyError}
+                            defaultValue={initialValue}
+                            priorityOptions={leadOptions?.leadPriorityOptions?.enumValues}
+                            sourceOrganizationOptions={sourceOrganizationOptions}
+                            onSourceOrganizationOptionsChange={setSourceOrganizationOptions}
+                            authorOrganizationOptions={authorOrganizationOptions}
+                            onAuthorOrganizationOptionsChange={setAuthorOrganizationOptions}
+                            assigneeOptions={projectUserOptions}
+                            onAssigneeOptionChange={setProjectUserOptions}
+                        />
+
+                        <Button
+                            className={styles.saveLead}
+                            name="save"
+                            // FIXME: Add disabled during pristine later
+                            disabled={pristine || pending}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    </>
+                )}
             </Card>
         </Container>
     );
