@@ -1,4 +1,4 @@
-.lead-url-box {
+.settings-box {
     width: 100vw;
     height: 90vh;
     --width-preview: 560px;
@@ -23,7 +23,8 @@
         }
     }
 
-    .save-lead-button {
+    .save-settings-button {
         float: right;
+        margin-top: var(--dui-spacing-medium);
     }
 }

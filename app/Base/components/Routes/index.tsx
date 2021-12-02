@@ -29,6 +29,12 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
+                    path={routes.leadSettings.path}
+                >
+                    {routes.leadSettings.load({ className })}
+                </Route>
+                <Route
+                    exact
                     path={routes.myProfile.path}
                 >
                     {routes.myProfile.load({ className })}
@@ -41,9 +47,9 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
-                    path={routes.fourHundredFour.path}
+                    path={routes.successForm.path}
                 >
-                    {routes.fourHundredFour.load({ className: undefined })}
+                    {routes.successForm.load({ className: undefined })}
                 </Route>
                 <Route
                     exact
@@ -53,9 +59,9 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
-                    path={routes.successForm.path}
+                    path={routes.fourHundredFour.path}
                 >
-                    {routes.successForm.load({ className: undefined })}
+                    {routes.fourHundredFour.load({ className: undefined })}
                 </Route>
             </Switch>
         </Suspense>

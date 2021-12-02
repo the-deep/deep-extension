@@ -8,6 +8,7 @@ import {
     Button,
     useAlert,
     Container,
+    Heading,
 } from '@the-deep/deep-ui';
 import {
     removeNull,
@@ -16,8 +17,9 @@ import {
     internal,
     SetValueArg,
 } from '@togglecorp/toggle-form';
+import { IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
-
+import { useHistory } from 'react-router-dom';
 import { schema, PartialFormType } from '../../components/LeadInput/schema';
 import {
     LeadOptionsQuery,
@@ -34,6 +36,7 @@ import { BasicProject } from '../../components/selections/ProjectSelectInput';
 import { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
 import LeadInput from '../../components/LeadInput';
 import { transformToFormError, ObjectError } from '../../Base/utils/errorTransform';
+import route from '../../Base/configs/routes';
 
 import styles from './styles.css';
 
@@ -151,6 +154,8 @@ function LeadModal(props: Props) {
     const alert = useAlert();
     const { user } = useContext(UserContext);
 
+    const history = useHistory();
+
     const initialValue: PartialFormType = useMemo(() => ({
         clientId: randomString(),
         sourceType: 'WEBSITE',
@@ -191,7 +196,7 @@ function LeadModal(props: Props) {
         error: riskyError,
         validate,
         setError,
-        pristine,
+        // pristine,
     } = useForm(schema, initialValue);
 
     const {
@@ -238,6 +243,7 @@ function LeadModal(props: Props) {
                     const formError = transformToFormError(removeNull(errors) as ObjectError[]);
                     setError(formError);
                 } else if (ok) {
+                    history.push(route.successForm.path);
                     alert.show(
                         'Successfully created lead!',
                         { variant: 'success' },
@@ -283,14 +289,35 @@ function LeadModal(props: Props) {
         setValue(newValue, true);
     }, [setValue]);
 
+    const handleLeadSettings = useCallback(
+        () => {
+            history.push(route.leadSettings.path);
+        }, [history],
+    );
+
     return (
         <Container
             className={_cs(className, styles.leadUrlBox)}
-            heading="Add a source"
         >
-            <Card className={styles.formContainer}>
+            <Card
+                className={styles.formContainer}
+            >
                 {projectOptions && (
                     <>
+                        <div className={styles.cardHead}>
+                            <Heading
+                                className={styles.leftHeader}
+                                size="medium"
+                            >
+                                Add Lead
+                            </Heading>
+                            <Heading
+                                className={styles.rightHeader}
+                                size="large"
+                            >
+                                <IoSettings onClick={handleLeadSettings} />
+                            </Heading>
+                        </div>
                         <LeadInput
                             name={undefined}
                             pending={pending}
@@ -312,10 +339,10 @@ function LeadModal(props: Props) {
                         />
 
                         <Button
-                            className={styles.saveLead}
+                            className={styles.saveLeadButton}
                             name="save"
                             // FIXME: Add disabled during pristine later
-                            disabled={pristine || pending}
+                            disabled={pending}
                             onClick={handleSubmit}
                         >
                             Save

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Router } from 'react-router-dom';
 import { init, ErrorBoundary, setUser as setUserOnSentry } from '@sentry/react';
-import { unique, _cs } from '@togglecorp/fujs';
+import { unique } from '@togglecorp/fujs';
 import { AlertContainer, AlertContext, AlertOptions } from '@the-deep/deep-ui';
 import { ApolloClient, ApolloProvider } from '@apollo/client';
 import ReactGA from 'react-ga';
@@ -16,7 +16,6 @@ import { UserContext, UserContextInterface } from '#base/context/UserContext';
 import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
 import AuthPopup from '#base/components/AuthPopup';
 import { sync } from '#base/hooks/useAuthSync';
-// import Navbar from '#base/components/Navbar';
 import Routes from '#base/components/Routes';
 import { User } from '#base/types/user';
 import apolloConfig from '#base/configs/apollo';
@@ -175,12 +174,6 @@ function Base() {
                                     <Init
                                         className={styles.init}
                                     >
-                                        {/* <Navbar
-                                            className={_cs(
-                                                styles.navbar,
-                                                !navbarVisibility && styles.hidden,
-                                            )}
-                                        /> */}
                                         <Routes
                                             className={styles.view}
                                         />
