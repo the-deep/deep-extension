@@ -6,6 +6,10 @@ const config = {
         'plugin:@typescript-eslint/recommended',
     ],
     env: {
+        es6: true,
+    },
+    globals: {
+        chrome: true,
         browser: true,
     },
     plugins: [

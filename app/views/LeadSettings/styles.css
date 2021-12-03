@@ -15,7 +15,7 @@
         justify-content: space-between;
 
         .left-header {
-            padding: var(--dui-spacing-medium);
+            margin: var(--dui-spacing-large);
         }
         .right-header {
             padding-top: var(--dui-spacing-medium);
@@ -23,8 +23,12 @@
         }
     }
 
+    .settings-container {
+        margin: var(--dui-spacing-large);
+    }
+
     .save-settings-button {
         float: right;
-        margin-top: var(--dui-spacing-medium);
+        margin: var(--dui-spacing-large);
     }
 }

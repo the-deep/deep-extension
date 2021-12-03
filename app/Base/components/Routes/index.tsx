@@ -29,6 +29,12 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
+                    path={routes.homeTwo.path}
+                >
+                    {routes.homeTwo.load({ className })}
+                </Route>
+                <Route
+                    exact
                     path={routes.leadSettings.path}
                 >
                     {routes.leadSettings.load({ className })}

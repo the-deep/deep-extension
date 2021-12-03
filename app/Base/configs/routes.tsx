@@ -2,17 +2,6 @@ import { lazy } from 'react';
 
 import { wrap } from '#base/utils/routes';
 
-const fourHundredFour = wrap({
-    path: '',
-    title: '404',
-    component: lazy(() => import('#views/FourHundredFour')),
-    componentProps: {
-        className: undefined,
-    },
-    visibility: 'is-authenticated',
-    navbarVisibility: true,
-});
-
 const login = wrap({
     path: '/login/',
     title: 'Login',
@@ -26,12 +15,23 @@ const login = wrap({
 const home = wrap({
     // NOTE: the first url is /index.html for addons
     path: '/index.html',
-    title: 'Home',
+    title: 'home',
     navbarVisibility: true,
     component: lazy(() => import('#views/LeadModal')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
+
+const homeTwo = wrap({
+    // NOTE: the first url is /index.html for addons
+    path: '/',
+    title: 'home',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/LeadModal')),
+    componentProps: {},
+    visibility: 'is-authenticated',
+});
+
 const leadSettings = wrap({
     path: '/leadSettings/',
     title: 'LeadSettings',
@@ -69,9 +69,19 @@ const failureForm = wrap({
     visibility: 'is-authenticated',
 });
 
+const fourHundredFour = wrap({
+    path: '',
+    title: '404',
+    component: lazy(() => import('#views/FourHundredFour')),
+    componentProps: {},
+    visibility: 'is-authenticated',
+    navbarVisibility: true,
+});
+
 const routes = {
     login,
     home,
+    homeTwo,
     leadSettings,
     myProfile,
     fourHundredFour,

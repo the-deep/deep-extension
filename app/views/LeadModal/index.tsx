@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useCallback, useState } from 'react';
+import React, { useContext, useMemo, useCallback, useState, useEffect } from 'react';
 import {
     _cs,
     randomString,
@@ -17,7 +17,7 @@ import {
     internal,
     SetValueArg,
 } from '@togglecorp/toggle-form';
-import { IoSettings } from 'react-icons/io5';
+import { IoLogoChrome, IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
 import { schema, PartialFormType } from '../../components/LeadInput/schema';
@@ -190,6 +190,12 @@ function LeadModal(props: Props) {
         setAuthorOrganizationOptions,
     ] = useState<BasicOrganization[] | undefined | null>();
 
+    const [
+        cookieBox,
+        setCookieBox,
+    ] = useState<undefined | null>();
+    console.log('In cookie center::>>', cookieBox);
+
     const {
         value,
         setValue,
@@ -294,6 +300,21 @@ function LeadModal(props: Props) {
             history.push(route.leadSettings.path);
         }, [history],
     );
+
+    useEffect(() => {
+        if (chrome.cookies) {
+            chrome.cookies.get(
+                {
+                    url: 'http://localhost:3000',
+                    name: 'deep-development-sessionid',
+                },
+                (cookieValue) => {
+                    setCookieBox(cookieValue);
+                    console.log('The latest cookie value::>>>', cookieValue);
+                },
+            );
+        }
+    }, []);
 
     return (
         <Container

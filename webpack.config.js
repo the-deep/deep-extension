@@ -29,7 +29,14 @@ const base = {
         default_popup: 'index.html',
     },
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
-    permissions: ['storage'],
+    host_permissions: ['http://localhost:3000'],
+    permissions: [
+        'storage',
+        'cookies',
+        '<all_urls>',
+        'http://localhost:3000',
+        'activeTab',
+    ],
     icons: {
         32: 'icons/logo-32.png',
         64: 'icons/logo-64.png',

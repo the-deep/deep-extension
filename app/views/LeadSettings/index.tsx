@@ -76,7 +76,7 @@ function LeadSettings(props: Props) {
                         onChange={setActiveView}
                     >
                         <Container
-                            className={_cs(className)}
+                            className={_cs(styles.settingsContainer)}
                             spacing="none"
                             headingSize="extraSmall"
                             heading={(
