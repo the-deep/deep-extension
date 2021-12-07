@@ -28,7 +28,7 @@
     }
 
     .save-settings-button {
-        float: right;
-        margin: var(--dui-spacing-large);
+        display: flex;
+        justify-content: flex-end;
     }
 }

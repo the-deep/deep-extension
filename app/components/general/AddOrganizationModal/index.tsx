@@ -20,10 +20,12 @@ import {
     useLazyRequest,
 } from '#base/utils/restRequest';
 import {
-    MultiResponse,
     Organization,
     OrganizationType,
-} from '../../../types';
+} from '../../../types/organization';
+import {
+    MultiResponse,
+} from '../../../types/common';
 
 import styles from './styles.css';
 

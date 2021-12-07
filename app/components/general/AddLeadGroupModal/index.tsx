@@ -16,7 +16,7 @@ import {
 
 import ProjectContext from '#base/context/ProjectContext';
 import { useLazyRequest } from '#base/utils/restRequest';
-import { LeadGroup } from '../../../types';
+import { LeadGroup } from '../../../types/lead';
 
 type FormType = Partial<Pick<LeadGroup, 'title' | 'project'>>
 type FormSchema = ObjectSchema<FormType>;

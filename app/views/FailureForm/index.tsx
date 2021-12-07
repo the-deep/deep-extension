@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 import { IoIosCloseCircle } from 'react-icons/io';
-import { Button } from '@the-deep/deep-ui';
+import { IoArrowBackCircleSharp } from 'react-icons/io5';
 import route from '../../Base/configs/routes';
 
 import styles from './styles.css';
@@ -16,32 +16,22 @@ function FailureForm(props: FailureFormInterface) {
         className,
     } = props;
 
-    const history = useHistory();
-
-    const handleNewLeads = useCallback(
-        () => {
-            history.push(route.home.path);
-        },
-        [history],
-    );
-
     return (
         <div className={_cs(className, styles.failureForm)}>
-            <h1 className={styles.heading}>
+            <h1 className={styles.failureHeading}>
                 <IoIosCloseCircle />
                 Failure
             </h1>
             <p className={styles.message}>
                 Sorry, leads could not be created at the moment !
             </p>
-            <p>
-                <Button
-                    name="add leads"
-                    onClick={handleNewLeads}
+            <h1 className={styles.failureHeading}>
+                <Link
+                    to={route.index.path}
                 >
-                    Add leads
-                </Button>
-            </p>
+                    <IoArrowBackCircleSharp />
+                </Link>
+            </h1>
         </div>
     );
 }

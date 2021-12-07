@@ -38,7 +38,7 @@ import {
 } from '../../utils/common';
 import {
     OrganizationDetails,
-} from '../../types';
+} from '../../types/organization';
 import {
     TokenQuery,
     LeadOptionsQuery,

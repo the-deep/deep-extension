@@ -12,7 +12,7 @@ import {
     TabPanel,
 } from '@the-deep/deep-ui';
 import { IoArrowBackCircleSharp } from 'react-icons/io5';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import route from '../../Base/configs/routes';
 import AlphaMode from './AlphaMode';
@@ -31,17 +31,10 @@ function LeadSettings(props: Props) {
         className,
     } = props;
 
-    const history = useHistory();
-
     const [activeView, setActiveView] = React.useState<'beta' | 'alpha' | 'localhost' | 'custom' | undefined>('beta');
 
-    const redirectToLead = useCallback(
-        () => {
-            history.push(route.home.path);
-        }, [history],
-    );
-
     const handleSubmit = useCallback(
+        // TODO: Changes of settings needs to be handled
         () => {
             console.log('Handle Settings submit:::');
         }, [],
@@ -67,7 +60,11 @@ function LeadSettings(props: Props) {
                             className={styles.rightHeader}
                             size="large"
                         >
-                            <IoArrowBackCircleSharp onClick={redirectToLead} />
+                            <Link
+                                to={route.index.path}
+                            >
+                                <IoArrowBackCircleSharp />
+                            </Link>
                         </Heading>
                     </div>
 
@@ -124,15 +121,16 @@ function LeadSettings(props: Props) {
                         </Container>
                     </Tabs>
 
-                    <Button
-                        className={styles.saveSettingsButton}
-                        name="save"
-                        // FIXME: Add disabled during pristine later
-                        // disabled={pending}
-                        onClick={handleSubmit}
-                    >
-                        Save
-                    </Button>
+                    <div className={styles.saveSettingsButton}>
+                        <Button
+                            name="save"
+                            // FIXME: Add disabled during pristine later
+                            // disabled={pending}
+                            onClick={handleSubmit}
+                        >
+                            Save
+                        </Button>
+                    </div>
                 </>
             </Card>
         </Container>

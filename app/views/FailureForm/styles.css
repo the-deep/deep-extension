@@ -5,7 +5,7 @@
     flex-grow: 1;
     justify-content: center;
 
-    .heading {
+    .failureHeading {
         color: var(--color-danger);
         font-size: var(--font-size-super-large);
         font-weight: var(--font-weight-bold);

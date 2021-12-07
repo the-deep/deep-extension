@@ -23,15 +23,15 @@ function Routes(props: Props) {
             <Switch>
                 <Route
                     exact
-                    path={routes.home.path}
+                    path={routes.index.path}
                 >
-                    {routes.home.load({ className })}
+                    {routes.index.load({ className })}
                 </Route>
                 <Route
                     exact
-                    path={routes.homeTwo.path}
+                    path={routes.home.path}
                 >
-                    {routes.homeTwo.load({ className })}
+                    {routes.home.load({ className })}
                 </Route>
                 <Route
                     exact

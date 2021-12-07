@@ -2,7 +2,7 @@
     padding: calc(var(--dui-spacing-large) - var(--dui-spacing-medium));
 
     .input {
-        margin: var(--dui-spacing-medium);
+        padding: var(--dui-spacing-medium);
     }
 
     /* .row {

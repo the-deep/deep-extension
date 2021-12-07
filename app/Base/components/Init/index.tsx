@@ -1,5 +1,10 @@
 import React, { useContext, useState, useMemo, useEffect } from 'react';
+import { useQuery, gql } from '@apollo/client';
+import {
+    removeNull,
+} from '@togglecorp/toggle-form';
 
+import { checkErrorCode } from '../../utils/apollo';
 import { UserContext } from '#base/context/UserContext';
 import PreloadMessage from '#base/components/PreloadMessage';
 
@@ -8,6 +13,24 @@ import {
     ProjectContextInterface,
 } from '#base/context/ProjectContext';
 import { Project } from '#base/types/project';
+import { MeQuery, MeQueryVariables } from '#generated/types';
+
+const ME = gql`
+    query Me {
+        me {
+            firstName
+            lastName
+            id
+            email
+            displayName
+            lastActiveProject {
+                id
+                title
+                allowedPermissions
+            }
+        }
+    }
+`;
 
 interface Props {
     className?: string;
@@ -26,15 +49,14 @@ function Init(props: Props) {
     const {
         setUser,
     } = useContext(UserContext);
-    /*
 
-    useQuery<MeQuery>(ME, {
+    useQuery<MeQuery, MeQueryVariables>(ME, {
         fetchPolicy: 'network-only',
         onCompleted: (data) => {
             const safeMe = removeNull(data.me);
             if (safeMe) {
                 setUser(safeMe);
-                setProject(safeMe.lastActiveProject ?? undefined);
+                setProject(safeMe?.lastActiveProject ?? undefined);
             } else {
                 setUser(undefined);
                 setProject(undefined);
@@ -48,16 +70,13 @@ function Init(props: Props) {
                 ['me'],
                 '401',
             );
-
             setErrored(!authError);
             setReady(true);
         },
     });
-    */
+
     useEffect(
         () => {
-            setUser({ id: '1', displayName: 'deep-user' });
-            setProject({ id: '1', title: 'Ramayan', allowedPermissions: [] });
             setErrored(false);
             setReady(true);
         },

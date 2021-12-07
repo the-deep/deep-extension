@@ -12,18 +12,17 @@ const login = wrap({
     },
     visibility: 'is-not-authenticated',
 });
-const home = wrap({
+const index = wrap({
     // NOTE: the first url is /index.html for addons
     path: '/index.html',
-    title: 'home',
+    title: 'index',
     navbarVisibility: true,
     component: lazy(() => import('#views/LeadModal')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
 
-const homeTwo = wrap({
-    // NOTE: the first url is /index.html for addons
+const home = wrap({
     path: '/',
     title: 'home',
     navbarVisibility: true,
@@ -80,8 +79,8 @@ const fourHundredFour = wrap({
 
 const routes = {
     login,
+    index,
     home,
-    homeTwo,
     leadSettings,
     myProfile,
     fourHundredFour,

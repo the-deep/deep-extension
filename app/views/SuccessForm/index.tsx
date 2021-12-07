@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
-import { IoCheckmarkCircle } from 'react-icons/io5';
-import { Button } from '@the-deep/deep-ui';
+import { IoCheckmarkCircle, IoArrowBackCircleSharp } from 'react-icons/io5';
 import route from '../../Base/configs/routes';
 
 import styles from './styles.css';
@@ -16,32 +15,19 @@ function SuccessForm(props: SuccessFormInterface) {
         className,
     } = props;
 
-    const history = useHistory();
-
-    const handleNewLeads = useCallback(
-        () => {
-            history.push(route.home.path);
-        },
-        [history],
-    );
-
     return (
         <div className={_cs(className, styles.successForm)}>
-            <h1 className={styles.heading}>
+            <h1 className={styles.successHeading}>
+                Lead created successfully!
                 <IoCheckmarkCircle />
-                Success
             </h1>
-            <p className={styles.message}>
-                Leads created successfully!
-            </p>
-            <p>
-                <Button
-                    name="add leads"
-                    onClick={handleNewLeads}
+            <h1 className={styles.successHeading}>
+                <Link
+                    to={route.index.path}
                 >
-                    Add more leads
-                </Button>
-            </p>
+                    <IoArrowBackCircleSharp />
+                </Link>
+            </h1>
         </div>
     );
 }

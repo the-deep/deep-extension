@@ -14,7 +14,7 @@ const link = new HttpLink({
     credentials: 'include',
 }) as unknown as ApolloLinkFromClient;
 
-const cookieMiddleware = new ApolloLinkFromClient((operation, forward) => {
+/* const cookieMiddleware = new ApolloLinkFromClient((operation, forward) => {
     // add the authorization to the headers
     operation.setContext(({ headers = {} }) => ({
         headers: {
@@ -25,6 +25,7 @@ const cookieMiddleware = new ApolloLinkFromClient((operation, forward) => {
 
     return forward(operation);
 });
+*/
 
 /*
 const link: ApolloLinkFromClient = ApolloLink.from([
@@ -50,7 +51,6 @@ const link: ApolloLinkFromClient = ApolloLink.from([
 
 const apolloOptions: ApolloClientOptions<NormalizedCacheObject> = {
     link: from([
-        cookieMiddleware,
         link,
     ]),
     cache: new InMemoryCache(),

@@ -5,15 +5,15 @@
     flex-grow: 1;
     justify-content: center;
 
-    .heading {
+    .success-heading {
         color: var(--color-danger);
         font-size: var(--font-size-super-large-alt);
         font-weight: var(--font-weight-bold);
     }
 
-    .message {
+    /* .message {
         margin: var(--spacing-large) 0;
         text-align: center;
         font-size: var(--font-size-large-alt);
-    }
+    } */
 }

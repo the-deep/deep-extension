@@ -9,11 +9,10 @@ const getWebsiteFromUrl = (url) => {
 const emptyObject = {};
 
 // TODO: make common constant for webpage as well
-const EXTENSION_GET_SCREENSHOT_MESSAGE = 'get-screenshot';
-const EXTENSION_SET_TOKEN_MESSAGE = 'set-token';
-const EXTENSION_SET_TOKEN_FG_MESSAGE = 'set-token-fg';
-const EXTENSION_GET_TOKEN_MESSAGE = 'get-token';
-console.log('screenshot taken::>>');
+const EXTENSION_GET_SCREENSHOT_MESSAGE = 'deep_extension_le_get-screenshot';
+const EXTENSION_SET_TOKEN_MESSAGE = 'deep_extension_le_set-token';
+const EXTENSION_SET_TOKEN_FG_MESSAGE = 'deep_extension_le_set-token-fg';
+const EXTENSION_GET_TOKEN_MESSAGE = 'deep_extension_le_get-token';
 
 // Message handler for messages from external source (eg: from website, other extension)
 chrome.runtime.onMessageExternal.addListener((request, sender, reply) => {

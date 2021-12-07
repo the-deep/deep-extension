@@ -17,9 +17,9 @@ import {
     internal,
     SetValueArg,
 } from '@togglecorp/toggle-form';
-import { IoLogoChrome, IoSettings } from 'react-icons/io5';
+import { IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { schema, PartialFormType } from '../../components/LeadInput/schema';
 import {
     LeadOptionsQuery,
@@ -190,12 +190,6 @@ function LeadModal(props: Props) {
         setAuthorOrganizationOptions,
     ] = useState<BasicOrganization[] | undefined | null>();
 
-    const [
-        cookieBox,
-        setCookieBox,
-    ] = useState<undefined | null>();
-    console.log('In cookie center::>>', cookieBox);
-
     const {
         value,
         setValue,
@@ -295,22 +289,12 @@ function LeadModal(props: Props) {
         setValue(newValue, true);
     }, [setValue]);
 
-    const handleLeadSettings = useCallback(
-        () => {
-            history.push(route.leadSettings.path);
-        }, [history],
-    );
-
     useEffect(() => {
         if (chrome.cookies) {
             chrome.cookies.get(
                 {
                     url: 'http://localhost:3000',
                     name: 'deep-development-sessionid',
-                },
-                (cookieValue) => {
-                    setCookieBox(cookieValue);
-                    console.log('The latest cookie value::>>>', cookieValue);
                 },
             );
         }
@@ -336,7 +320,11 @@ function LeadModal(props: Props) {
                                 className={styles.rightHeader}
                                 size="large"
                             >
-                                <IoSettings onClick={handleLeadSettings} />
+                                <Link
+                                    to={route.leadSettings.path}
+                                >
+                                    <IoSettings />
+                                </Link>
                             </Heading>
                         </div>
                         <LeadInput
@@ -359,15 +347,16 @@ function LeadModal(props: Props) {
                             onAssigneeOptionChange={setProjectUserOptions}
                         />
 
-                        <Button
-                            className={styles.saveLeadButton}
-                            name="save"
-                            // FIXME: Add disabled during pristine later
-                            disabled={pending}
-                            onClick={handleSubmit}
-                        >
-                            Save
-                        </Button>
+                        <div className={styles.saveLeadButton}>
+                            <Button
+                                name="save"
+                                // FIXME: Add disabled during pristine later
+                                disabled={pending}
+                                onClick={handleSubmit}
+                            >
+                                Save
+                            </Button>
+                        </div>
                     </>
                 )}
             </Card>

@@ -11,6 +11,13 @@ export interface BasicOrganization {
     };
 }
 
+export interface OrganizationDetails {
+    id: number;
+    shortName?: string;
+    title: string;
+    logo?: string;
+    mergedAs?: BasicElement;
+}
 export interface OrganizationType {
     id: number;
     title: string;
@@ -30,12 +37,4 @@ export interface Organization extends BasicOrganization {
     logo?: number;
     organizationType?: number;
     organizationTypeDisplay: OrganizationType;
-}
-
-export interface OrganizationDetails {
-    id: number;
-    shortName?: string;
-    title: string;
-    logo?: string;
-    mergedAs?: BasicElement;
 }
