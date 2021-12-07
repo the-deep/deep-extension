@@ -1,24 +1,15 @@
 .lead-edit-form {
-    padding: calc(var(--dui-spacing-large) - var(--dui-spacing-medium));
-
-    .input {
-        margin: var(--dui-spacing-medium);
-    }
+    display: flex;
+    flex-direction: column;
+    gap: var(--dui-spacing-medium);
+    padding: var(--dui-spacing-small);
 
     .row {
         display: flex;
+        gap: var(--dui-spacing-medium);
 
         .input {
-            flex-basis: 50%;
-        }
-
-        .nested-row {
-            display: flex;
-            flex-basis: 50%;
-
-            .nested-input {
-                flex-grow: 1;
-            }
+            flex-basis: calc(50% - var(--dui-spacing-medium) / 2);
         }
     }
 }

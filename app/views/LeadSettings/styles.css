@@ -3,32 +3,11 @@
     height: 90vh;
     --width-preview: 560px;
 
-    .form-container {
-        flex-grow: 1;
-        margin: var(--dui-spacing-large);
-        border: var(--dui-width-separator-thin) solid var(--dui-color-separator);
-        overflow-y: auto;
-    }
+    .alpha-form {
+        padding: calc(var(--dui-spacing-large) - var(--dui-spacing-medium));
 
-    .card-head {
-        display: flex;
-        justify-content: space-between;
-
-        .left-header {
-            margin: var(--dui-spacing-large);
+        .input {
+            padding: var(--dui-spacing-medium);
         }
-        .right-header {
-            padding-top: var(--dui-spacing-medium);
-            padding-right: var(--dui-spacing-extra-large);
-        }
-    }
-
-    .settings-container {
-        margin: var(--dui-spacing-large);
-    }
-
-    .save-settings-button {
-        display: flex;
-        justify-content: flex-end;
     }
 }

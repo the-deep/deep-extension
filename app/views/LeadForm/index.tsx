@@ -4,11 +4,10 @@ import {
     randomString,
 } from '@togglecorp/fujs';
 import {
-    Card,
     Button,
     useAlert,
-    Container,
-    Heading,
+    ContainerCard,
+    Link,
 } from '@the-deep/deep-ui';
 import {
     removeNull,
@@ -19,7 +18,7 @@ import {
 } from '@togglecorp/toggle-form';
 import { IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { schema, PartialFormType } from '../../components/LeadInput/schema';
 import {
     LeadOptionsQuery,
@@ -147,7 +146,7 @@ interface Props {
     className?: string;
 }
 
-function LeadModal(props: Props) {
+function LeadForm(props: Props) {
     const {
         className,
     } = props;
@@ -290,78 +289,64 @@ function LeadModal(props: Props) {
     }, [setValue]);
 
     useEffect(() => {
-        if (chrome.cookies) {
+        if (chrome?.cookies) {
             chrome.cookies.get(
                 {
                     url: 'http://localhost:3000',
                     name: 'deep-development-sessionid',
+                }, (cookie) => {
+                    console.info('Obtained cookie:', cookie);
                 },
             );
         }
     }, []);
 
     return (
-        <Container
+        <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
+            heading="Add lead"
+            borderBelowHeader
+            headerActions={(
+                <Link
+                    to={route.leadSettings.path}
+                >
+                    <IoSettings />
+                </Link>
+            )}
+            footerActions={(
+                <Button
+                    name="save"
+                    // FIXME: Add disabled during pristine later
+                    disabled={pending}
+                    onClick={handleSubmit}
+                >
+                    Save
+                </Button>
+            )}
         >
-            <Card
-                className={styles.formContainer}
-            >
-                {projectOptions && (
-                    <>
-                        <div className={styles.cardHead}>
-                            <Heading
-                                className={styles.leftHeader}
-                                size="medium"
-                            >
-                                Add Lead
-                            </Heading>
-                            <Heading
-                                className={styles.rightHeader}
-                                size="large"
-                            >
-                                <Link
-                                    to={route.leadSettings.path}
-                                >
-                                    <IoSettings />
-                                </Link>
-                            </Heading>
-                        </div>
-                        <LeadInput
-                            name={undefined}
-                            pending={pending}
-                            value={value}
-                            onChange={handleLeadChange}
-                            projectId={recentProjectId}
-                            setProjectId={setRecentProjectId}
-                            projectOptions={projectOptions}
-                            setProjectOptions={setProjectOptions}
-                            error={riskyError}
-                            defaultValue={initialValue}
-                            priorityOptions={leadOptions?.leadPriorityOptions?.enumValues}
-                            sourceOrganizationOptions={sourceOrganizationOptions}
-                            onSourceOrganizationOptionsChange={setSourceOrganizationOptions}
-                            authorOrganizationOptions={authorOrganizationOptions}
-                            onAuthorOrganizationOptionsChange={setAuthorOrganizationOptions}
-                            assigneeOptions={projectUserOptions}
-                            onAssigneeOptionChange={setProjectUserOptions}
-                        />
-
-                        <div className={styles.saveLeadButton}>
-                            <Button
-                                name="save"
-                                // FIXME: Add disabled during pristine later
-                                disabled={pending}
-                                onClick={handleSubmit}
-                            >
-                                Save
-                            </Button>
-                        </div>
-                    </>
-                )}
-            </Card>
-        </Container>
+            {projectOptions && (
+                <LeadInput
+                    name={undefined}
+                    pending={pending}
+                    value={value}
+                    onChange={handleLeadChange}
+                    projectId={recentProjectId}
+                    setProjectId={setRecentProjectId}
+                    projectOptions={projectOptions}
+                    setProjectOptions={setProjectOptions}
+                    error={riskyError}
+                    defaultValue={initialValue}
+                    priorityOptions={leadOptions?.leadPriorityOptions?.enumValues}
+                    sourceOrganizationOptions={sourceOrganizationOptions}
+                    onSourceOrganizationOptionsChange={setSourceOrganizationOptions}
+                    authorOrganizationOptions={authorOrganizationOptions}
+                    onAuthorOrganizationOptionsChange={setAuthorOrganizationOptions}
+                    assigneeOptions={projectUserOptions}
+                    onAssigneeOptionChange={setProjectUserOptions}
+                />
+            )}
+        </ContainerCard>
     );
 }
 
-export default LeadModal;
+export default LeadForm;

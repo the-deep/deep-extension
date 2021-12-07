@@ -1,10 +1,8 @@
 import { useContext } from 'react';
 import { generatePath } from 'react-router-dom';
 
-import UserContext from '#base/context/ProjectContext';
-import ProjectContext from '#base/context/ProjectContext';
+import { UserContext, ProjectContext } from '#base/context/ProjectContext';
 import { wrap } from '#base/utils/routes';
-
 
 export interface Attrs {
     [key: string]: string | number | undefined;
@@ -43,9 +41,9 @@ function useRouteMatching(route: RouteData, attrs?: Attrs) {
 
     if (
         visibility === 'is-authenticated'
-            && authenticated
-            && checkPermissions
-            && !checkPermissions(project, skipProjectPermissionCheck)
+        && authenticated
+        && checkPermissions
+        && !checkPermissions(project, skipProjectPermissionCheck)
     ) {
         return undefined;
     }

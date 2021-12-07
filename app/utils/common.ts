@@ -6,6 +6,11 @@ import {
 
 import { EnumEntity } from '../types/common';
 
+export interface BasicEntity {
+    id: string;
+    name: string;
+}
+
 export const genericMemo: (<T>(c: T) => T) = memo;
 
 export function sortByOrder<T extends { order: number }>(data: T[]): T[]
@@ -44,3 +49,6 @@ export const enumKeySelector = <T>(d: EnumEntity<T>) => (
 export const enumLabelSelector = <T extends string | number>(d: EnumEntity<T>) => (
     d.description ?? `${d.name}`
 );
+
+export const basicEntityKeySelector = (d: BasicEntity): string => d.id;
+export const basicEntityLabelSelector = (d: BasicEntity) => d.name;

@@ -334,19 +334,16 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         <div className={_cs(styles.leadEditForm, className)}>
             {pending && <PendingMessage />}
             <NonFieldError error={error} />
-            <div className={styles.row}>
-                <ProjectSelectInput
-                    name="project"
-                    className={styles.input}
-                    label="Project"
-                    value={projectId}
-                    onChange={handleProjectChange}
-                    variant="general"
-                    options={projectOptions}
-                    onOptionsChange={setProjectOptions}
-                    nonClearable
-                />
-            </div>
+            <ProjectSelectInput
+                name="project"
+                className={styles.input}
+                label="Project"
+                value={projectId}
+                onChange={handleProjectChange}
+                options={projectOptions}
+                onOptionsChange={setProjectOptions}
+                nonClearable
+            />
             {value.sourceType === 'WEBSITE' && (
                 <>
                     <TextInput
@@ -465,30 +462,26 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
-            <div className={styles.row}>
-                <SegmentInput
-                    name="priority"
-                    label="Priority"
-                    value={value.priority}
-                    onChange={setFieldValue}
-                    options={priorityOptions ?? undefined}
-                    keySelector={enumKeySelector}
-                    labelSelector={enumLabelSelector}
-                    className={styles.input}
-                    error={error?.priority}
-                    disabled={disabled}
-                />
-                <div className={styles.nestedRow}>
-                    <ConfidentialityInput
-                        name="confidentiality"
-                        className={styles.nestedInput}
-                        value={value.confidentiality ?? undefined}
-                        onChange={setFieldValue}
-                        label="Confidential"
-                        disabled={disabled}
-                    />
-                </div>
-            </div>
+            <ConfidentialityInput
+                className={styles.input}
+                name="confidentiality"
+                value={value.confidentiality ?? undefined}
+                onChange={setFieldValue}
+                label="Confidential"
+                disabled={disabled}
+            />
+            <SegmentInput
+                name="priority"
+                label="Priority"
+                value={value.priority}
+                onChange={setFieldValue}
+                options={priorityOptions ?? undefined}
+                keySelector={enumKeySelector}
+                labelSelector={enumLabelSelector}
+                className={styles.input}
+                error={error?.priority}
+                disabled={disabled}
+            />
             <EmmStats
                 emmTriggers={value.emmTriggers}
                 emmEntities={value.emmEntities}

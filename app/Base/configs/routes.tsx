@@ -17,7 +17,7 @@ const index = wrap({
     path: '/index.html',
     title: 'index',
     navbarVisibility: true,
-    component: lazy(() => import('#views/LeadModal')),
+    component: lazy(() => import('#views/LeadForm')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
@@ -26,7 +26,7 @@ const home = wrap({
     path: '/',
     title: 'home',
     navbarVisibility: true,
-    component: lazy(() => import('#views/LeadModal')),
+    component: lazy(() => import('#views/LeadForm')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
