@@ -288,18 +288,26 @@ function LeadForm(props: Props) {
         setValue(newValue, true);
     }, [setValue]);
 
+    const [csrfToken, setCsrfToken] = useState<string | undefined>();
+    const [csrfTokenLoaded, setCsrfTokenLoaded] = useState(false);
+
     useEffect(() => {
-        if (chrome?.cookies) {
-            chrome.cookies.get(
-                {
-                    url: 'http://localhost:3000',
-                    name: 'deep-development-sessionid',
-                }, (cookie) => {
-                    console.info('Obtained cookie:', cookie);
-                },
-            );
-        }
+        chrome.cookies.get(
+            {
+                url: 'http://localhost:3000',
+                name: 'deep-development-csrftoken',
+            }, (cookie: { value: string } | undefined) => {
+                if (cookie) {
+                    setCsrfToken(cookie.value);
+                }
+                setCsrfTokenLoaded(true);
+            },
+        );
     }, []);
+
+    if (!csrfTokenLoaded) {
+        return null;
+    }
 
     return (
         <ContainerCard
@@ -326,6 +334,7 @@ function LeadForm(props: Props) {
         >
             {projectOptions && (
                 <LeadInput
+                    csrfToken={csrfToken}
                     name={undefined}
                     pending={pending}
                     value={value}

@@ -29,12 +29,10 @@ const base = {
         default_popup: 'index.html',
     },
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
-    host_permissions: ['http://localhost:3000'],
+    host_permissions: ['<all_urls>'],
     permissions: [
         'storage',
         'cookies',
-        '<all_urls>',
-        'http://localhost:3000',
         'activeTab',
     ],
     icons: {

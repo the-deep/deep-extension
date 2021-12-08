@@ -118,6 +118,7 @@ interface Props<N extends string | number | undefined> {
     // eslint-disable-next-line max-len
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
+    csrfToken: string | undefined;
 }
 
 function LeadInput<N extends string | number | undefined>(props: Props<N>) {
@@ -142,6 +143,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         onAuthorOrganizationOptionsChange,
         assigneeOptions,
         onAssigneeOptionChange,
+        csrfToken,
     } = props;
 
     const error = getErrorObject(riskyError);
@@ -227,6 +229,11 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         method: 'POST',
         url: 'server://v2/web-info-data/',
         body: (ctx) => ctx,
+        other: () => ({
+            headers: {
+                'X-CSRFToken': csrfToken,
+            },
+        }),
         onSuccess: (response, ctx) => {
             handleInfoAutoFill({
                 date: ctx.date,
@@ -242,21 +249,18 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
     const {
         pending: rawWebInfoPending,
         trigger: getRawWebInfo,
-    } = useLazyRequest<RawWebInfo, { url: string; isFile: boolean, token: string }>({
+    } = useLazyRequest<RawWebInfo, { url: string; token: string }>({
         method: 'GET',
         url: 'serverless://web-info-extract/',
         query: (ctx) => ({ url: ctx.url }),
         other: (ctx) => ({
             headers: {
                 Authorization: `Bearer ${ctx.token}`,
+                'X-CSRFToken': csrfToken,
             },
         }),
         onSuccess: (response, ctx) => {
-            if (ctx.isFile) {
-                handleInfoAutoFill({
-                    title: response.title,
-                });
-            } else {
+            if (response) {
                 getWebInfo({
                     url: ctx.url,
                     title: response.title,
@@ -266,6 +270,8 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     sourceRaw: response.sourceRaw,
                     authorRaw: response.authorRaw,
                 });
+            } else {
+                console.error('No response found for getRawWebInfo::');
             }
         },
         failureHeader: 'Raw Web Info Extract',
@@ -281,10 +287,9 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     return;
                 }
 
-                if (value.sourceType === 'WEBSITE' && value.url) {
+                if (value.url) {
                     getRawWebInfo({
                         url: value.url,
-                        isFile: false,
                         token,
                     });
                 } else {
@@ -344,40 +349,36 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                 onOptionsChange={setProjectOptions}
                 nonClearable
             />
-            {value.sourceType === 'WEBSITE' && (
-                <>
-                    <TextInput
-                        className={styles.input}
-                        label="URL"
-                        name="url"
-                        value={value.url}
-                        onChange={setFieldValue}
-                        error={error?.url}
-                        readOnly={!!value.id}
-                        disabled={disabled}
-                        actions={(
-                            <QuickActionButton
-                                name="leadExtract"
-                                variant="action"
-                                onClick={handleLeadDataExtract}
-                                title="Auto-fill lead information"
-                                disabled={disabled}
-                            >
-                                <IoEye />
-                            </QuickActionButton>
-                        )}
-                    />
-                    <TextInput
-                        className={styles.input}
-                        label="Website"
-                        name="website"
-                        value={value.website}
-                        onChange={setFieldValue}
-                        error={error?.website}
-                        disabled={disabled}
-                    />
-                </>
-            )}
+            <TextInput
+                className={styles.input}
+                label="URL"
+                name="url"
+                value={value.url}
+                onChange={setFieldValue}
+                error={error?.url}
+                readOnly={!!value.id}
+                disabled={disabled}
+                actions={(
+                    <QuickActionButton
+                        name="leadExtract"
+                        variant="action"
+                        onClick={handleLeadDataExtract}
+                        title="Auto-fill lead information"
+                        disabled={!value.url}
+                    >
+                        <IoEye />
+                    </QuickActionButton>
+                )}
+            />
+            <TextInput
+                className={styles.input}
+                label="Website"
+                name="website"
+                value={value.website}
+                onChange={setFieldValue}
+                error={error?.website}
+                disabled={disabled}
+            />
             <TextInput
                 className={styles.input}
                 label="Title"

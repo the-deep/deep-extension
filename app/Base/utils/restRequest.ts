@@ -13,17 +13,6 @@ import {
     // reactAppApiHttps,
 } from '../configs/restRequest';
 
-function getCookie(name: string) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-
-    if (parts.length === 2) {
-        const part = parts.pop();
-        return part && part.split(';').shift();
-    }
-    return undefined;
-}
-
 function getVersionedUrl(endpoint: string, url: string) {
     const versionString = '/v2';
     if (!url.startsWith(versionString)) {
@@ -165,15 +154,10 @@ export const processDeepOptions: DeepContextInterface['transformOptions'] = (
             ...otherOptions,
         };
     }
-
+    console.warn(headers, finalOptions);
+    /*
     const isInternalRequest = url.startsWith(serverPrefix);
     if (isInternalRequest) {
-        /*
-        // TODO: enable this after the feature is enabled in server
-        const csrftoken = reactAppApiHttps === 'https'
-            ? getCookie(`__Secure-deep-${process.env.REACT_APP_DEEP_ENVIRONMENT}-csrftoken`)
-            : getCookie(`deep-${process.env.REACT_APP_DEEP_ENVIRONMENT}-csrftoken`);
-       */
         const csrftoken = getCookie(`deep-${process.env.REACT_APP_DEEP_ENVIRONMENT}-csrftoken`);
 
         finalOptions.credentials = 'include';
@@ -181,6 +165,7 @@ export const processDeepOptions: DeepContextInterface['transformOptions'] = (
             finalOptions.headers['X-CSRFToken'] = csrftoken;
         }
     }
+    */
 
     return finalOptions;
 };
