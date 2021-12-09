@@ -34,6 +34,7 @@ const base = {
         'storage',
         'cookies',
         'activeTab',
+        'tabs',
         '<all_urls>',
     ],
     icons: {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useLazyQuery, gql } from '@apollo/client';
 import {
     _cs,
@@ -119,6 +119,7 @@ interface Props<N extends string | number | undefined> {
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
     csrfToken: string | undefined;
+    currentTabInfo: { url: string, title: string } | undefined;
 }
 
 function LeadInput<N extends string | number | undefined>(props: Props<N>) {
@@ -144,6 +145,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
         assigneeOptions,
         onAssigneeOptionChange,
         csrfToken,
+        currentTabInfo,
     } = props;
 
     const error = getErrorObject(riskyError);
@@ -334,6 +336,15 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
     ]);
 
     const pending = pendingFromProps || pendingUserToken || webInfoPending || rawWebInfoPending;
+
+    useEffect(() => {
+        if (currentTabInfo) {
+            handleInfoAutoFill({
+                url: currentTabInfo?.url,
+                title: currentTabInfo?.title,
+            });
+        }
+    }, [currentTabInfo, handleInfoAutoFill]);
 
     return (
         <div className={_cs(styles.leadEditForm, className)}>

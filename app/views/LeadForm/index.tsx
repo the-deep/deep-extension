@@ -290,6 +290,7 @@ function LeadForm(props: Props) {
 
     const [csrfToken, setCsrfToken] = useState<string | undefined>();
     const [csrfTokenLoaded, setCsrfTokenLoaded] = useState(false);
+    const [currentTabInfo, setCurrentTabInfo] = useState<string | undefined>();
 
     useEffect(() => {
         chrome.cookies.get(
@@ -304,6 +305,15 @@ function LeadForm(props: Props) {
                 setCsrfTokenLoaded(true);
             },
         );
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true,
+        }, (tabs: string[] | undefined) => {
+            const tabURL = tabs && tabs[0];
+            if (tabURL) {
+                setCurrentTabInfo(tabURL);
+            }
+        });
     }, []);
 
     if (!csrfTokenLoaded) {
@@ -336,6 +346,7 @@ function LeadForm(props: Props) {
             {projectOptions && (
                 <LeadInput
                     csrfToken={csrfToken}
+                    currentTabInfo={currentTabInfo}
                     name={undefined}
                     pending={pending}
                     value={value}
