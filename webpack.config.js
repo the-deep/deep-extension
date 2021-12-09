@@ -29,11 +29,12 @@ const base = {
         default_popup: 'index.html',
     },
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
-    host_permissions: ['<all_urls>'],
+    // host_permissions: ['<all_urls>'],
     permissions: [
         'storage',
         'cookies',
         'activeTab',
+        '<all_urls>',
     ],
     icons: {
         32: 'icons/logo-32.png',

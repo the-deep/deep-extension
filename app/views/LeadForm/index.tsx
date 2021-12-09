@@ -297,6 +297,7 @@ function LeadForm(props: Props) {
                 url: 'http://localhost:3000',
                 name: 'deep-development-csrftoken',
             }, (cookie: { value: string } | undefined) => {
+                console.log('Obtained cookie::>>', cookie);
                 if (cookie) {
                     setCsrfToken(cookie.value);
                 }
