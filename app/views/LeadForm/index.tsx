@@ -290,7 +290,10 @@ function LeadForm(props: Props) {
 
     const [csrfToken, setCsrfToken] = useState<string | undefined>();
     const [csrfTokenLoaded, setCsrfTokenLoaded] = useState(false);
-    const [currentTabInfo, setCurrentTabInfo] = useState<string | undefined>();
+    const [
+        currentTabInfo,
+        setCurrentTabInfo,
+    ] = useState<{ url: string, title: string } | undefined>();
 
     useEffect(() => {
         chrome.cookies.get(
@@ -308,8 +311,8 @@ function LeadForm(props: Props) {
         chrome.tabs.query({
             active: true,
             currentWindow: true,
-        }, (tabs: string[] | undefined) => {
-            const tabURL = tabs && tabs[0];
+        }, (tabs: { url: string, title: string }[] | undefined) => {
+            const tabURL: { url: string, title: string } | undefined = tabs && tabs[0];
             if (tabURL) {
                 setCurrentTabInfo(tabURL);
             }

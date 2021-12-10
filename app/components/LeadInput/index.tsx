@@ -273,7 +273,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     authorRaw: response.authorRaw,
                 });
             } else {
-                console.error('No response found for getRawWebInfo::');
+                console.warn('No response found for getRawWebInfo::');
             }
         },
         failureHeader: 'Raw Web Info Extract',
