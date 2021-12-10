@@ -15,9 +15,14 @@ import route from '../../Base/configs/routes';
 import useStoredState from '#base/hooks/useLocalStorage';
 import styles from './styles.css';
 
+type ConfigKeys = 'prod' | 'alpha' | 'custom';
+
 interface Props {
     className?: string;
 }
+
+const segmentKeySelector = (data: { key: ConfigKeys; }) => data.key;
+const segmentLabelSelector = (data: { name: string; }) => data.name;
 
 const productionValues = {
     webServer: 'https://beta.thedeep.io',
@@ -30,8 +35,6 @@ const alphaValues = {
     apiServer: 'https://api.alpha.thedeep.io',
     serverLess: 'https://services-alpha.thedeep.io',
 };
-
-type ConfigKeys = 'prod' | 'alpha' | 'custom';
 
 const serverOptions: { key: ConfigKeys; name: string }[] = [
     {
@@ -157,8 +160,8 @@ function LeadSettings(props: Props) {
                     value={activeView}
                     onChange={handleServerEnvironment}
                     options={serverOptions}
-                    keySelector={(d) => d.key}
-                    labelSelector={(d) => d.name}
+                    keySelector={segmentKeySelector}
+                    labelSelector={segmentLabelSelector}
                 />
                 <Card className={_cs(styles.alphaForm, className)}>
                     <TextInput
