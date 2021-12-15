@@ -298,8 +298,8 @@ function LeadForm(props: Props) {
     useEffect(() => {
         chrome.cookies.get(
             {
-                url: 'http://localhost:3000',
-                name: 'deep-development-csrftoken',
+                url: 'https://alpha-2-api.thedeep.io',
+                name: 'deep-alpha-2-csrftoken',
             }, (cookie: { value: string } | undefined) => {
                 console.log('Obtained cookie::>>', cookie);
                 if (cookie) {
