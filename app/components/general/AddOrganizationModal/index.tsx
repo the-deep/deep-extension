@@ -109,7 +109,7 @@ function AddOrganizationModal(props: Props) {
     return (
         <Modal
             className={styles.addOrganizationModal}
-            heading="Title"
+            heading="Add Organization"
             onCloseButtonClick={onModalClose}
             bodyClassName={styles.modalBody}
             footerActions={(
@@ -120,7 +120,7 @@ function AddOrganizationModal(props: Props) {
                     disabled={pristine || pending}
                     onClick={handleSubmit}
                 >
-                    save
+                    Save
                 </Button>
             )}
         >
@@ -131,8 +131,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.title}
                 error={error?.title}
-                label="titleLabel"
-                placeholder="titleLabel"
+                label="Organization Title"
+                placeholder="Title"
                 autoFocus
             />
             <TextInput
@@ -141,8 +141,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.shortName}
                 error={error?.shortName}
-                label="shortName"
-                placeholder="shortName"
+                label="Organization ShortName"
+                placeholder="ShortName"
             />
             <TextInput
                 name="url"
@@ -150,8 +150,8 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.url}
                 error={error?.url}
-                label="url"
-                placeholder="url"
+                label="Url"
+                placeholder="Url"
             />
             <SelectInput
                 name="organizationType"
@@ -161,8 +161,8 @@ function AddOrganizationModal(props: Props) {
                 error={error?.organizationType}
                 keySelector={organizationTypeKeySelector}
                 labelSelector={organizationTypeLabelSelector}
-                label="organizationType"
-                placeholder="organizationType"
+                label="Organization Type"
+                placeholder="Type"
             />
         </Modal>
     );

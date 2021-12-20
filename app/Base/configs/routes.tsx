@@ -15,27 +15,27 @@ const login = wrap({
 const index = wrap({
     // NOTE: the first url is /index.html for addons
     path: '/index.html',
-    title: 'index',
+    title: 'Index',
     navbarVisibility: true,
-    component: lazy(() => import('#views/LeadForm')),
+    component: lazy(() => import('#views/SourceForm')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
 
 const home = wrap({
     path: '/',
-    title: 'home',
+    title: 'Home',
     navbarVisibility: true,
-    component: lazy(() => import('#views/LeadForm')),
+    component: lazy(() => import('#views/SourceForm')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
 
 const leadSettings = wrap({
     path: '/leadSettings/',
-    title: 'LeadSettings',
+    title: 'Source Settings',
     navbarVisibility: true,
-    component: lazy(() => import('#views/LeadSettings')),
+    component: lazy(() => import('#views/SourceSettings')),
     componentProps: {},
     visibility: 'is-authenticated',
 });
@@ -59,22 +59,13 @@ const successForm = wrap({
     visibility: 'is-authenticated',
 });
 
-const failureForm = wrap({
-    path: '/failure/',
-    title: 'Failure Submission',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/FailureForm')),
-    componentProps: {},
-    visibility: 'is-authenticated',
-});
-
 const fourHundredFour = wrap({
     path: '',
     title: '404',
     component: lazy(() => import('#views/FourHundredFour')),
     componentProps: {},
-    visibility: 'is-authenticated',
-    navbarVisibility: true,
+    visibility: 'is-anything',
+    navbarVisibility: false,
 });
 
 const routes = {
@@ -85,6 +76,5 @@ const routes = {
     myProfile,
     fourHundredFour,
     successForm,
-    failureForm,
 };
 export default routes;

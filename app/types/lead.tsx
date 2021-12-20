@@ -82,26 +82,3 @@ export interface LeadOptions {
     emmRiskFactors?: EmmEntity[];
     emmKeywords?: EmmEntity[];
 }
-
-export interface LeadSummary {
-    total: number;
-    totalEntries: number;
-    totalVerifiedEntries: number;
-    totalUnverifiedEntries: number;
-}
-
-export interface LeadGroup {
-    id: number;
-    createdAt: string;
-    modifiedAt: string;
-    createdBy: number;
-    modifiedBy: number;
-    createdByName: string;
-    modifiedByName: string;
-    clientId?: string;
-    versionId: number;
-    leads?: Lead[];
-    noOfLeads?: number;
-    title: string;
-    project?: number;
-}

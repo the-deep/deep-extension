@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import { _cs } from '@togglecorp/fujs';
 
 import {
@@ -11,8 +11,10 @@ import {
 import { IoArrowBackCircleSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
-import route from '../../Base/configs/routes';
-import useStoredState from '#base/hooks/useLocalStorage';
+import route from '#base/configs/routes';
+import {
+    ServerContext,
+} from '#base/context/serverContext';
 import styles from './styles.css';
 
 type ConfigKeys = 'prod' | 'alpha' | 'custom';
@@ -31,7 +33,7 @@ const productionValues = {
 };
 
 const alphaValues = {
-    webServer: 'https://alpha.thedeep.io',
+    webServer: 'https://alpha-2-api.thedeep.io',
     apiServer: 'https://api.alpha.thedeep.io',
     serverLess: 'https://services-alpha.thedeep.io',
 };
@@ -51,29 +53,12 @@ const serverOptions: { key: ConfigKeys; name: string }[] = [
     },
 ];
 
-interface SelectedConfig {
-    activeConfig: 'prod' | 'alpha' | 'custom';
-    customWebAddress?: string;
-    customApiAddress?: string;
-    customServerlessAddress?: string;
-}
-
-const defaultServerConfig = {
-    activeConfig: 'custom' as const,
-    customWebAddress: 'http://localhost:3000',
-    customApiAddress: 'http://localhost:8000',
-    customServerlessAddress: 'http://local.the-deep.io',
-};
-
-function LeadSettings(props: Props) {
+function SourceSettings(props: Props) {
     const {
         className,
     } = props;
 
-    const [
-        selectedConfig,
-        setSelectedConfig,
-    ] = useStoredState<SelectedConfig>('serverConfig', defaultServerConfig);
+    const { selectedConfig, setSelectedConfig } = useContext(ServerContext);
 
     const [
         activeView,
@@ -166,7 +151,7 @@ function LeadSettings(props: Props) {
                 <Card className={_cs(styles.alphaForm, className)}>
                     <TextInput
                         className={styles.input}
-                        label="WEB SERVER ADDRESS"
+                        label="Web Server Address"
                         name="webServerAddress"
                         value={webServerState}
                         onChange={setWebServerState}
@@ -174,7 +159,7 @@ function LeadSettings(props: Props) {
                     />
                     <TextInput
                         className={styles.input}
-                        label="API SERVER ADDRESS"
+                        label="Api Server Address"
                         name="apiServerAddress"
                         value={apiServerState}
                         onChange={setApiServerState}
@@ -182,8 +167,8 @@ function LeadSettings(props: Props) {
                     />
                     <TextInput
                         className={styles.input}
-                        label="SERVERLESS SERVER ADDRESS"
-                        name="serverLessServerAddress"
+                        label="Serverless Address"
+                        name="serverLessAddress"
                         value={serverlessState}
                         onChange={setServerlessState}
                         readOnly={disableInput}
@@ -194,4 +179,4 @@ function LeadSettings(props: Props) {
     );
 }
 
-export default LeadSettings;
+export default SourceSettings;

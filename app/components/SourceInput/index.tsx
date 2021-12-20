@@ -122,7 +122,7 @@ interface Props<N extends string | number | undefined> {
     currentTabInfo: { url: string, title: string } | undefined;
 }
 
-function LeadInput<N extends string | number | undefined>(props: Props<N>) {
+function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     const {
         name,
         className,
@@ -165,6 +165,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
         onChange((oldValues = defaultValue) => {
             const newValues = produce(oldValues, (safeValues) => {
+                console.log('Web scrapped values::>>', webInfo);
                 if (webInfo.date) {
                     // eslint-disable-next-line no-param-reassign
                     safeValues.publishedOn = webInfo.date;
@@ -272,8 +273,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                     sourceRaw: response.sourceRaw,
                     authorRaw: response.authorRaw,
                 });
-            } else {
-                console.warn('No response found for getRawWebInfo::');
             }
         },
         failureHeader: 'Raw Web Info Extract',
@@ -294,9 +293,6 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                         url: value.url,
                         token,
                     });
-                } else {
-                    // eslint-disable-next-line no-console
-                    console.error('No attachment or URL found in lead to be extracted');
                 }
             },
         },
@@ -411,7 +407,7 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
                 />
                 <ProjectUserSelectInput
                     className={styles.input}
-                    disabled={pendingLeadOptions || disabled}
+                    disabled={pendingLeadOptions || disabled || !projectId}
                     error={error?.assignee}
                     label="Assignee"
                     name="assignee"
@@ -508,4 +504,4 @@ function LeadInput<N extends string | number | undefined>(props: Props<N>) {
     );
 }
 
-export default LeadInput;
+export default SourceInput;

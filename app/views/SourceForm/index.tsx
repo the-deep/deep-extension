@@ -19,7 +19,7 @@ import {
 import { IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
-import { schema, PartialFormType } from '../../components/LeadInput/schema';
+import { schema, PartialFormType } from '../../components/SourceInput/schema';
 import {
     LeadOptionsQuery,
     LeadOptionsQueryVariables,
@@ -29,19 +29,22 @@ import {
     RecentProjectQuery,
     RecentProjectQueryVariables,
 } from '#generated/types';
-import { UserContext } from '../../Base/context/UserContext';
+import { UserContext } from '#base/context/UserContext';
+import {
+    ServerContext,
+} from '#base/context/serverContext';
 import { BasicOrganization } from '../../components/selections/NewOrganizationSelectInput';
 import { BasicProject } from '../../components/selections/ProjectSelectInput';
 import { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
-import LeadInput from '../../components/LeadInput';
-import { transformToFormError, ObjectError } from '../../Base/utils/errorTransform';
-import route from '../../Base/configs/routes';
+import SourceInput from '../../components/SourceInput';
+import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
+import route from '#base/configs/routes';
 
 import styles from './styles.css';
 
 // TODO: Show attachment's title and link if lead is attachment type
 
-const LEAD_OPTIONS = gql`
+const SOURCE_OPTIONS = gql`
     query LeadOptions {
         leadPriorityOptions: __type(name: "LeadPriorityEnum") {
             enumValues {
@@ -52,7 +55,7 @@ const LEAD_OPTIONS = gql`
     }
 `;
 
-const LEAD_FRAGMENT = gql`
+const SOURCE_FRAGMENT = gql`
     fragment LeadResponse on LeadType {
         id
         title
@@ -112,13 +115,14 @@ const LEAD_FRAGMENT = gql`
     }
 `;
 
-const LEAD_CREATE = gql`
-    ${LEAD_FRAGMENT}
+const SOURCE_CREATE = gql`
+    ${SOURCE_FRAGMENT}
     mutation LeadCreate(
         $projectId: ID!,
         $data: LeadInputType!,
     ) {
         project(id: $projectId) {
+            id
             leadCreate(data: $data) {
                 ok
                 errors
@@ -146,12 +150,13 @@ interface Props {
     className?: string;
 }
 
-function LeadForm(props: Props) {
+function SourceForm(props: Props) {
     const {
         className,
     } = props;
     const alert = useAlert();
     const { user } = useContext(UserContext);
+    const { selectedConfig } = useContext(ServerContext);
 
     const history = useHistory();
 
@@ -195,14 +200,15 @@ function LeadForm(props: Props) {
         error: riskyError,
         validate,
         setError,
-        // pristine,
+        pristine,
     } = useForm(schema, initialValue);
+    console.log('Pristine state::>', pristine);
 
     const {
         loading: leadOptionsLoading,
         data: leadOptions,
     } = useQuery<LeadOptionsQuery, LeadOptionsQueryVariables>(
-        LEAD_OPTIONS,
+        SOURCE_OPTIONS,
     );
 
     const {
@@ -226,9 +232,8 @@ function LeadForm(props: Props) {
             loading: leadCreatePending,
         },
     ] = useMutation<LeadCreateMutation, LeadCreateMutationVariables>(
-        LEAD_CREATE,
+        SOURCE_CREATE,
         {
-            refetchQueries: ['ProjectSources'],
             onCompleted: (response) => {
                 if (!response?.project?.leadCreate) {
                     return;
@@ -243,10 +248,10 @@ function LeadForm(props: Props) {
                     setError(formError);
                 } else if (ok) {
                     history.push(route.successForm.path);
-                    alert.show(
-                        'Successfully created lead!',
-                        { variant: 'success' },
-                    );
+                    // alert.show(
+                    //    'Successfully created lead!',
+                    //    { variant: 'success' },
+                    // ) ;
                 }
             },
             onError: (errors) => {
@@ -265,7 +270,6 @@ function LeadForm(props: Props) {
 
     const handleSubmit = useCallback(() => {
         if (!recentProjectId) {
-            console.error('No project defined.');
             return;
         }
         const submit = createSubmitHandler(
@@ -285,7 +289,7 @@ function LeadForm(props: Props) {
     }, [setError, validate, createLead, recentProjectId]);
 
     const handleLeadChange = useCallback((newValue: SetValueArg<PartialFormType>) => {
-        setValue(newValue, true);
+        setValue(newValue);
     }, [setValue]);
 
     const [csrfToken, setCsrfToken] = useState<string | undefined>();
@@ -298,10 +302,9 @@ function LeadForm(props: Props) {
     useEffect(() => {
         chrome.cookies.get(
             {
-                url: 'https://alpha-2-api.thedeep.io',
-                name: 'deep-alpha-2-csrftoken',
+                url: selectedConfig.customWebAddress,
+                name: `deep-${selectedConfig.activeConfig}-2-csrftoken`,
             }, (cookie: { value: string } | undefined) => {
-                console.log('Obtained cookie::>>', cookie);
                 if (cookie) {
                     setCsrfToken(cookie.value);
                 }
@@ -317,7 +320,7 @@ function LeadForm(props: Props) {
                 setCurrentTabInfo(tabURL);
             }
         });
-    }, []);
+    }, [selectedConfig.activeConfig, selectedConfig.customWebAddress]);
 
     if (!csrfTokenLoaded) {
         return null;
@@ -326,7 +329,7 @@ function LeadForm(props: Props) {
     return (
         <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
-            heading="Add lead"
+            heading="Add Source"
             borderBelowHeader
             headerActions={(
                 <Link
@@ -347,7 +350,7 @@ function LeadForm(props: Props) {
             )}
         >
             {projectOptions && (
-                <LeadInput
+                <SourceInput
                     csrfToken={csrfToken}
                     currentTabInfo={currentTabInfo}
                     name={undefined}
@@ -373,4 +376,4 @@ function LeadForm(props: Props) {
     );
 }
 
-export default LeadForm;
+export default SourceForm;

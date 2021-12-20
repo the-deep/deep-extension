@@ -13,6 +13,11 @@ import PreloadMessage from '#base/components/PreloadMessage';
 import browserHistory from '#base/configs/history';
 import sentryConfig from '#base/configs/sentry';
 import { UserContext, UserContextInterface } from '#base/context/UserContext';
+import {
+    ServerContext,
+    ServerContextInterface,
+} from '#base/context/serverContext';
+import useStoredState from './hooks/useLocalStorage';
 import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
 import AuthPopup from '#base/components/AuthPopup';
 import { sync } from '#base/hooks/useAuthSync';
@@ -43,6 +48,13 @@ if (trackingId) {
     });
 }
 
+interface SelectedConfig {
+    activeConfig: 'prod' | 'alpha' | 'custom';
+    customWebAddress?: string;
+    customApiAddress?: string;
+    customServerlessAddress?: string;
+}
+
 const apolloClient = new ApolloClient(apolloConfig);
 
 const requestContextValue = {
@@ -52,10 +64,22 @@ const requestContextValue = {
     transformError: processDeepError,
 };
 
+const defaultServerConfig = {
+    activeConfig: 'custom' as const,
+    customWebAddress: 'https://alpha-2-api.thedeep.io',
+    customApiAddress: 'https://api.alpha.thedeep.io',
+    customServerlessAddress: 'https://services-alpha.thedeep.io',
+};
+
 function Base() {
     const [user, setUser] = useState<User | undefined>();
 
     const [navbarVisibility, setNavbarVisibility] = useState(false);
+
+    const [
+        selectedConfig,
+        setSelectedConfig,
+    ] = useStoredState<SelectedConfig>('serverConfig', defaultServerConfig);
 
     const authenticated = !!user;
 
@@ -104,6 +128,14 @@ function Base() {
             setNavbarVisibility,
         }),
         [navbarVisibility, setNavbarVisibility],
+    );
+
+    const serverContext: ServerContextInterface = useMemo(
+        () => ({
+            selectedConfig,
+            setSelectedConfig,
+        }),
+        [selectedConfig, setSelectedConfig],
     );
 
     const [alerts, setAlerts] = React.useState<AlertOptions[]>([]);
@@ -181,21 +213,23 @@ function Base() {
                 <RequestContext.Provider value={requestContextValue}>
                     <ApolloProvider client={apolloClient}>
                         <UserContext.Provider value={userContext}>
-                            <NavbarContext.Provider value={navbarContext}>
-                                <AlertContext.Provider value={alertContext}>
-                                    <AuthPopup />
-                                    <AlertContainer className={styles.alertContainer} />
-                                    <Router history={browserHistory}>
-                                        <Init
-                                            className={styles.init}
-                                        >
-                                            <Routes
-                                                className={styles.view}
-                                            />
-                                        </Init>
-                                    </Router>
-                                </AlertContext.Provider>
-                            </NavbarContext.Provider>
+                            <ServerContext.Provider value={serverContext}>
+                                <NavbarContext.Provider value={navbarContext}>
+                                    <AlertContext.Provider value={alertContext}>
+                                        <AuthPopup />
+                                        <AlertContainer className={styles.alertContainer} />
+                                        <Router history={browserHistory}>
+                                            <Init
+                                                className={styles.init}
+                                            >
+                                                <Routes
+                                                    className={styles.view}
+                                                />
+                                            </Init>
+                                        </Router>
+                                    </AlertContext.Provider>
+                                </NavbarContext.Provider>
+                            </ServerContext.Provider>
                         </UserContext.Provider>
                     </ApolloProvider>
                 </RequestContext.Provider>

@@ -14,41 +14,6 @@ const link = new HttpLink({
     credentials: 'include',
 }) as unknown as ApolloLinkFromClient;
 
-/* const cookieMiddleware = new ApolloLinkFromClient((operation, forward) => {
-    // add the authorization to the headers
-    operation.setContext(({ headers = {} }) => ({
-        headers: {
-            ...headers,
-            testHeader: 'test',
-        },
-    }));
-
-    return forward(operation);
-});
-*/
-
-/*
-const link: ApolloLinkFromClient = ApolloLink.from([
-    new RetryLink(),
-    ApolloLink.split(
-        (operation) => operation.getContext().hasUpload,
-        createUploadLink({
-            uri: GRAPHQL_ENDPOINT,
-            credentials: 'include',
-        }) as unknown as ApolloLink,
-        ApolloLink.from([
-            new RestLink({
-                uri: 'https://osmnames.idmcdb.org',
-            }) as unknown as ApolloLink,
-            new BatchHttpLink({
-                uri: GRAPHQL_ENDPOINT,
-                credentials: 'include',
-            }),
-        ]),
-    ),
-]) as unknown as ApolloLinkFromClient;
-*/
-
 const apolloOptions: ApolloClientOptions<NormalizedCacheObject> = {
     link: from([
         link,

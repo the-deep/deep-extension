@@ -55,19 +55,13 @@ function Routes(props: Props) {
                     exact
                     path={routes.successForm.path}
                 >
-                    {routes.successForm.load({ className: undefined })}
-                </Route>
-                <Route
-                    exact
-                    path={routes.failureForm.path}
-                >
-                    {routes.failureForm.load({ className: undefined })}
+                    {routes.successForm.load({})}
                 </Route>
                 <Route
                     exact
                     path={routes.fourHundredFour.path}
                 >
-                    {routes.fourHundredFour.load({ className: undefined })}
+                    {routes.fourHundredFour.load({})}
                 </Route>
             </Switch>
         </Suspense>
