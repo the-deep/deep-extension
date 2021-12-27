@@ -1,57 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title><%= process.env.MY_APP %></title>
-        <style>
-            html, body {
-                position: relative;
-                margin: 0;
-                padding: 0;
-                font-family: 'Source Sans Pro', sans-serif;
-                background-color: 'var(--dui-color-background)';
-            }
 
-            body {
-                display: flex;
-                overflow-y: auto;
-                min-height: 640px;
-                min-width: 512px;
-            }
+<head>
+    <meta charset="utf-8" />
+    <meta name="referrer" content="origin">
+    <title>
+        <%= process.env.MY_APP %>
+    </title>
+    <style>
+        html,
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: 'var(--dui-color-background)';
+        }
 
-            * {
-                box-sizing: border-box;
-            }
+        body {
+            display: flex;
+            overflow-y: auto;
+            min-height: 640px;
+            min-width: 512px;
+        }
 
-            ::-webkit-scrollbar {
-                width: var(--dui-width-scrollbar);
-                height: var(--dui-width-scrollbar);
-                background-color: var(--dui-color-background-scrollbar);
-            }
+        * {
+            box-sizing: border-box;
+        }
 
-            ::-webkit-scrollbar-track {
-                background-color: var(--dui-color-background-scrollbar);
-            }
+        ::-webkit-scrollbar {
+            width: var(--dui-width-scrollbar);
+            height: var(--dui-width-scrollbar);
+            background-color: var(--dui-color-background-scrollbar);
+        }
 
-            ::-webkit-scrollbar-thumb {
-                border-radius: var(--dui-radius-scrollbar-border);
-                background-color: var(--dui-color-foreground-scrollbar);
-            }
+        ::-webkit-scrollbar-track {
+            background-color: var(--dui-color-background-scrollbar);
+        }
 
-            #app-container {
-                flex-grow: 1;
-                display: flex;
-                overflow-y: auto;
-            }
-        </style>
-    </head>
+        ::-webkit-scrollbar-thumb {
+            border-radius: var(--dui-radius-scrollbar-border);
+            background-color: var(--dui-color-foreground-scrollbar);
+        }
 
-    <body>
-        <noscript>
-            <%= process.env.MY_APP %> needs JS.
-        </noscript>
-        <div id="app-container"></div>
+        #app-container {
+            flex-grow: 1;
+            display: flex;
+            overflow-y: auto;
+        }
+    </style>
+</head>
 
-        <link href="https://fonts.googleapis.com/css?family=Oxygen+Mono|Source+Sans+Pro:300,400,600" rel="stylesheet">
-    </body>
+<body>
+    <noscript>
+        <%= process.env.MY_APP %> needs JS.
+    </noscript>
+    <div id="app-container"></div>
+
+    <link href="https://fonts.googleapis.com/css?family=Oxygen+Mono|Source+Sans+Pro:300,400,600" rel="stylesheet">
+</body>
+
 </html>

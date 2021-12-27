@@ -20,7 +20,6 @@ function SuccessForm(props: SuccessFormInterface) {
             <div className={styles.successHeading}>
                 Source created successfully!
                 &nbsp;
-                &nbsp;
                 <IoCheckmarkCircle />
             </div>
             <div className={styles.backButton}>

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Router } from 'react-router-dom';
 import { init, ErrorBoundary, setUser as setUserOnSentry } from '@sentry/react';
-import { unique } from '@togglecorp/fujs';
+import { _cs, unique } from '@togglecorp/fujs';
 import { AlertContainer, AlertContext, AlertOptions } from '@the-deep/deep-ui';
 import { ApolloClient, ApolloProvider } from '@apollo/client';
 import ReactGA from 'react-ga';
@@ -12,10 +12,13 @@ import Init from '#base/components/Init';
 import PreloadMessage from '#base/components/PreloadMessage';
 import browserHistory from '#base/configs/history';
 import sentryConfig from '#base/configs/sentry';
+import Navbar from '#base/components/Navbar';
 import { UserContext, UserContextInterface } from '#base/context/UserContext';
 import {
     ServerContext,
     ServerContextInterface,
+    defaultServerConfig,
+    SelectedConfigType,
 } from '#base/context/serverContext';
 import useStoredState from './hooks/useLocalStorage';
 import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
@@ -48,13 +51,6 @@ if (trackingId) {
     });
 }
 
-interface SelectedConfig {
-    activeConfig: 'prod' | 'alpha' | 'custom';
-    customWebAddress?: string;
-    customApiAddress?: string;
-    customServerlessAddress?: string;
-}
-
 const apolloClient = new ApolloClient(apolloConfig);
 
 const requestContextValue = {
@@ -62,13 +58,6 @@ const requestContextValue = {
     transformOptions: processDeepOptions,
     transformResponse: processDeepResponse,
     transformError: processDeepError,
-};
-
-const defaultServerConfig = {
-    activeConfig: 'custom' as const,
-    customWebAddress: 'https://alpha-2-api.thedeep.io',
-    customApiAddress: 'https://api.alpha.thedeep.io',
-    customServerlessAddress: 'https://services-alpha.thedeep.io',
 };
 
 function Base() {
@@ -79,7 +68,7 @@ function Base() {
     const [
         selectedConfig,
         setSelectedConfig,
-    ] = useStoredState<SelectedConfig>('serverConfig', defaultServerConfig);
+    ] = useStoredState<SelectedConfigType>('serverConfig', defaultServerConfig);
 
     const authenticated = !!user;
 
@@ -213,23 +202,28 @@ function Base() {
                 <RequestContext.Provider value={requestContextValue}>
                     <ApolloProvider client={apolloClient}>
                         <UserContext.Provider value={userContext}>
-                            <ServerContext.Provider value={serverContext}>
-                                <NavbarContext.Provider value={navbarContext}>
-                                    <AlertContext.Provider value={alertContext}>
-                                        <AuthPopup />
-                                        <AlertContainer className={styles.alertContainer} />
-                                        <Router history={browserHistory}>
-                                            <Init
-                                                className={styles.init}
-                                            >
-                                                <Routes
-                                                    className={styles.view}
-                                                />
-                                            </Init>
-                                        </Router>
-                                    </AlertContext.Provider>
-                                </NavbarContext.Provider>
-                            </ServerContext.Provider>
+                            <NavbarContext.Provider value={navbarContext}>
+                                <ServerContext.Provider value={serverContext}>
+                                    <NavbarContext.Provider value={navbarContext}>
+                                        <AlertContext.Provider value={alertContext}>
+                                            <AuthPopup />
+                                            <AlertContainer className={styles.alertContainer} />
+                                            <Router history={browserHistory}>
+                                                <Init
+                                                    className={styles.init}
+                                                >
+                                                    <Navbar
+                                                        className={_cs(styles.navbar)}
+                                                    />
+                                                    <Routes
+                                                        className={styles.view}
+                                                    />
+                                                </Init>
+                                            </Router>
+                                        </AlertContext.Provider>
+                                    </NavbarContext.Provider>
+                                </ServerContext.Provider>
+                            </NavbarContext.Provider>
                         </UserContext.Provider>
                     </ApolloProvider>
                 </RequestContext.Provider>

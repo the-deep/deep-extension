@@ -1,10 +1,11 @@
 import { createContext } from 'react';
 
-interface SelectedConfigType {
-    activeConfig: 'prod' | 'alpha' | 'custom';
-    customWebAddress?: string;
-    customApiAddress?: string;
-    customServerlessAddress?: string;
+export interface SelectedConfigType {
+    activeConfig: 'beta' | 'alpha' | 'custom';
+    webServerUrl?: string;
+    apiServerUrl?: string;
+    serverlessUrl?: string;
+    identifier?: string;
 }
 
 export interface ServerContextInterface {
@@ -12,11 +13,12 @@ export interface ServerContextInterface {
     setSelectedConfig: React.Dispatch<React.SetStateAction<SelectedConfigType>>;
 }
 
-const defaultServerConfig = {
+export const defaultServerConfig = {
     activeConfig: 'custom' as const,
-    customWebAddress: 'https://alpha-2-api.thedeep.io',
-    customApiAddress: 'https://api.alpha.thedeep.io',
-    customServerlessAddress: 'https://services-alpha.thedeep.io',
+    webServerUrl: 'https://alpha-2.thedeep.io',
+    apiServerUrl: 'https://alpha-2-api.thedeep.io',
+    serverlessUrl: 'https://services-local.thedeep.io',
+    identifier: 'alpha-2',
 };
 
 export const ServerContext = createContext<ServerContextInterface>({

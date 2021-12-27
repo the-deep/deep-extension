@@ -10,7 +10,6 @@ import { mapToMap, isDefined } from '@togglecorp/fujs';
 import {
     serverlessEndpoint,
     wsEndpoint,
-    // reactAppApiHttps,
 } from '../configs/restRequest';
 
 function getVersionedUrl(endpoint: string, url: string) {
@@ -154,18 +153,7 @@ export const processDeepOptions: DeepContextInterface['transformOptions'] = (
             ...otherOptions,
         };
     }
-    console.warn(headers, finalOptions);
-    /*
-    const isInternalRequest = url.startsWith(serverPrefix);
-    if (isInternalRequest) {
-        const csrftoken = getCookie(`deep-${process.env.REACT_APP_DEEP_ENVIRONMENT}-csrftoken`);
-
-        finalOptions.credentials = 'include';
-        if (finalOptions.headers) {
-            finalOptions.headers['X-CSRFToken'] = csrftoken;
-        }
-    }
-    */
+    // console.warn(headers, finalOptions);
 
     return finalOptions;
 };

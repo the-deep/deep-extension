@@ -12,6 +12,7 @@ import {
     SegmentInput,
     QuickActionButton,
     useBooleanState,
+    useAlert,
 } from '@the-deep/deep-ui';
 import {
     Error,
@@ -25,7 +26,7 @@ import {
     IoEye,
 } from 'react-icons/io5';
 
-import { useLazyRequest } from '../../Base/utils/restRequest';
+import { useLazyRequest } from '#base/utils/restRequest';
 import ProjectSelectInput, { BasicProject } from '../selections/ProjectSelectInput';
 import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
 import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
@@ -148,6 +149,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         currentTabInfo,
     } = props;
 
+    const alert = useAlert();
+
     const error = getErrorObject(riskyError);
     const setFieldValue = useFormObject(name, onChange, defaultValue);
 
@@ -165,7 +168,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
         onChange((oldValues = defaultValue) => {
             const newValues = produce(oldValues, (safeValues) => {
-                console.log('Web scrapped values::>>', webInfo);
                 if (webInfo.date) {
                     // eslint-disable-next-line no-param-reassign
                     safeValues.publishedOn = webInfo.date;
@@ -234,7 +236,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         body: (ctx) => ctx,
         other: () => ({
             headers: {
-                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json; charset=UTF-8',
+                origin: 'alpha-2.thedeep.io',
             },
         }),
         onSuccess: (response, ctx) => {
@@ -245,6 +248,12 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 url: ctx.url,
                 ...response,
             });
+        },
+        onFailure: () => {
+            alert.show(
+                'Sorry, cannot generate source info right now!',
+                { variant: 'error' },
+            );
         },
         failureHeader: 'Web Info Extract',
     });
@@ -259,7 +268,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         other: (ctx) => ({
             headers: {
                 Authorization: `Bearer ${ctx.token}`,
-                'X-CSRFToken': csrfToken,
+                'X-CSRFToken': csrfToken as string,
             },
         }),
         onSuccess: (response, ctx) => {
@@ -348,6 +357,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             <NonFieldError error={error} />
             <ProjectSelectInput
                 name="project"
+                labelContainerClassName={styles.formLabel}
                 className={styles.input}
                 label="Project"
                 value={projectId}
@@ -358,6 +368,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             />
             <TextInput
                 className={styles.input}
+                labelContainerClassName={styles.formLabel}
                 label="URL"
                 name="url"
                 value={value.url}
@@ -379,6 +390,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             />
             <TextInput
                 className={styles.input}
+                labelContainerClassName={styles.formLabel}
                 label="Website"
                 name="website"
                 value={value.website}
@@ -388,6 +400,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             />
             <TextInput
                 className={styles.input}
+                labelContainerClassName={styles.formLabel}
                 label="Title"
                 name="title"
                 value={value.title}
@@ -397,8 +410,9 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             />
             <div className={styles.row}>
                 <DateInput
-                    className={styles.input}
+                    className={styles.rowInput}
                     label="Published On"
+                    labelContainerClassName={styles.rowLabel}
                     name="publishedOn"
                     value={value.publishedOn}
                     onChange={setFieldValue}
@@ -406,7 +420,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     disabled={disabled}
                 />
                 <ProjectUserSelectInput
-                    className={styles.input}
+                    className={styles.rowInput}
+                    labelContainerClassName={styles.rowLabel}
                     disabled={pendingLeadOptions || disabled || !projectId}
                     error={error?.assignee}
                     label="Assignee"
@@ -420,7 +435,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             </div>
             <div className={styles.row}>
                 <NewOrganizationSelectInput
-                    className={styles.input}
+                    className={styles.rowInput}
+                    labelContainerClassName={styles.rowLabel}
                     name="source"
                     value={value.source}
                     onChange={setFieldValue}
@@ -445,7 +461,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
                 <NewOrganizationMultiSelectInput
-                    className={styles.input}
+                    className={styles.rowInput}
+                    labelContainerClassName={styles.rowLabel}
                     name="authors"
                     value={value.authors}
                     onChange={setFieldValue}
@@ -470,26 +487,30 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
-            <ConfidentialityInput
-                className={styles.input}
-                name="confidentiality"
-                value={value.confidentiality ?? undefined}
-                onChange={setFieldValue}
-                label="Confidential"
-                disabled={disabled}
-            />
-            <SegmentInput
-                name="priority"
-                label="Priority"
-                value={value.priority}
-                onChange={setFieldValue}
-                options={priorityOptions ?? undefined}
-                keySelector={enumKeySelector}
-                labelSelector={enumLabelSelector}
-                className={styles.input}
-                error={error?.priority}
-                disabled={disabled}
-            />
+            <div className={styles.priorityRow}>
+                <SegmentInput
+                    name="priority"
+                    label="Priority"
+                    labelContainerClassName={styles.priorityLabel}
+                    value={value.priority}
+                    onChange={setFieldValue}
+                    options={priorityOptions ?? undefined}
+                    keySelector={enumKeySelector}
+                    labelSelector={enumLabelSelector}
+                    className={styles.input}
+                    error={error?.priority}
+                    disabled={disabled}
+                />
+                <ConfidentialityInput
+                    className={styles.input}
+                    labelContainerClassName={styles.priorityLabel}
+                    name="confidentiality"
+                    value={value.confidentiality ?? undefined}
+                    onChange={setFieldValue}
+                    label="Confidential"
+                    disabled={disabled}
+                />
+            </div>
             <EmmStats
                 emmTriggers={value.emmTriggers}
                 emmEntities={value.emmEntities}

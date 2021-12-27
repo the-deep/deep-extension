@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         background-color: green;
-        padding: 20px !important;
+        padding: var(--dui-spacing-medium);
         font-size: x-large;
     }
 }

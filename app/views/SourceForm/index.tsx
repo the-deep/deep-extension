@@ -7,7 +7,6 @@ import {
     Button,
     useAlert,
     ContainerCard,
-    Link,
 } from '@the-deep/deep-ui';
 import {
     removeNull,
@@ -16,10 +15,9 @@ import {
     internal,
     SetValueArg,
 } from '@togglecorp/toggle-form';
-import { IoSettings } from 'react-icons/io5';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
-import { schema, PartialFormType } from '../../components/SourceInput/schema';
+import { schema, PartialFormType } from '#components/SourceInput/schema';
 import {
     LeadOptionsQuery,
     LeadOptionsQueryVariables,
@@ -33,10 +31,11 @@ import { UserContext } from '#base/context/UserContext';
 import {
     ServerContext,
 } from '#base/context/serverContext';
-import { BasicOrganization } from '../../components/selections/NewOrganizationSelectInput';
-import { BasicProject } from '../../components/selections/ProjectSelectInput';
-import { BasicProjectUser } from '../../components/selections/ProjectUserSelectInput';
-import SourceInput from '../../components/SourceInput';
+import { productionValues, alphaValues } from '#base/utils/apollo';
+import { BasicOrganization } from '#components/selections/NewOrganizationSelectInput';
+import { BasicProject } from '#components/selections/ProjectSelectInput';
+import { BasicProjectUser } from '#components/selections/ProjectUserSelectInput';
+import SourceInput from '#components/SourceInput';
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
 import route from '#base/configs/routes';
 
@@ -150,6 +149,39 @@ interface Props {
     className?: string;
 }
 
+interface ConfigProps {
+    activeConfig: 'beta' | 'alpha' | 'custom';
+    webServerUrl?: string;
+    apiServerUrl?: string;
+    serverlessUrl?: string;
+    identifier?: string;
+}
+
+function getWebAddress(configMode: ConfigProps) {
+    if (configMode.activeConfig === 'custom') {
+        return configMode.webServerUrl;
+    }
+    if (configMode.activeConfig === 'alpha') {
+        return alphaValues.webServer;
+    }
+    if (configMode.activeConfig === 'beta') {
+        return productionValues.webServer;
+    }
+    return null;
+}
+function getIdentifier(configMode: ConfigProps) {
+    if (configMode.activeConfig === 'custom') {
+        return configMode.identifier;
+    }
+    if (configMode.activeConfig === 'alpha') {
+        return alphaValues.identifier;
+    }
+    if (configMode.activeConfig === 'beta') {
+        return productionValues.identifier;
+    }
+    return null;
+}
+
 function SourceForm(props: Props) {
     const {
         className,
@@ -200,9 +232,8 @@ function SourceForm(props: Props) {
         error: riskyError,
         validate,
         setError,
-        pristine,
+        // pristine,
     } = useForm(schema, initialValue);
-    console.log('Pristine state::>', pristine);
 
     const {
         loading: leadOptionsLoading,
@@ -248,10 +279,6 @@ function SourceForm(props: Props) {
                     setError(formError);
                 } else if (ok) {
                     history.push(route.successForm.path);
-                    // alert.show(
-                    //    'Successfully created lead!',
-                    //    { variant: 'success' },
-                    // ) ;
                 }
             },
             onError: (errors) => {
@@ -302,8 +329,8 @@ function SourceForm(props: Props) {
     useEffect(() => {
         chrome.cookies.get(
             {
-                url: selectedConfig.customWebAddress,
-                name: `deep-${selectedConfig.activeConfig}-2-csrftoken`,
+                url: getWebAddress(selectedConfig),
+                name: `deep-${getIdentifier(selectedConfig)}-csrftoken`,
             }, (cookie: { value: string } | undefined) => {
                 if (cookie) {
                     setCsrfToken(cookie.value);
@@ -320,7 +347,7 @@ function SourceForm(props: Props) {
                 setCurrentTabInfo(tabURL);
             }
         });
-    }, [selectedConfig.activeConfig, selectedConfig.customWebAddress]);
+    }, [selectedConfig.activeConfig, selectedConfig]);
 
     if (!csrfTokenLoaded) {
         return null;
@@ -329,15 +356,6 @@ function SourceForm(props: Props) {
     return (
         <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
-            heading="Add Source"
-            borderBelowHeader
-            headerActions={(
-                <Link
-                    to={route.leadSettings.path}
-                >
-                    <IoSettings />
-                </Link>
-            )}
             footerActions={(
                 <Button
                     name="save"

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
     useForm,
     requiredCondition,
@@ -19,6 +19,8 @@ import {
     useRequest,
     useLazyRequest,
 } from '#base/utils/restRequest';
+import NotificationContext from '#base/context/NotificationContext';
+
 import {
     Organization,
     OrganizationType,
@@ -59,6 +61,10 @@ function AddOrganizationModal(props: Props) {
     } = props;
 
     const {
+        notify,
+    } = useContext(NotificationContext);
+
+    const {
         pending: organizationTypesPending,
         response: organizatonTypesResponse,
     } = useRequest<MultiResponse<OrganizationType>>({
@@ -76,8 +82,18 @@ function AddOrganizationModal(props: Props) {
         onSuccess: (response) => {
             if (onOrganizationAdd) {
                 onOrganizationAdd(response);
+                notify({
+                    children: 'Organization created successfully!',
+                    variant: 'success',
+                });
             }
             onModalClose();
+        },
+        onFailure: ({ value: errorValue }) => {
+            notify({
+                children: errorValue,
+                variant: 'error',
+            });
         },
         failureHeader: 'addOrganizationModal',
     });

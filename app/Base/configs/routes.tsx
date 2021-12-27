@@ -5,10 +5,10 @@ import { wrap } from '#base/utils/routes';
 const login = wrap({
     path: '/login/',
     title: 'Login',
-    navbarVisibility: false,
+    navbarVisibility: true,
     component: lazy(() => import('#views/Template')),
     componentProps: {
-        name: 'Login Page',
+        name: 'Login to continue',
     },
     visibility: 'is-not-authenticated',
 });
@@ -24,20 +24,20 @@ const index = wrap({
 
 const home = wrap({
     path: '/',
-    title: 'Home',
-    navbarVisibility: true,
+    title: 'Add source',
     component: lazy(() => import('#views/SourceForm')),
     componentProps: {},
     visibility: 'is-authenticated',
+    navbarVisibility: true,
 });
 
 const leadSettings = wrap({
     path: '/leadSettings/',
-    title: 'Source Settings',
+    title: 'Settings',
     navbarVisibility: true,
     component: lazy(() => import('#views/SourceSettings')),
     componentProps: {},
-    visibility: 'is-authenticated',
+    visibility: 'is-anything',
 });
 const myProfile = wrap({
     path: '/my-profile/',
@@ -56,7 +56,7 @@ const successForm = wrap({
     navbarVisibility: true,
     component: lazy(() => import('#views/SuccessForm')),
     componentProps: {},
-    visibility: 'is-authenticated',
+    visibility: 'is-anything',
 });
 
 const fourHundredFour = wrap({
@@ -65,7 +65,7 @@ const fourHundredFour = wrap({
     component: lazy(() => import('#views/FourHundredFour')),
     componentProps: {},
     visibility: 'is-anything',
-    navbarVisibility: false,
+    navbarVisibility: true,
 });
 
 const routes = {

@@ -1,46 +1,59 @@
 import React, { useState, useCallback, useContext } from 'react';
 import { _cs } from '@togglecorp/fujs';
-
+import {
+    ObjectSchema,
+    useForm,
+    createSubmitHandler,
+    urlCondition,
+    requiredStringCondition,
+    PartialForm,
+} from '@togglecorp/toggle-form';
 import {
     Button,
     SegmentInput,
     ContainerCard,
     Card,
     TextInput,
+    useAlert,
 } from '@the-deep/deep-ui';
-import { IoArrowBackCircleSharp } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
+// import { IoArrowBackCircleSharp } from 'react-icons/io5';
+// import { Link } from 'react-router-dom';
 
-import route from '#base/configs/routes';
+// import route from '#base/configs/routes';
 import {
     ServerContext,
 } from '#base/context/serverContext';
+import { productionValues, alphaValues } from '#base/utils/apollo';
 import styles from './styles.css';
+import NonFieldError from '#components/NonFieldError';
 
-type ConfigKeys = 'prod' | 'alpha' | 'custom';
+type ConfigKeys = 'beta' | 'alpha' | 'custom';
 
-interface Props {
-    className?: string;
+type ServerConfigFields = {
+    webServerAddress: string;
+    apiServerAddress: string;
+    serverlessAddress: string;
+    identifier: string;
 }
+type FormType = PartialForm<ServerConfigFields>;
+type FormSchema = ObjectSchema<FormType>
+type FormSchemaFields = ReturnType<FormSchema['fields']>;
+
+const schema: FormSchema = {
+    fields: (): FormSchemaFields => ({
+        identifier: [requiredStringCondition],
+        webServerAddress: [requiredStringCondition, urlCondition],
+        apiServerAddress: [requiredStringCondition, urlCondition],
+        serverlessAddress: [requiredStringCondition, urlCondition],
+    }),
+};
 
 const segmentKeySelector = (data: { key: ConfigKeys; }) => data.key;
 const segmentLabelSelector = (data: { name: string; }) => data.name;
 
-const productionValues = {
-    webServer: 'https://beta.thedeep.io',
-    apiServer: 'https://api.thedeep.io',
-    serverLess: 'https://services.thedeep.io',
-};
-
-const alphaValues = {
-    webServer: 'https://alpha-2-api.thedeep.io',
-    apiServer: 'https://api.alpha.thedeep.io',
-    serverLess: 'https://services-alpha.thedeep.io',
-};
-
 const serverOptions: { key: ConfigKeys; name: string }[] = [
     {
-        key: 'prod',
+        key: 'beta',
         name: 'Production',
     },
     {
@@ -53,92 +66,131 @@ const serverOptions: { key: ConfigKeys; name: string }[] = [
     },
 ];
 
+interface Props {
+    className?: string;
+}
+
 function SourceSettings(props: Props) {
     const {
         className,
     } = props;
 
+    const alert = useAlert();
+
     const { selectedConfig, setSelectedConfig } = useContext(ServerContext);
+
+    const {
+        activeConfig,
+        ...otherConfig
+    } = selectedConfig;
+
+    // FIXME: we need to get configuration of beta and alpha
+    const defaultForm: FormType = {
+        webServerAddress: otherConfig.webServerUrl,
+        apiServerAddress: otherConfig.apiServerUrl,
+        serverlessAddress: otherConfig.serverlessUrl,
+        identifier: otherConfig.identifier,
+    };
+
+    const {
+        pristine,
+        value,
+        error,
+        setValue,
+        setFieldValue,
+        validate,
+        setError,
+        setPristine,
+    } = useForm(schema, defaultForm);
 
     const [
         activeView,
         setActiveView,
-    ] = useState<ConfigKeys>(selectedConfig.activeConfig);
+    ] = useState<ConfigKeys>(activeConfig);
 
-    const [
-        disableInput,
-        setDisableInput,
-    ] = useState(true);
-
-    const [
-        webServerState,
-        setWebServerState,
-    ] = useState<string | undefined>(selectedConfig.customWebAddress);
-    const [
-        apiServerState,
-        setApiServerState,
-    ] = useState<string | undefined>(selectedConfig.customApiAddress);
-    const [
-        serverlessState,
-        setServerlessState,
-    ] = useState<string | undefined>(selectedConfig.customServerlessAddress);
+    const disableInput = activeView !== 'custom';
 
     const handleSubmit = useCallback(
-        () => {
-            setSelectedConfig({
-                activeConfig: activeView,
-                customWebAddress: webServerState,
-                customApiAddress: apiServerState,
-                customServerlessAddress: serverlessState,
-            });
-        }, [activeView, webServerState, apiServerState, serverlessState, setSelectedConfig],
+        (urlValue: FormType) => {
+            if (activeView !== 'custom') {
+                setSelectedConfig({
+                    activeConfig: activeView,
+                    webServerUrl: undefined,
+                    apiServerUrl: undefined,
+                    serverlessUrl: undefined,
+                    identifier: undefined,
+                });
+            } else {
+                setSelectedConfig({
+                    activeConfig: activeView,
+                    webServerUrl: urlValue.webServerAddress,
+                    apiServerUrl: urlValue.apiServerAddress,
+                    serverlessUrl: urlValue.serverlessAddress,
+                    identifier: urlValue.identifier,
+                });
+            }
+            alert.show(
+                'Successfully saved brower settings!',
+                { variant: 'success' },
+            );
+            setTimeout(() => {
+                window.close();
+            }, 1000);
+        },
+        [
+            activeView,
+            setSelectedConfig,
+            alert,
+        ],
     );
 
     const handleServerEnvironment = useCallback(
         (val: ConfigKeys) => {
             setActiveView(val);
-            if (val === 'prod') {
-                setWebServerState(productionValues.webServer);
-                setApiServerState(productionValues.apiServer);
-                setServerlessState(productionValues.serverLess);
-                setDisableInput(true);
-            } else if (val === 'alpha') {
-                setWebServerState(alphaValues.webServer);
-                setApiServerState(alphaValues.apiServer);
-                setServerlessState(alphaValues.serverLess);
-                setDisableInput(true);
-            } else {
-                setWebServerState(undefined);
-                setApiServerState(undefined);
-                setServerlessState(undefined);
-                setDisableInput(false);
-            }
-        }, [],
+            setValue(() => {
+                if (val === 'beta') {
+                    return {
+                        webServerAddress: productionValues.webServer,
+                        apiServerAddress: productionValues.apiServer,
+                        serverlessAddress: productionValues.serverLess,
+                        identifier: productionValues.identifier,
+                    };
+                }
+                if (val === 'alpha') {
+                    return {
+                        webServerAddress: alphaValues.webServer,
+                        apiServerAddress: alphaValues.apiServer,
+                        serverlessAddress: alphaValues.serverLess,
+                        identifier: alphaValues.identifier,
+                    };
+                }
+                return {};
+            });
+            setPristine(false);
+        },
+        [
+            setValue,
+            setPristine,
+        ],
     );
 
     return (
-        <ContainerCard
-            className={_cs(className, styles.settingsBox)}
-            heading="Settings"
-            borderBelowHeader
-            headerActions={(
-                <Link
-                    to={route.index.path}
-                >
-                    <IoArrowBackCircleSharp />
-                </Link>
-            )}
-            footerActions={(
-                <Button
-                    // FIXME: Add disabled during pristine later
-                    name="save"
-                    onClick={handleSubmit}
-                >
-                    Save
-                </Button>
-            )}
+        <form
+            onSubmit={createSubmitHandler(validate, setError, handleSubmit)}
         >
-            <>
+            <ContainerCard
+                className={_cs(className, styles.settingsBox)}
+                footerActions={(
+                    <Button
+                        // FIXME: Add disabled during pristine later
+                        name={undefined}
+                        type="submit"
+                        disabled={pristine}
+                    >
+                        Save
+                    </Button>
+                )}
+            >
                 <SegmentInput
                     className={styles.input}
                     name="server-env"
@@ -149,33 +201,52 @@ function SourceSettings(props: Props) {
                     labelSelector={segmentLabelSelector}
                 />
                 <Card className={_cs(styles.alphaForm, className)}>
+
+                    <NonFieldError error={error} />
                     <TextInput
                         className={styles.input}
+                        labelContainerClassName={styles.label}
+                        label="Identifier"
+                        name="identifier"
+                        value={value.identifier}
+                        onChange={setFieldValue}
+                        readOnly={disableInput}
+                        error={error?.identifier}
+                    />
+                    <TextInput
+                        className={styles.input}
+                        labelContainerClassName={styles.label}
                         label="Web Server Address"
                         name="webServerAddress"
-                        value={webServerState}
-                        onChange={setWebServerState}
+                        value={value.webServerAddress}
+                        error={error?.webServerAddress}
+                        onChange={setFieldValue}
                         readOnly={disableInput}
                     />
                     <TextInput
                         className={styles.input}
+                        labelContainerClassName={styles.label}
                         label="Api Server Address"
                         name="apiServerAddress"
-                        value={apiServerState}
-                        onChange={setApiServerState}
+                        value={value.apiServerAddress}
+                        onChange={setFieldValue}
                         readOnly={disableInput}
+                        error={error?.apiServerAddress}
                     />
                     <TextInput
                         className={styles.input}
+                        labelContainerClassName={styles.label}
                         label="Serverless Address"
-                        name="serverLessAddress"
-                        value={serverlessState}
-                        onChange={setServerlessState}
+                        name="serverlessAddress"
+                        value={value.serverlessAddress}
+                        onChange={setFieldValue}
                         readOnly={disableInput}
+                        error={error?.serverlessAddress}
                     />
+
                 </Card>
-            </>
-        </ContainerCard>
+            </ContainerCard>
+        </form>
     );
 }
 

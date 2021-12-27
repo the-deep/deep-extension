@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useEffect } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import {
     removeNull,
@@ -74,14 +74,6 @@ function Init(props: Props) {
             setReady(true);
         },
     });
-
-    useEffect(
-        () => {
-            setErrored(false);
-            setReady(true);
-        },
-        [setUser],
-    );
 
     const projectContext: ProjectContextInterface = useMemo(
         () => ({
