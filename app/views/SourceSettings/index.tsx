@@ -7,6 +7,7 @@ import {
     urlCondition,
     requiredStringCondition,
     PartialForm,
+    getErrorObject,
 } from '@togglecorp/toggle-form';
 import {
     Button,
@@ -14,12 +15,10 @@ import {
     ContainerCard,
     Card,
     TextInput,
-    useAlert,
 } from '@the-deep/deep-ui';
-// import { IoArrowBackCircleSharp } from 'react-icons/io5';
-// import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import route from '#base/configs/routes';
 
-// import route from '#base/configs/routes';
 import {
     ServerContext,
 } from '#base/context/serverContext';
@@ -75,7 +74,7 @@ function SourceSettings(props: Props) {
         className,
     } = props;
 
-    const alert = useAlert();
+    const history = useHistory();
 
     const { selectedConfig, setSelectedConfig } = useContext(ServerContext);
 
@@ -95,13 +94,15 @@ function SourceSettings(props: Props) {
     const {
         pristine,
         value,
-        error,
+        error: settingsError,
         setValue,
         setFieldValue,
         validate,
         setError,
         setPristine,
     } = useForm(schema, defaultForm);
+
+    const error = getErrorObject(settingsError);
 
     const [
         activeView,
@@ -129,18 +130,12 @@ function SourceSettings(props: Props) {
                     identifier: urlValue.identifier,
                 });
             }
-            alert.show(
-                'Successfully saved brower settings!',
-                { variant: 'success' },
-            );
-            setTimeout(() => {
-                window.close();
-            }, 1000);
+            history.push(route.settingsSuccessForm.path);
         },
         [
             activeView,
             setSelectedConfig,
-            alert,
+            history,
         ],
     );
 
@@ -201,7 +196,6 @@ function SourceSettings(props: Props) {
                     labelSelector={segmentLabelSelector}
                 />
                 <Card className={_cs(styles.alphaForm, className)}>
-
                     <NonFieldError error={error} />
                     <TextInput
                         className={styles.input}

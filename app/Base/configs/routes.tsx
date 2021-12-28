@@ -59,6 +59,15 @@ const successForm = wrap({
     visibility: 'is-anything',
 });
 
+const settingsSuccessForm = wrap({
+    path: '/settingsSuccess/',
+    title: 'Url Settings Success',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SettingsSuccess')),
+    componentProps: {},
+    visibility: 'is-anything',
+});
+
 const fourHundredFour = wrap({
     path: '',
     title: '404',
@@ -76,5 +85,6 @@ const routes = {
     myProfile,
     fourHundredFour,
     successForm,
+    settingsSuccessForm,
 };
 export default routes;
