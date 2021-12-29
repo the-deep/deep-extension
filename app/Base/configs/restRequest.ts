@@ -13,7 +13,10 @@ export const adminEndpoint = !process.env.REACT_APP_ADMIN_END
     ? 'http://alpha-2-api.thedeep.io/admin/'
     : `${reactAppApiHttps}://${process.env.REACT_APP_ADMIN_END}/admin/`;
 */
-const UrlData = JSON.parse(localStorage.getItem('serverConfig'));
+
+const storageData = localStorage.getItem('serverConfig');
+
+const UrlData = JSON.parse(storageData);
 const currentConfigMode = UrlData?.activeConfig;
 
 function getUrlData() {

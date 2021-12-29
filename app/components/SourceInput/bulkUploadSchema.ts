@@ -58,12 +58,6 @@ export const leadSchema: LeadFormSchema = {
             emmTriggers: [defaultEmptyArrayType],
 
             // NOTE: We are not adding forceNullType here, as it is not the behavior in server
-            /*
-            url: [forceNullType],
-            website: [forceNullType],
-            text: [forceNullType],
-            attachment: [forceNullType],
-            */
         };
         if (value?.sourceType === 'WEBSITE') {
             baseSchema = {

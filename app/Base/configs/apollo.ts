@@ -8,9 +8,8 @@ import {
 } from '@apollo/client';
 import { productionValues, alphaValues } from '#base/utils/apollo';
 
-// FIXME: read configurations for alpha, beta and custom
-
-const UrlData = JSON.parse(localStorage.getItem('serverConfig'));
+const storageData = localStorage.getItem('serverConfig');
+const UrlData = JSON.parse(storageData);
 const currentConfigMode = UrlData?.activeConfig;
 
 function getUrlData() {

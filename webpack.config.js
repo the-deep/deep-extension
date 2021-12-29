@@ -172,7 +172,6 @@ module.exports = () => {
                 meta: {
                     viewport: 'width=device-width, initial-scale=1.0, shrink-to-fit=no',
                     description: pkg.description,
-                    // referrer: 'origin',
                 },
             }),
             new CopyPlugin({

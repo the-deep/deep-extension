@@ -114,7 +114,7 @@ export const processDeepUrls: DeepContextInterface['transformUrl'] = (url) => {
 };
 
 export const processDeepOptions: DeepContextInterface['transformOptions'] = (
-    url,
+    _,
     options,
     requestOptions,
 ) => {

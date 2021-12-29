@@ -7,10 +7,6 @@
 
     .navbar {
         flex-shrink: 0;
-
-        &.hidden {
-            display: none;
-        }
     }
 
     .view,
