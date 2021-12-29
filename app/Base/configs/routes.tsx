@@ -5,11 +5,9 @@ import { wrap } from '#base/utils/routes';
 const login = wrap({
     path: '/login/',
     title: 'Login',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/Template')),
-    componentProps: {
-        name: 'Login to continue',
-    },
+    navbarVisibility: false,
+    component: lazy(() => import('#views/Login')),
+    componentProps: {},
     visibility: 'is-not-authenticated',
 });
 const index = wrap({
@@ -32,24 +30,13 @@ const home = wrap({
 });
 
 const leadSettings = wrap({
-    path: '/leadSettings/',
+    path: '/lead-settings/',
     title: 'Settings',
     navbarVisibility: true,
     component: lazy(() => import('#views/SourceSettings')),
     componentProps: {},
     visibility: 'is-anything',
 });
-const myProfile = wrap({
-    path: '/my-profile/',
-    title: 'My Profile',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/Template')),
-    componentProps: {
-        name: 'My Profile Page',
-    },
-    visibility: 'is-authenticated',
-});
-
 const successForm = wrap({
     path: '/success/',
     title: 'Success Submission',
@@ -82,7 +69,6 @@ const routes = {
     index,
     home,
     leadSettings,
-    myProfile,
     fourHundredFour,
     successForm,
     settingsSuccessForm,

@@ -4,10 +4,8 @@ import {
     removeNull,
 } from '@togglecorp/toggle-form';
 
-import { checkErrorCode } from '../../utils/apollo';
 import { UserContext } from '#base/context/UserContext';
 import PreloadMessage from '#base/components/PreloadMessage';
-
 import {
     ProjectContext,
     ProjectContextInterface,
@@ -43,7 +41,6 @@ function Init(props: Props) {
     } = props;
 
     const [ready, setReady] = useState(false);
-    const [errored, setErrored] = useState(false);
     const [project, setProject] = useState<Project | undefined>(undefined);
 
     const {
@@ -63,7 +60,8 @@ function Init(props: Props) {
             }
             setReady(true);
         },
-        onError: (error) => {
+        onError: () => {
+            /*
             const { graphQLErrors } = error;
             const authError = checkErrorCode(
                 graphQLErrors,
@@ -71,6 +69,7 @@ function Init(props: Props) {
                 '401',
             );
             setErrored(!authError);
+            */
             setReady(true);
         },
     });
@@ -83,15 +82,6 @@ function Init(props: Props) {
         [project],
     );
 
-    if (errored) {
-        return (
-            <PreloadMessage
-                className={className}
-                heading="Oh no!"
-                content="Some error occurred"
-            />
-        );
-    }
     if (!ready) {
         return (
             <PreloadMessage

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { useLazyQuery, gql } from '@apollo/client';
 import {
     _cs,
@@ -6,6 +6,7 @@ import {
 } from '@togglecorp/fujs';
 import produce from 'immer';
 import {
+    Checkbox,
     PendingMessage,
     TextInput,
     DateInput,
@@ -29,6 +30,8 @@ import {
 import { useLazyRequest } from '#base/utils/restRequest';
 import ProjectSelectInput, { BasicProject } from '../selections/ProjectSelectInput';
 import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
+import AddLeadGroupModal from '#components/AddLeadGroupModal';
+import LeadGroupSelectInput, { BasicLeadGroup } from '#components/selections/LeadGroupSelectInput';
 import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
 import NewOrganizationMultiSelectInput from '../selections/NewOrganizationMultiSelectInput';
 import AddOrganizationModal from '../general/AddOrganizationModal';
@@ -111,6 +114,9 @@ interface Props<N extends string | number | undefined> {
     priorityOptions: NonNullable<LeadOptionsQuery['leadPriorityOptions']>['enumValues'] | undefined;
     sourceOrganizationOptions: BasicOrganization[] | undefined | null;
     // eslint-disable-next-line max-len
+    onLeadGroupOptionsChange: React.Dispatch<React.SetStateAction<BasicLeadGroup[] | undefined | null>>;
+    leadGroupOptions: BasicLeadGroup[] | undefined | null;
+    // eslint-disable-next-line max-len
     onSourceOrganizationOptionsChange: React.Dispatch<React.SetStateAction<BasicOrganization[] | undefined | null>>;
     authorOrganizationOptions: BasicOrganization[] | undefined | null;
     // eslint-disable-next-line max-len
@@ -139,15 +145,24 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         disabled,
         priorityOptions,
         pendingLeadOptions,
+        leadGroupOptions,
         sourceOrganizationOptions,
         onSourceOrganizationOptionsChange,
         authorOrganizationOptions,
         onAuthorOrganizationOptionsChange,
         assigneeOptions,
+        onLeadGroupOptionsChange,
         onAssigneeOptionChange,
         csrfToken,
         currentTabInfo,
     } = props;
+
+    const selectedProjectData = useMemo(() => {
+        if (!projectId) {
+            return undefined;
+        }
+        return projectOptions?.find((p) => p.id === projectId);
+    }, [projectId, projectOptions]);
 
     const alert = useAlert();
 
@@ -164,6 +179,16 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setShowAddOrganizationModalTrue,
         setShowAddOrganizationModalFalse,
     ] = useBooleanState(false);
+
+    const [
+        showAddLeadGroupModal,
+        setShowAddLeadAddGroupModal,
+        setShowAddLeadGroupModalFalse,
+    ] = useBooleanState(false);
+
+    const handleAddLeadGroupClick = useCallback(() => {
+        setShowAddLeadAddGroupModal();
+    }, [setShowAddLeadAddGroupModal]);
 
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
         onChange((oldValues = defaultValue) => {
@@ -221,6 +246,11 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onSourceOrganizationOptionsChange,
         onAuthorOrganizationOptionsChange,
     ]);
+
+    const handleLeadGroupAdd = useCallback((val: BasicLeadGroup) => {
+        setFieldValue(val.id, 'leadGroup');
+        onLeadGroupOptionsChange((oldVal) => [...oldVal ?? [], val]);
+    }, [setFieldValue, onLeadGroupOptionsChange]);
 
     const handleProjectChange = useCallback((projectVal) => {
         setProjectId(projectVal);
@@ -357,8 +387,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             <NonFieldError error={error} />
             <ProjectSelectInput
                 name="project"
-                labelContainerClassName={styles.formLabel}
-                className={styles.input}
                 label="Project"
                 value={projectId}
                 onChange={handleProjectChange}
@@ -367,8 +395,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 nonClearable
             />
             <TextInput
-                className={styles.input}
-                labelContainerClassName={styles.formLabel}
                 label="URL"
                 name="url"
                 value={value.url}
@@ -389,8 +415,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 )}
             />
             <TextInput
-                className={styles.input}
-                labelContainerClassName={styles.formLabel}
                 label="Website"
                 name="website"
                 value={value.website}
@@ -399,8 +423,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 disabled={disabled}
             />
             <TextInput
-                className={styles.input}
-                labelContainerClassName={styles.formLabel}
                 label="Title"
                 name="title"
                 value={value.title}
@@ -412,7 +434,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 <DateInput
                     className={styles.rowInput}
                     label="Published On"
-                    labelContainerClassName={styles.rowLabel}
                     name="publishedOn"
                     value={value.publishedOn}
                     onChange={setFieldValue}
@@ -421,7 +442,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 />
                 <ProjectUserSelectInput
                     className={styles.rowInput}
-                    labelContainerClassName={styles.rowLabel}
                     disabled={pendingLeadOptions || disabled || !projectId}
                     error={error?.assignee}
                     label="Assignee"
@@ -436,7 +456,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             <div className={styles.row}>
                 <NewOrganizationSelectInput
                     className={styles.rowInput}
-                    labelContainerClassName={styles.rowLabel}
                     name="source"
                     value={value.source}
                     onChange={setFieldValue}
@@ -462,7 +481,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 />
                 <NewOrganizationMultiSelectInput
                     className={styles.rowInput}
-                    labelContainerClassName={styles.rowLabel}
                     name="authors"
                     value={value.authors}
                     onChange={setFieldValue}
@@ -487,29 +505,62 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
+            {selectedProjectData?.hasAssessmentTemplate && (
+                <LeadGroupSelectInput
+                    // FIXME: Filter this out based on if the project has assessment or not
+                    name="leadGroup"
+                    value={value.leadGroup}
+                    onChange={setFieldValue}
+                    options={leadGroupOptions}
+                    onOptionsChange={onLeadGroupOptionsChange}
+                    disabled={disabled}
+                    label="Source Group"
+                    error={error?.leadGroup}
+                    projectId={projectId}
+                    actions={(
+                        <QuickActionButton
+                            name={undefined}
+                            variant="transparent"
+                            onClick={handleAddLeadGroupClick}
+                            disabled={disabled}
+                            title="Add source group"
+                        >
+                            <IoAdd />
+
+                        </QuickActionButton>
+                    )}
+                />
+            )}
             <div className={styles.priorityRow}>
                 <SegmentInput
                     name="priority"
                     label="Priority"
-                    labelContainerClassName={styles.priorityLabel}
                     value={value.priority}
                     onChange={setFieldValue}
                     options={priorityOptions ?? undefined}
                     keySelector={enumKeySelector}
                     labelSelector={enumLabelSelector}
-                    className={styles.input}
                     error={error?.priority}
                     disabled={disabled}
                 />
-                <ConfidentialityInput
-                    className={styles.input}
-                    labelContainerClassName={styles.priorityLabel}
-                    name="confidentiality"
-                    value={value.confidentiality ?? undefined}
-                    onChange={setFieldValue}
-                    label="Confidential"
-                    disabled={disabled}
-                />
+                <div className={styles.checkboxes}>
+                    <ConfidentialityInput
+                        name="confidentiality"
+                        value={value.confidentiality ?? undefined}
+                        onChange={setFieldValue}
+                        label="Confidential"
+                        disabled={disabled}
+                    />
+                    {selectedProjectData?.hasAssessmentTemplate && (
+                        <Checkbox
+                            name="isAssessmentLead"
+                            value={value.isAssessmentLead}
+                            onChange={setFieldValue}
+                            label="Is Assessment"
+                            disabled={disabled}
+                        />
+                    )}
+                </div>
             </div>
             <EmmStats
                 emmTriggers={value.emmTriggers}
@@ -519,6 +570,14 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 <AddOrganizationModal
                     onModalClose={setShowAddOrganizationModalFalse}
                     onOrganizationAdd={handleOrganizationAdd}
+                />
+            )}
+            {showAddLeadGroupModal && projectId && (
+                <AddLeadGroupModal
+                    onModalClose={setShowAddLeadGroupModalFalse}
+                    activeProject={+projectId}
+                    onLeadGroupAdd={handleLeadGroupAdd}
+                    csrfToken={csrfToken}
                 />
             )}
         </div>

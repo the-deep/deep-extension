@@ -4,20 +4,19 @@
     align-items: center;
     border-bottom: var(--dui-width-separator-thin) solid var(--dui-color-separator);
     background-color: var(--dui-color-foreground);
-    padding: 0 calc(var(--dui-spacing-super-large) - var(--dui-spacing-large));
+    padding: var(--dui-spacing-medium) var(--dui-spacing-large);
     overflow: auto;
     color: var(--dui-color-text);
+    gap: var(--dui-spacing-large);
 
     .app-brand {
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        padding: var(--dui-spacing-medium) var(--dui-spacing-large);
         color: var(--dui-color-brand);
 
         .logo {
             height: var(--dui-font-size-super-large);
-            font-size: var(--dui-font-size-medium);
         }
     }
 
@@ -25,19 +24,14 @@
         display: flex;
         align-self: stretch;
         flex-grow: 1;
+        justify-content: flex-end;
         overflow: auto;
 
-        .nav-links {
+        .link {
             display: flex;
-            flex-grow: 1;
-            justify-content: flex-start;
-            padding: 0 calc(var(--dui-spacing-super-large) - var(--dui-spacing-large));
-            overflow: hidden;
-            font-size: var(--dui-font-size-large);
-
-            .link {
-                margin: 0 var(--dui-spacing-large);
-            }
+            align-items: center;
+            color: var(--dui-color-brand);
+            font-size: var(--dui-font-size-extra-large);
         }
     }
 

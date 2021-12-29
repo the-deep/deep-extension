@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react';
+import React, { useMemo, useState, useCallback, useContext } from 'react';
 import { _cs } from '@togglecorp/fujs';
 import {
     ObjectSchema,
@@ -17,14 +17,15 @@ import {
     TextInput,
 } from '@the-deep/deep-ui';
 import { useHistory } from 'react-router-dom';
-import route from '#base/configs/routes';
 
+import route from '#base/configs/routes';
 import {
     ServerContext,
 } from '#base/context/serverContext';
 import { productionValues, alphaValues } from '#base/utils/apollo';
-import styles from './styles.css';
 import NonFieldError from '#components/NonFieldError';
+
+import styles from './styles.css';
 
 type ConfigKeys = 'beta' | 'alpha' | 'custom';
 
@@ -83,13 +84,30 @@ function SourceSettings(props: Props) {
         ...otherConfig
     } = selectedConfig;
 
-    // FIXME: we need to get configuration of beta and alpha
-    const defaultForm: FormType = {
-        webServerAddress: otherConfig.webServerUrl,
-        apiServerAddress: otherConfig.apiServerUrl,
-        serverlessAddress: otherConfig.serverlessUrl,
-        identifier: otherConfig.identifier,
-    };
+    const defaultForm: FormType = useMemo(() => {
+        if (activeConfig === 'beta') {
+            return {
+                webServerAddress: productionValues.webServer,
+                apiServerAddress: productionValues.apiServer,
+                serverlessAddress: productionValues.serverLess,
+                identifier: productionValues.identifier,
+            };
+        }
+        if (activeConfig === 'alpha') {
+            return {
+                webServerAddress: alphaValues.webServer,
+                apiServerAddress: alphaValues.apiServer,
+                serverlessAddress: alphaValues.serverLess,
+                identifier: alphaValues.identifier,
+            };
+        }
+        return ({
+            webServerAddress: otherConfig.webServerUrl,
+            apiServerAddress: otherConfig.apiServerUrl,
+            serverlessAddress: otherConfig.serverlessUrl,
+            identifier: otherConfig.identifier,
+        });
+    }, [activeConfig, otherConfig]);
 
     const {
         pristine,
@@ -159,11 +177,17 @@ function SourceSettings(props: Props) {
                         identifier: alphaValues.identifier,
                     };
                 }
-                return {};
+                return {
+                    webServerAddress: selectedConfig.webServerUrl,
+                    apiServerAddress: selectedConfig.apiServerUrl,
+                    serverlessAddress: selectedConfig.serverlessUrl,
+                    identifier: selectedConfig.identifier,
+                };
             });
             setPristine(false);
         },
         [
+            selectedConfig,
             setValue,
             setPristine,
         ],
@@ -237,7 +261,6 @@ function SourceSettings(props: Props) {
                         readOnly={disableInput}
                         error={error?.serverlessAddress}
                     />
-
                 </Card>
             </ContainerCard>
         </form>

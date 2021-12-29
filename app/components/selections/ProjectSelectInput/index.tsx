@@ -15,6 +15,7 @@ const MY_PROJECTS = gql`
                 id
                 title
                 isPrivate
+                hasAssessmentTemplate
             }
             totalCount
             page

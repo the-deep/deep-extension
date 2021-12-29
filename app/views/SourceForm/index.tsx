@@ -5,6 +5,7 @@ import {
 } from '@togglecorp/fujs';
 import {
     Button,
+    Message,
     useAlert,
     ContainerCard,
 } from '@the-deep/deep-ui';
@@ -34,6 +35,7 @@ import {
 import { productionValues, alphaValues } from '#base/utils/apollo';
 import { BasicOrganization } from '#components/selections/NewOrganizationSelectInput';
 import { BasicProject } from '#components/selections/ProjectSelectInput';
+import { BasicLeadGroup } from '#components/selections/LeadGroupSelectInput';
 import { BasicProjectUser } from '#components/selections/ProjectUserSelectInput';
 import SourceInput from '#components/SourceInput';
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
@@ -140,6 +142,7 @@ const RECENT_PROJECT = gql`
                 id
                 title
                 isPrivate
+                hasAssessmentTemplate
             }
         }
     }
@@ -220,6 +223,11 @@ function SourceForm(props: Props) {
         sourceOrganizationOptions,
         setSourceOrganizationOptions,
     ] = useState<BasicOrganization[] | undefined | null>();
+
+    const [
+        leadGroupOptions,
+        setLeadGroupOptions,
+    ] = useState<BasicLeadGroup[] | undefined | null>(undefined);
 
     const [
         authorOrganizationOptions,
@@ -356,6 +364,7 @@ function SourceForm(props: Props) {
     return (
         <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
+            contentClassName={styles.content}
             footerActions={(
                 <Button
                     name="save"
@@ -367,7 +376,7 @@ function SourceForm(props: Props) {
                 </Button>
             )}
         >
-            {projectOptions && (
+            {projectOptions ? (
                 <SourceInput
                     csrfToken={csrfToken}
                     currentTabInfo={currentTabInfo}
@@ -388,6 +397,14 @@ function SourceForm(props: Props) {
                     onAuthorOrganizationOptionsChange={setAuthorOrganizationOptions}
                     assigneeOptions={projectUserOptions}
                     onAssigneeOptionChange={setProjectUserOptions}
+                    leadGroupOptions={leadGroupOptions}
+                    onLeadGroupOptionsChange={setLeadGroupOptions}
+                />
+            ) : (
+                <Message
+                    pending={pending}
+                    pendingMessage="Fetching project options..."
+                    message="Failed to fetch project options. Please check your internet connection."
                 />
             )}
         </ContainerCard>
