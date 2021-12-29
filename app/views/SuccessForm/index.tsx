@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {
+    Message,
+    Kraken,
+} from '@the-deep/deep-ui';
 import { _cs } from '@togglecorp/fujs';
 import { IoCheckmarkCircle, IoArrowBackCircleSharp } from 'react-icons/io5';
-import route from '../../Base/configs/routes';
-
-import styles from './styles.css';
+import SmartButtonLikeLink from '#base/components/SmartButtonLikeLink';
+import route from '#base/configs/routes';
 
 interface SuccessFormInterface {
     className?: string;
@@ -16,20 +18,35 @@ function SuccessForm(props: SuccessFormInterface) {
     } = props;
 
     return (
-        <div className={_cs(className, styles.successPage)}>
-            <div className={styles.successHeading}>
-                Source created successfully!
-                &nbsp;
-                <IoCheckmarkCircle />
-            </div>
-            <div className={styles.backButton}>
-                <Link
-                    to={route.index.path}
+
+        <Message
+            className={_cs(className)}
+            message={(
+                <>
+                    <p>
+                        Source created successfully!
+                        &nbsp;
+                        <IoCheckmarkCircle />
+                    </p>
+                </>
+            )}
+            icon={(
+                <Kraken
+                    size="extraLarge"
+                    variant="ballon"
+                />
+            )}
+            actions={(
+                <SmartButtonLikeLink
+                    route={route.home}
+                    icons={(
+                        <IoArrowBackCircleSharp />
+                    )}
                 >
-                    <IoArrowBackCircleSharp />
-                </Link>
-            </div>
-        </div>
+                    Back
+                </SmartButtonLikeLink>
+            )}
+        />
     );
 }
 

@@ -17,12 +17,14 @@ import {
     TextInput,
 } from '@the-deep/deep-ui';
 import { useHistory } from 'react-router-dom';
+import { IoArrowBackCircleSharp } from 'react-icons/io5';
 
 import route from '#base/configs/routes';
 import {
     ServerContext,
 } from '#base/context/serverContext';
 import { productionValues, alphaValues } from '#base/utils/apollo';
+import SmartButtonLikeLink from '#base/components/SmartButtonLikeLink';
 import NonFieldError from '#components/NonFieldError';
 
 import styles from './styles.css';
@@ -200,14 +202,24 @@ function SourceSettings(props: Props) {
             <ContainerCard
                 className={_cs(className, styles.settingsBox)}
                 footerActions={(
-                    <Button
-                        // FIXME: Add disabled during pristine later
-                        name={undefined}
-                        type="submit"
-                        disabled={pristine}
-                    >
-                        Save
-                    </Button>
+                    <>
+                        <SmartButtonLikeLink
+                            route={route.home}
+                            icons={(
+                                <IoArrowBackCircleSharp />
+                            )}
+                        >
+                            Back
+                        </SmartButtonLikeLink>
+                        <Button
+                            // FIXME: Add disabled during pristine later
+                            name={undefined}
+                            type="submit"
+                            disabled={pristine}
+                        >
+                            Save
+                        </Button>
+                    </>
                 )}
             >
                 <SegmentInput

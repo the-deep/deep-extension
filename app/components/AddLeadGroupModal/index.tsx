@@ -93,7 +93,6 @@ function AddLeadGroupModal(props: Props) {
         },
     });
 
-    console.warn('here', csrfToken);
     const {
         trigger: leadGroupAddTrigger,
         pending: leadGroupAddPending,

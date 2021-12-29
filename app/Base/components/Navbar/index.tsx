@@ -5,7 +5,6 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import Svg from '#base/components/Svg';
 import deepLogo from '#base/resources/deep-logo-new.svg';
 import SmartLink from '#base/components/SmartLink';
-// import SmartNavLink from '#base/components/SmartNavLink';
 import route from '#base/configs/routes';
 
 import styles from './styles.css';
@@ -26,13 +25,6 @@ function Navbar(props: Props) {
                 />
             </div>
             <div className={styles.main}>
-                {/*
-                <SmartNavLink
-                    exact
-                    route={route.home}
-                    className={styles.link}
-                />
-                */}
                 <SmartLink
                     route={route.leadSettings}
                     className={styles.link}
