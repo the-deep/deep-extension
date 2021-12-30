@@ -14,13 +14,13 @@ export function checkErrorCode(errors: ApolloError['graphQLErrors'], path: (stri
 export const productionValues = {
     webServer: 'https://beta.thedeep.io',
     apiServer: 'https://api.thedeep.io',
-    serverLess: 'https://services.thedeep.io',
+    serverless: 'https://services.thedeep.io',
     identifier: 'beta',
 };
 
 export const alphaValues = {
     webServer: 'https://alpha.thedeep.io',
     apiServer: 'https://api.alpha.thedeep.io',
-    serverLess: 'https://services-alpha.thedeep.io',
+    serverless: 'https://services-alpha.thedeep.io',
     identifier: 'alpha',
 };
