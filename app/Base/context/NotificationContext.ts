@@ -21,14 +21,17 @@ export interface NotificationContextProps {
 
 const NotificationContext = createContext<NotificationContextProps>({
     notify: () => {
+        // eslint-disable-next-line no-console
         console.warn('Trying to notify');
         return '';
     },
     notifyGQLError: () => {
+        // eslint-disable-next-line no-console
         console.warn('Trying to notify gql error');
         return '';
     },
     dismiss: () => {
+        // eslint-disable-next-line no-console
         console.warn('Tyring to dismiss notification');
     },
 });

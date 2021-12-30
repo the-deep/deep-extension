@@ -9,7 +9,7 @@ import {
 import { productionValues, alphaValues } from '#base/utils/apollo';
 
 const storageData = localStorage.getItem('serverConfig');
-const UrlData = JSON.parse(storageData);
+const UrlData = storageData ? JSON.parse(storageData) : undefined;
 const currentConfigMode = UrlData?.activeConfig;
 
 function getUrlData() {

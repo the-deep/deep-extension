@@ -332,27 +332,33 @@ function SourceForm(props: Props) {
     const [
         currentTabInfo,
         setCurrentTabInfo,
-    ] = useState<{ url: string, title: string } | undefined>();
+    ] = useState<{ url: string, title?: string } | undefined>();
 
     useEffect(() => {
-        chrome.cookies.get(
-            {
-                url: getWebAddress(selectedConfig),
-                name: `deep-${getIdentifier(selectedConfig)}-csrftoken`,
-            }, (cookie: { value: string } | undefined) => {
-                if (cookie) {
-                    setCsrfToken(cookie.value);
-                }
-                setCsrfTokenLoaded(true);
-            },
-        );
+        const url = getWebAddress(selectedConfig);
+        if (url) {
+            chrome.cookies.get(
+                {
+                    url,
+                    name: `deep-${getIdentifier(selectedConfig)}-csrftoken`,
+                }, (cookie: { value: string } | undefined | null) => {
+                    if (cookie) {
+                        setCsrfToken(cookie.value);
+                    }
+                    setCsrfTokenLoaded(true);
+                },
+            );
+        }
         chrome.tabs.query({
             active: true,
             currentWindow: true,
-        }, (tabs: { url: string, title: string }[] | undefined) => {
-            const tabURL: { url: string, title: string } | undefined = tabs && tabs[0];
-            if (tabURL) {
-                setCurrentTabInfo(tabURL);
+        }, (tabs) => {
+            const activeTab = tabs && tabs[0];
+            if (activeTab?.url) {
+                setCurrentTabInfo({
+                    url: activeTab?.url,
+                    title: activeTab?.title,
+                });
             }
         });
     }, [selectedConfig.activeConfig, selectedConfig]);

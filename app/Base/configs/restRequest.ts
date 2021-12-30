@@ -16,7 +16,7 @@ export const adminEndpoint = !process.env.REACT_APP_ADMIN_END
 
 const storageData = localStorage.getItem('serverConfig');
 
-const UrlData = JSON.parse(storageData);
+const UrlData = storageData ? JSON.parse(storageData) : undefined;
 const currentConfigMode = UrlData?.activeConfig;
 
 function getUrlData() {

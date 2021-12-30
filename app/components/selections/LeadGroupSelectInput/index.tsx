@@ -49,10 +49,15 @@ function LeadGroupSelectInput<K extends string>(props: LeadGroupSelectInputProps
     const [searchText, setSearchText] = useState<string>('');
     const debouncedSearchText = useDebouncedValue(searchText);
 
-    const variables = useMemo(() => ({
-        search: debouncedSearchText,
-        projectId,
-    }), [debouncedSearchText, projectId]);
+    const variables = useMemo(
+        () => (
+            projectId ? ({
+                search: debouncedSearchText,
+                projectId,
+            }) : undefined
+        ),
+        [debouncedSearchText, projectId],
+    );
 
     const { data, loading } = useQuery<LeadGroupsQuery, LeadGroupsQueryVariables>(
         LEAD_GROUPS,

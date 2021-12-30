@@ -58,6 +58,9 @@ function EmmStatsModal(props: Props) {
                         data={emmTriggers ?? undefined}
                         keySelector={emmTriggerKeySelector}
                         rendererParams={emmTriggerRendererParams}
+                        filtered={false}
+                        errored={false}
+                        pending={false}
                     />
                 </ContainerCard>
             )}
@@ -73,6 +76,9 @@ function EmmStatsModal(props: Props) {
                         data={emmEntities ?? undefined}
                         keySelector={emmEntitiesKeySelector}
                         rendererParams={emmEntitiesRendererParams}
+                        filtered={false}
+                        errored={false}
+                        pending={false}
                     />
                 </ContainerCard>
             )}

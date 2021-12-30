@@ -126,7 +126,7 @@ interface Props<N extends string | number | undefined> {
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
     csrfToken: string | undefined;
-    currentTabInfo: { url: string, title: string } | undefined;
+    currentTabInfo: { url: string, title?: string } | undefined;
 }
 
 function SourceInput<N extends string | number | undefined>(props: Props<N>) {
@@ -375,8 +375,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     useEffect(() => {
         if (currentTabInfo) {
             handleInfoAutoFill({
-                url: currentTabInfo?.url,
-                title: currentTabInfo?.title,
+                url: currentTabInfo.url,
+                title: currentTabInfo.title,
             });
         }
     }, [currentTabInfo, handleInfoAutoFill]);

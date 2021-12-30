@@ -4,7 +4,7 @@ import {
     Kraken,
 } from '@the-deep/deep-ui';
 import { _cs } from '@togglecorp/fujs';
-import { IoCheckmarkCircle, IoArrowBackCircleSharp } from 'react-icons/io5';
+import { IoCheckmarkCircle } from 'react-icons/io5';
 import SmartButtonLikeLink from '#base/components/SmartButtonLikeLink';
 import route from '#base/configs/routes';
 
@@ -39,11 +39,8 @@ function SuccessForm(props: SuccessFormInterface) {
             actions={(
                 <SmartButtonLikeLink
                     route={route.home}
-                    icons={(
-                        <IoArrowBackCircleSharp />
-                    )}
                 >
-                    Back
+                    Go Back
                 </SmartButtonLikeLink>
             )}
         />

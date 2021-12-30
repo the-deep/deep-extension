@@ -5,7 +5,7 @@ import {
     Button,
 } from '@the-deep/deep-ui';
 import { _cs } from '@togglecorp/fujs';
-import { IoCheckmarkCircle, IoRemoveCircle } from 'react-icons/io5';
+import { IoCheckmarkCircle } from 'react-icons/io5';
 
 interface SettingsFormInterface {
     className?: string;
@@ -42,13 +42,10 @@ function SettingsSuccess(props: SettingsFormInterface) {
             actions={(
                 <Button
                     name="closeExtension"
-                    icons={(
-                        <IoRemoveCircle />
-                    )}
                     onClick={handleCloseExtension}
                     variant="primary"
                 >
-                    Close
+                    Go back
                 </Button>
             )}
         />
