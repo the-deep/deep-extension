@@ -32,9 +32,9 @@ import styles from './styles.css';
 type ConfigKeys = 'beta' | 'alpha' | 'custom';
 
 type ServerConfigFields = {
-    webServerAddress: string;
-    apiServerAddress: string;
-    serverlessAddress: string;
+    webServer: string;
+    apiServer: string;
+    serverless: string;
     identifier: string;
 }
 type FormType = PartialForm<ServerConfigFields>;
@@ -44,9 +44,9 @@ type FormSchemaFields = ReturnType<FormSchema['fields']>;
 const schema: FormSchema = {
     fields: (): FormSchemaFields => ({
         identifier: [requiredStringCondition],
-        webServerAddress: [requiredStringCondition, urlCondition],
-        apiServerAddress: [requiredStringCondition, urlCondition],
-        serverlessAddress: [requiredStringCondition, urlCondition],
+        webServer: [requiredStringCondition, urlCondition],
+        apiServer: [requiredStringCondition, urlCondition],
+        serverless: [requiredStringCondition, urlCondition],
     }),
 };
 
@@ -86,36 +86,17 @@ function SourceSettings(props: Props) {
         ...otherConfig
     } = selectedConfig;
 
-    const defaultForm: FormType = useMemo(() => {
-        if (activeConfig === 'beta') {
-            return {
-                webServerAddress: productionValues.webServer,
-                apiServerAddress: productionValues.apiServer,
-                serverlessAddress: productionValues.serverLess,
-                identifier: productionValues.identifier,
-            };
-        }
-        if (activeConfig === 'alpha') {
-            return {
-                webServerAddress: alphaValues.webServer,
-                apiServerAddress: alphaValues.apiServer,
-                serverlessAddress: alphaValues.serverLess,
-                identifier: alphaValues.identifier,
-            };
-        }
-        return ({
-            webServerAddress: otherConfig.webServerUrl,
-            apiServerAddress: otherConfig.apiServerUrl,
-            serverlessAddress: otherConfig.serverlessUrl,
-            identifier: otherConfig.identifier,
-        });
-    }, [activeConfig, otherConfig]);
+    const defaultForm: FormType = useMemo(() => ({
+        webServer: otherConfig.webServerUrl,
+        apiServer: otherConfig.apiServerUrl,
+        serverless: otherConfig.serverlessUrl,
+        identifier: otherConfig.identifier,
+    }), [otherConfig]);
 
     const {
         pristine,
         value,
         error: settingsError,
-        setValue,
         setFieldValue,
         validate,
         setError,
@@ -133,66 +114,65 @@ function SourceSettings(props: Props) {
 
     const handleSubmit = useCallback(
         (urlValue: FormType) => {
-            if (activeView !== 'custom') {
+            if (activeView === 'custom') {
                 setSelectedConfig({
                     activeConfig: activeView,
-                    webServerUrl: undefined,
-                    apiServerUrl: undefined,
-                    serverlessUrl: undefined,
-                    identifier: undefined,
+                    webServerUrl: urlValue.webServer,
+                    apiServerUrl: urlValue.apiServer,
+                    serverlessUrl: urlValue.serverless,
+                    identifier: urlValue.identifier,
                 });
             } else {
                 setSelectedConfig({
                     activeConfig: activeView,
-                    webServerUrl: urlValue.webServerAddress,
-                    apiServerUrl: urlValue.apiServerAddress,
-                    serverlessUrl: urlValue.serverlessAddress,
-                    identifier: urlValue.identifier,
+                    webServerUrl: otherConfig.webServerUrl,
+                    apiServerUrl: otherConfig.apiServerUrl,
+                    serverlessUrl: otherConfig.serverlessUrl,
+                    identifier: otherConfig.identifier,
                 });
             }
             history.push(route.settingsSuccessForm.path);
         },
         [
             activeView,
+            otherConfig,
             setSelectedConfig,
             history,
         ],
     );
 
-    const handleServerEnvironment = useCallback(
-        (val: ConfigKeys) => {
-            setActiveView(val);
-            setValue(() => {
-                if (val === 'beta') {
-                    return {
-                        webServerAddress: productionValues.webServer,
-                        apiServerAddress: productionValues.apiServer,
-                        serverlessAddress: productionValues.serverLess,
-                        identifier: productionValues.identifier,
-                    };
-                }
-                if (val === 'alpha') {
-                    return {
-                        webServerAddress: alphaValues.webServer,
-                        apiServerAddress: alphaValues.apiServer,
-                        serverlessAddress: alphaValues.serverLess,
-                        identifier: alphaValues.identifier,
-                    };
-                }
+    const valueToShow = useMemo(
+        () => {
+            if (activeView === 'beta') {
                 return {
-                    webServerAddress: selectedConfig.webServerUrl,
-                    apiServerAddress: selectedConfig.apiServerUrl,
-                    serverlessAddress: selectedConfig.serverlessUrl,
-                    identifier: selectedConfig.identifier,
+                    identifier: productionValues.identifier,
+                    webServer: productionValues.webServer,
+                    apiServer: productionValues.apiServer,
+                    serverless: productionValues.serverless,
                 };
-            });
-            setPristine(false);
+            }
+            if (activeView === 'alpha') {
+                return {
+                    identifier: alphaValues.identifier,
+                    webServer: alphaValues.webServer,
+                    apiServer: alphaValues.apiServer,
+                    serverless: alphaValues.serverless,
+                };
+            }
+            return value;
         },
         [
-            selectedConfig,
-            setValue,
-            setPristine,
+            value,
+            activeView,
         ],
+    );
+
+    const handleServerEnvironmentChange = useCallback(
+        (val: ConfigKeys) => {
+            setActiveView(val);
+            setPristine(false);
+        },
+        [setPristine],
     );
 
     return (
@@ -226,7 +206,7 @@ function SourceSettings(props: Props) {
                     className={styles.input}
                     name="server-env"
                     value={activeView}
-                    onChange={handleServerEnvironment}
+                    onChange={handleServerEnvironmentChange}
                     options={serverOptions}
                     keySelector={segmentKeySelector}
                     labelSelector={segmentLabelSelector}
@@ -238,7 +218,7 @@ function SourceSettings(props: Props) {
                         labelContainerClassName={styles.label}
                         label="Identifier"
                         name="identifier"
-                        value={value.identifier}
+                        value={valueToShow.identifier}
                         onChange={setFieldValue}
                         readOnly={disableInput}
                         error={error?.identifier}
@@ -247,9 +227,9 @@ function SourceSettings(props: Props) {
                         className={styles.input}
                         labelContainerClassName={styles.label}
                         label="Web Server Address"
-                        name="webServerAddress"
-                        value={value.webServerAddress}
-                        error={error?.webServerAddress}
+                        name="webServer"
+                        value={valueToShow.webServer}
+                        error={error?.webServer}
                         onChange={setFieldValue}
                         readOnly={disableInput}
                     />
@@ -257,21 +237,21 @@ function SourceSettings(props: Props) {
                         className={styles.input}
                         labelContainerClassName={styles.label}
                         label="Api Server Address"
-                        name="apiServerAddress"
-                        value={value.apiServerAddress}
+                        name="apiServer"
+                        value={valueToShow.apiServer}
                         onChange={setFieldValue}
                         readOnly={disableInput}
-                        error={error?.apiServerAddress}
+                        error={error?.apiServer}
                     />
                     <TextInput
                         className={styles.input}
                         labelContainerClassName={styles.label}
                         label="Serverless Address"
-                        name="serverlessAddress"
-                        value={value.serverlessAddress}
+                        name="serverless"
+                        value={valueToShow.serverless}
                         onChange={setFieldValue}
                         readOnly={disableInput}
-                        error={error?.serverlessAddress}
+                        error={error?.serverless}
                     />
                 </Card>
             </ContainerCard>
