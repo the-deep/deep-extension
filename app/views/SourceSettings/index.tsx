@@ -42,12 +42,22 @@ type FormSchema = ObjectSchema<FormType>
 type FormSchemaFields = ReturnType<FormSchema['fields']>;
 
 const schema: FormSchema = {
-    fields: (): FormSchemaFields => ({
-        identifier: [requiredStringCondition],
-        webServer: [requiredStringCondition, urlCondition],
-        apiServer: [requiredStringCondition, urlCondition],
-        serverless: [requiredStringCondition, urlCondition],
-    }),
+    fields: (value): FormSchemaFields => {
+        if (value?.identifier !== 'alpha' && value?.identifier !== 'beta') {
+            return ({
+                identifier: [requiredStringCondition],
+                webServer: [requiredStringCondition, urlCondition],
+                apiServer: [requiredStringCondition, urlCondition],
+                serverless: [requiredStringCondition, urlCondition],
+            });
+        }
+        return {
+            identifier: [],
+            webServer: [],
+            apiServer: [],
+            serverless: [],
+        };
+    },
 };
 
 const segmentKeySelector = (data: { key: ConfigKeys; }) => data.key;
@@ -112,34 +122,49 @@ function SourceSettings(props: Props) {
 
     const disableInput = activeView !== 'custom';
 
-    const handleSubmit = useCallback(
-        (urlValue: FormType) => {
-            if (activeView === 'custom') {
-                setSelectedConfig({
-                    activeConfig: activeView,
-                    webServerUrl: urlValue.webServer,
-                    apiServerUrl: urlValue.apiServer,
-                    serverlessUrl: urlValue.serverless,
-                    identifier: urlValue.identifier,
-                });
-            } else {
-                setSelectedConfig({
-                    activeConfig: activeView,
-                    webServerUrl: otherConfig.webServerUrl,
-                    apiServerUrl: otherConfig.apiServerUrl,
-                    serverlessUrl: otherConfig.serverlessUrl,
-                    identifier: otherConfig.identifier,
-                });
-            }
+    const handleCustomSubmit = useCallback(
+        () => {
+            const submit = createSubmitHandler(
+                validate,
+                setError,
+                (val) => {
+                    const data = { ...val } as FormType;
+                    setSelectedConfig({
+                        activeConfig: activeView,
+                        webServerUrl: data.webServer,
+                        apiServerUrl: data.apiServer,
+                        serverlessUrl: data.serverless,
+                        identifier: data.identifier,
+                    });
+                },
+            );
+            submit();
             history.push(route.settingsSuccessForm.path);
         },
         [
             activeView,
-            otherConfig,
             setSelectedConfig,
             history,
+            setError,
+            validate,
         ],
     );
+
+    const handleFixedSubmit = useCallback(() => {
+        setSelectedConfig({
+            activeConfig: activeView,
+            webServerUrl: otherConfig.webServerUrl,
+            apiServerUrl: otherConfig.apiServerUrl,
+            serverlessUrl: otherConfig.serverlessUrl,
+            identifier: otherConfig.identifier,
+        });
+        history.push(route.settingsSuccessForm.path);
+    }, [
+        activeView,
+        otherConfig,
+        setSelectedConfig,
+        history,
+    ]);
 
     const valueToShow = useMemo(
         () => {
@@ -176,86 +201,124 @@ function SourceSettings(props: Props) {
     );
 
     return (
-        <form
-            onSubmit={createSubmitHandler(validate, setError, handleSubmit)}
+        <ContainerCard
+            className={_cs(className, styles.settingsBox)}
+            footerActions={(
+                <>
+                    <SmartButtonLikeLink
+                        route={route.home}
+                        icons={(
+                            <IoArrowBackCircleSharp />
+                        )}
+                    >
+                        Back
+                    </SmartButtonLikeLink>
+                    <Button
+                        name={undefined}
+                        onClick={activeView === 'custom' ? handleCustomSubmit : handleFixedSubmit}
+                        disabled={pristine}
+                    >
+                        Save
+                    </Button>
+                </>
+            )}
         >
-            <ContainerCard
-                className={_cs(className, styles.settingsBox)}
-                footerActions={(
+            <SegmentInput
+                className={styles.input}
+                name="server-env"
+                value={activeView}
+                onChange={handleServerEnvironmentChange}
+                options={serverOptions}
+                keySelector={segmentKeySelector}
+                labelSelector={segmentLabelSelector}
+            />
+            <Card className={_cs(styles.alphaForm, className)}>
+                <NonFieldError error={error} />
+                {(activeView === 'alpha' || activeView === 'beta') ? (
                     <>
-                        <SmartButtonLikeLink
-                            route={route.home}
-                            icons={(
-                                <IoArrowBackCircleSharp />
-                            )}
-                        >
-                            Back
-                        </SmartButtonLikeLink>
-                        <Button
-                            // FIXME: Add disabled during pristine later
-                            name={undefined}
-                            type="submit"
-                            disabled={pristine}
-                        >
-                            Save
-                        </Button>
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Identifier"
+                            name="identifier"
+                            value={valueToShow.identifier}
+                            onChange={undefined}
+                            readOnly
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Web Server Address"
+                            name="webServer"
+                            value={valueToShow.webServer}
+                            onChange={undefined}
+                            readOnly
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Api Server Address"
+                            name="apiServer"
+                            value={valueToShow.apiServer}
+                            onChange={undefined}
+                            readOnly
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Serverless Address"
+                            name="serverless"
+                            value={valueToShow.serverless}
+                            onChange={undefined}
+                            readOnly
+                        />
+                    </>
+                ) : (
+                    <>
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Identifier"
+                            name="identifier"
+                            value={valueToShow.identifier}
+                            onChange={setFieldValue}
+                            readOnly={disableInput}
+                            error={error?.identifier}
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Web Server Address"
+                            name="webServer"
+                            value={valueToShow.webServer}
+                            error={error?.webServer}
+                            onChange={setFieldValue}
+                            readOnly={disableInput}
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Api Server Address"
+                            name="apiServer"
+                            value={valueToShow.apiServer}
+                            onChange={setFieldValue}
+                            readOnly={disableInput}
+                            error={error?.apiServer}
+                        />
+                        <TextInput
+                            className={styles.input}
+                            labelContainerClassName={styles.label}
+                            label="Serverless Address"
+                            name="serverless"
+                            value={valueToShow.serverless}
+                            onChange={setFieldValue}
+                            readOnly={disableInput}
+                            error={error?.serverless}
+                        />
                     </>
                 )}
-            >
-                <SegmentInput
-                    className={styles.input}
-                    name="server-env"
-                    value={activeView}
-                    onChange={handleServerEnvironmentChange}
-                    options={serverOptions}
-                    keySelector={segmentKeySelector}
-                    labelSelector={segmentLabelSelector}
-                />
-                <Card className={_cs(styles.alphaForm, className)}>
-                    <NonFieldError error={error} />
-                    <TextInput
-                        className={styles.input}
-                        labelContainerClassName={styles.label}
-                        label="Identifier"
-                        name="identifier"
-                        value={valueToShow.identifier}
-                        onChange={setFieldValue}
-                        readOnly={disableInput}
-                        error={error?.identifier}
-                    />
-                    <TextInput
-                        className={styles.input}
-                        labelContainerClassName={styles.label}
-                        label="Web Server Address"
-                        name="webServer"
-                        value={valueToShow.webServer}
-                        error={error?.webServer}
-                        onChange={setFieldValue}
-                        readOnly={disableInput}
-                    />
-                    <TextInput
-                        className={styles.input}
-                        labelContainerClassName={styles.label}
-                        label="Api Server Address"
-                        name="apiServer"
-                        value={valueToShow.apiServer}
-                        onChange={setFieldValue}
-                        readOnly={disableInput}
-                        error={error?.apiServer}
-                    />
-                    <TextInput
-                        className={styles.input}
-                        labelContainerClassName={styles.label}
-                        label="Serverless Address"
-                        name="serverless"
-                        value={valueToShow.serverless}
-                        onChange={setFieldValue}
-                        readOnly={disableInput}
-                        error={error?.serverless}
-                    />
-                </Card>
-            </ContainerCard>
-        </form>
+            </Card>
+        </ContainerCard>
     );
 }
 
