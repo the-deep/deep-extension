@@ -212,12 +212,7 @@ function Base() {
                                                 <Init
                                                     className={styles.init}
                                                 >
-                                                    <Navbar
-                                                        className={_cs(
-                                                            styles.navbar,
-                                                            !navbarVisibility && styles.hidden,
-                                                        )}
-                                                    />
+                                                    <Navbar className={_cs(styles.navbar)} />
                                                     <Routes
                                                         className={styles.view}
                                                     />
