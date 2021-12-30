@@ -1,0 +1,18 @@
+.settings-box {
+    width: 100vw;
+    height: 90vh;
+    --width-preview: 560px;
+
+    .alpha-form {
+        padding: calc(var(--dui-spacing-large) - var(--dui-spacing-medium));
+
+        .input {
+            padding: var(--dui-spacing-medium);
+            font-size: var(--dui-font-size-large);
+
+            .label {
+                font-size: var(--dui-font-size-large);
+            }
+        }
+    }
+}

@@ -29,7 +29,14 @@ const base = {
         default_popup: 'index.html',
     },
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
-    permissions: ['storage'],
+    // host_permissions: ['<all_urls>'],
+    permissions: [
+        'storage',
+        'cookies',
+        'activeTab',
+        'tabs',
+        '<all_urls>',
+    ],
     icons: {
         32: 'icons/logo-32.png',
         64: 'icons/logo-64.png',
@@ -165,7 +172,6 @@ module.exports = () => {
                 meta: {
                     viewport: 'width=device-width, initial-scale=1.0, shrink-to-fit=no',
                     description: pkg.description,
-                    referrer: 'origin',
                 },
             }),
             new CopyPlugin({

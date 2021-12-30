@@ -1,0 +1,28 @@
+.lead-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--dui-spacing-medium);
+    padding: var(--dui-spacing-small);
+
+    .row {
+        display: flex;
+        gap: var(--dui-spacing-medium);
+
+        .row-input {
+            flex-basis: calc(50% - var(--dui-spacing-medium) / 2);
+        }
+
+    }
+
+    .priority-row {
+        display: flex;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: var(--dui-spacing-medium);
+
+        .checkboxes {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

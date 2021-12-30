@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Router } from 'react-router-dom';
 import { init, ErrorBoundary, setUser as setUserOnSentry } from '@sentry/react';
-import { unique, _cs } from '@togglecorp/fujs';
+import { _cs, unique } from '@togglecorp/fujs';
 import { AlertContainer, AlertContext, AlertOptions } from '@the-deep/deep-ui';
 import { ApolloClient, ApolloProvider } from '@apollo/client';
 import ReactGA from 'react-ga';
@@ -12,15 +12,29 @@ import Init from '#base/components/Init';
 import PreloadMessage from '#base/components/PreloadMessage';
 import browserHistory from '#base/configs/history';
 import sentryConfig from '#base/configs/sentry';
+import Navbar from '#base/components/Navbar';
 import { UserContext, UserContextInterface } from '#base/context/UserContext';
+import {
+    ServerContext,
+    ServerContextInterface,
+    defaultServerConfig,
+    SelectedConfigType,
+} from '#base/context/serverContext';
+import useStoredState from './hooks/useLocalStorage';
 import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
 import AuthPopup from '#base/components/AuthPopup';
 import { sync } from '#base/hooks/useAuthSync';
-import Navbar from '#base/components/Navbar';
 import Routes from '#base/components/Routes';
 import { User } from '#base/types/user';
 import apolloConfig from '#base/configs/apollo';
 import { trackingId, gaConfig } from '#base/configs/googleAnalytics';
+import {
+    processDeepUrls,
+    processDeepOptions,
+    processDeepResponse,
+    processDeepError,
+    RequestContext,
+} from '#base/utils/restRequest';
 
 import styles from './styles.css';
 
@@ -39,10 +53,22 @@ if (trackingId) {
 
 const apolloClient = new ApolloClient(apolloConfig);
 
+const requestContextValue = {
+    transformUrl: processDeepUrls,
+    transformOptions: processDeepOptions,
+    transformResponse: processDeepResponse,
+    transformError: processDeepError,
+};
+
 function Base() {
     const [user, setUser] = useState<User | undefined>();
 
     const [navbarVisibility, setNavbarVisibility] = useState(false);
+
+    const [
+        selectedConfig,
+        setSelectedConfig,
+    ] = useStoredState<SelectedConfigType>('serverConfig', defaultServerConfig);
 
     const authenticated = !!user;
 
@@ -91,6 +117,14 @@ function Base() {
             setNavbarVisibility,
         }),
         [navbarVisibility, setNavbarVisibility],
+    );
+
+    const serverContext: ServerContextInterface = useMemo(
+        () => ({
+            selectedConfig,
+            setSelectedConfig,
+        }),
+        [selectedConfig, setSelectedConfig],
     );
 
     const [alerts, setAlerts] = React.useState<AlertOptions[]>([]);
@@ -165,31 +199,32 @@ function Base() {
                     />
                 )}
             >
-                <ApolloProvider client={apolloClient}>
-                    <UserContext.Provider value={userContext}>
-                        <NavbarContext.Provider value={navbarContext}>
-                            <AlertContext.Provider value={alertContext}>
-                                <AuthPopup />
-                                <AlertContainer className={styles.alertContainer} />
-                                <Router history={browserHistory}>
-                                    <Init
-                                        className={styles.init}
-                                    >
-                                        <Navbar
-                                            className={_cs(
-                                                styles.navbar,
-                                                !navbarVisibility && styles.hidden,
-                                            )}
-                                        />
-                                        <Routes
-                                            className={styles.view}
-                                        />
-                                    </Init>
-                                </Router>
-                            </AlertContext.Provider>
-                        </NavbarContext.Provider>
-                    </UserContext.Provider>
-                </ApolloProvider>
+                <RequestContext.Provider value={requestContextValue}>
+                    <ApolloProvider client={apolloClient}>
+                        <UserContext.Provider value={userContext}>
+                            <NavbarContext.Provider value={navbarContext}>
+                                <ServerContext.Provider value={serverContext}>
+                                    <NavbarContext.Provider value={navbarContext}>
+                                        <AlertContext.Provider value={alertContext}>
+                                            <AuthPopup />
+                                            <AlertContainer className={styles.alertContainer} />
+                                            <Router history={browserHistory}>
+                                                <Init
+                                                    className={styles.init}
+                                                >
+                                                    <Navbar className={_cs(styles.navbar)} />
+                                                    <Routes
+                                                        className={styles.view}
+                                                    />
+                                                </Init>
+                                            </Router>
+                                        </AlertContext.Provider>
+                                    </NavbarContext.Provider>
+                                </ServerContext.Provider>
+                            </NavbarContext.Provider>
+                        </UserContext.Provider>
+                    </ApolloProvider>
+                </RequestContext.Provider>
             </ErrorBoundary>
         </div>
     );

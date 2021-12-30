@@ -2,53 +2,75 @@ import { lazy } from 'react';
 
 import { wrap } from '#base/utils/routes';
 
-const fourHundredFour = wrap({
-    path: '*',
-    title: '404',
-    component: lazy(() => import('#base/components/PreloadMessage')),
-    componentProps: {
-        heading: '404',
-        content: 'What you are looking for does not exist.',
-    },
-    visibility: 'is-anything',
-    navbarVisibility: true,
-});
 const login = wrap({
     path: '/login/',
     title: 'Login',
     navbarVisibility: false,
-    component: lazy(() => import('#views/Template')),
-    componentProps: {
-        name: 'Login Page',
-    },
+    component: lazy(() => import('#views/Login')),
+    componentProps: {},
     visibility: 'is-not-authenticated',
 });
-const home = wrap({
+const index = wrap({
     // NOTE: the first url is /index.html for addons
     path: '/index.html',
-    title: 'Home',
+    title: 'Index',
     navbarVisibility: true,
-    component: lazy(() => import('#views/Template')),
-    componentProps: {
-        name: 'Home Page',
-    },
+    component: lazy(() => import('#views/SourceForm')),
+    componentProps: {},
     visibility: 'is-authenticated',
 });
-const myProfile = wrap({
-    path: '/my-profile/',
-    title: 'My Profile',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/Template')),
-    componentProps: {
-        name: 'My Profile Page',
-    },
+
+const home = wrap({
+    path: '/',
+    title: 'Add source',
+    component: lazy(() => import('#views/SourceForm')),
+    componentProps: {},
     visibility: 'is-authenticated',
+    navbarVisibility: true,
+});
+
+const leadSettings = wrap({
+    path: '/lead-settings/',
+    title: 'Settings',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SourceSettings')),
+    componentProps: {},
+    visibility: 'is-anything',
+});
+const successForm = wrap({
+    path: '/success/',
+    title: 'Success Submission',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SuccessForm')),
+    componentProps: {},
+    visibility: 'is-anything',
+});
+
+const settingsSuccessForm = wrap({
+    path: '/settingsSuccess/',
+    title: 'Url Settings Success',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SettingsSuccess')),
+    componentProps: {},
+    visibility: 'is-anything',
+});
+
+const fourHundredFour = wrap({
+    path: '',
+    title: '404',
+    component: lazy(() => import('#views/FourHundredFour')),
+    componentProps: {},
+    visibility: 'is-anything',
+    navbarVisibility: true,
 });
 
 const routes = {
     login,
+    index,
     home,
-    myProfile,
+    leadSettings,
     fourHundredFour,
+    successForm,
+    settingsSuccessForm,
 };
 export default routes;

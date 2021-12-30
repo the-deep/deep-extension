@@ -23,15 +23,21 @@ function Routes(props: Props) {
             <Switch>
                 <Route
                     exact
+                    path={routes.index.path}
+                >
+                    {routes.index.load({ className })}
+                </Route>
+                <Route
+                    exact
                     path={routes.home.path}
                 >
                     {routes.home.load({ className })}
                 </Route>
                 <Route
                     exact
-                    path={routes.myProfile.path}
+                    path={routes.leadSettings.path}
                 >
-                    {routes.myProfile.load({ className })}
+                    {routes.leadSettings.load({ className })}
                 </Route>
                 <Route
                     exact
@@ -41,9 +47,21 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
+                    path={routes.successForm.path}
+                >
+                    {routes.successForm.load({})}
+                </Route>
+                <Route
+                    exact
+                    path={routes.settingsSuccessForm.path}
+                >
+                    {routes.settingsSuccessForm.load({})}
+                </Route>
+                <Route
+                    exact
                     path={routes.fourHundredFour.path}
                 >
-                    {routes.fourHundredFour.load({ className })}
+                    {routes.fourHundredFour.load({})}
                 </Route>
             </Switch>
         </Suspense>
