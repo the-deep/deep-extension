@@ -1,5 +1,6 @@
 // FIXME: remove this
 import { productionValues, alphaValues } from '#base/utils/apollo';
+import { SelectedConfigType } from '#base/context/serverContext';
 
 export const reactAppApiHttps = location.protocol === 'https:' // eslint-disable-line no-restricted-globals
     ? 'https'
@@ -16,18 +17,18 @@ export const adminEndpoint = !process.env.REACT_APP_ADMIN_END
 
 const storageData = localStorage.getItem('serverConfig');
 
-const UrlData = storageData ? JSON.parse(storageData) : undefined;
-const currentConfigMode = UrlData?.activeConfig;
+const urlData: SelectedConfigType | undefined = storageData ? JSON.parse(storageData) : undefined;
+const currentConfigMode = urlData?.activeConfig;
 
 function getUrlData() {
     if (currentConfigMode === 'alpha') {
-        return alphaValues.webServer;
+        return alphaValues.apiServer;
     }
     if (currentConfigMode === 'beta') {
-        return productionValues.webServer;
+        return productionValues.apiServer;
     }
     if (currentConfigMode === 'custom') {
-        return UrlData?.apiServerUrl;
+        return urlData?.apiServerUrl;
     }
     return null;
 }
@@ -38,17 +39,14 @@ export const wsEndpoint = `${webAddress}/api/v1`;
 export const adminEndpoint = `${webAddress}/admin/`;
 
 export const serverlessEndpoint = (() => {
-    if (process.env.REACT_APP_SERVERLESS_DOMAIN) {
-        return process.env.REACT_APP_SERVERLESS_DOMAIN;
+    if (currentConfigMode === 'alpha') {
+        return alphaValues?.serverless;
     }
-    switch (process.env.REACT_APP_DEEP_ENVIRONMENT) {
-        case 'nightly':
-            return 'https://services-nightly.thedeep.io';
-        case 'alpha':
-            return 'https://services-alpha.thedeep.io';
-        case 'beta':
-            return 'https://services.thedeep.io';
-        default:
-            return 'https://services-local.thedeep.io';
+    if (currentConfigMode === 'beta') {
+        return productionValues?.serverless;
     }
+    if (currentConfigMode === 'custom') {
+        return urlData?.serverlessUrl;
+    }
+    return null;
 })();
