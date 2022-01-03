@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import {
     useForm,
     requiredCondition,
@@ -14,12 +14,12 @@ import {
     TextInput,
     Button,
     Modal,
+    useAlert,
 } from '@the-deep/deep-ui';
 import {
     useRequest,
     useLazyRequest,
 } from '#base/utils/restRequest';
-import NotificationContext from '#base/context/NotificationContext';
 
 import {
     Organization,
@@ -60,9 +60,7 @@ function AddOrganizationModal(props: Props) {
         onOrganizationAdd,
     } = props;
 
-    const {
-        notify,
-    } = useContext(NotificationContext);
+    const alert = useAlert();
 
     const {
         pending: organizationTypesPending,
@@ -82,18 +80,18 @@ function AddOrganizationModal(props: Props) {
         onSuccess: (response) => {
             if (onOrganizationAdd) {
                 onOrganizationAdd(response);
-                notify({
-                    children: 'Organization created successfully!',
-                    variant: 'success',
-                });
+                alert.show(
+                    'Organization created successfully!',
+                    { variant: 'success' },
+                );
             }
             onModalClose();
         },
         onFailure: ({ value: errorValue }) => {
-            notify({
-                children: errorValue,
-                variant: 'error',
-            });
+            alert.show(
+                { children: errorValue },
+                { variant: 'error' },
+            );
         },
         failureHeader: 'addOrganizationModal',
     });
@@ -147,7 +145,7 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.title}
                 error={error?.title}
-                label="Organization Title"
+                label="Title"
                 placeholder="Title"
                 autoFocus
             />
@@ -157,7 +155,7 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.shortName}
                 error={error?.shortName}
-                label="Organization ShortName"
+                label="ShortName"
                 placeholder="ShortName"
             />
             <TextInput
