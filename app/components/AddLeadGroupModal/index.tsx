@@ -103,7 +103,6 @@ function AddLeadGroupModal(props: Props) {
         other: () => ({
             headers: {
                 Authorization: `Bearer ${csrfToken}`,
-                'X-CSRFToken': csrfToken as string,
             },
         }),
         onSuccess: (response) => {
@@ -120,6 +119,13 @@ function AddLeadGroupModal(props: Props) {
                 {
                     variant: 'success',
                 },
+            );
+            onModalClose();
+        },
+        onFailure: ({ value: errorValue }) => {
+            alert.show(
+                { children: errorValue },
+                { variant: 'error' },
             );
             onModalClose();
         },
