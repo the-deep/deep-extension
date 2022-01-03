@@ -1,7 +1,7 @@
 {
-    "name": "deep-extension",
+    "name": "DEEP",
     "version": "1.0.0",
-    "description": "DEEP Extension",
+    "description": "Extension to add sources to the deep",
     "scripts": {
         "generate": "env-cmd -f .env graphql-codegen --config codegen.yml",
         "lint": "eslint ./app --report-unused-disable-directives",
