@@ -31,11 +31,10 @@ const base = {
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
     // host_permissions: ['<all_urls>'],
     permissions: [
-        'storage',
         'cookies',
         'activeTab',
-        'tabs',
-        '<all_urls>',
+        'https://*.thedeep.io/',
+        'http://localhost:*/',
     ],
     icons: {
         32: 'icons/logo-32.png',

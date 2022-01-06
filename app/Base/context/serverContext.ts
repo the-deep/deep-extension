@@ -14,11 +14,7 @@ export interface ServerContextInterface {
 }
 
 export const defaultServerConfig = {
-    activeConfig: 'custom' as const,
-    webServerUrl: 'https://alpha-2.thedeep.io',
-    apiServerUrl: 'https://alpha-2-api.thedeep.io',
-    serverlessUrl: 'https://services-local.thedeep.io',
-    identifier: 'alpha-2',
+    activeConfig: 'beta' as const,
 };
 
 export const ServerContext = createContext<ServerContextInterface>({
