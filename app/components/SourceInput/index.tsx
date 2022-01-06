@@ -407,7 +407,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                         name="leadExtract"
                         variant="action"
                         onClick={handleLeadDataExtract}
-                        title="Auto-fill lead information"
+                        title="Auto-fill source information"
                         disabled={!value.url}
                     >
                         <IoEye />
