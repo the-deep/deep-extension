@@ -23,6 +23,8 @@ function getPath(value) {
 
 const gitRevisionPlugin = new GitRevisionPlugin();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const base = {
     manifest_version: 2,
     browser_action: {
@@ -31,20 +33,17 @@ const base = {
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
     // host_permissions: ['<all_urls>'],
     permissions: [
-        'storage',
         'cookies',
         'activeTab',
-        'tabs',
-        '<all_urls>',
-    ],
+        'https://*.thedeep.io/',
+        isProduction ? undefined : 'http://localhost:*/',
+    ].filter(Boolean),
     icons: {
         32: 'icons/logo-32.png',
         64: 'icons/logo-64.png',
         128: 'icons/logo-128.png',
     },
 };
-
-const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = () => {
     const config = {
