@@ -1,6 +1,6 @@
 {
     "name": "DEEP",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Extension to add sources to the deep",
     "scripts": {
         "generate": "env-cmd -f .env graphql-codegen --config codegen.yml",

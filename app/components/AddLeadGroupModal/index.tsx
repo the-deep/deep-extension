@@ -147,7 +147,7 @@ function AddLeadGroupModal(props: Props) {
 
     return (
         <Modal
-            heading="Add lead group"
+            heading="Add source group"
             freeHeight
             size="small"
             onCloseButtonClick={onModalClose}

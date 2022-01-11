@@ -238,7 +238,6 @@ function SourceSettings(props: Props) {
                     <>
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Identifier"
                             name="identifier"
                             value={valueToShow.identifier}
@@ -247,7 +246,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Web Server Address"
                             name="webServer"
                             value={valueToShow.webServer}
@@ -256,7 +254,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Api Server Address"
                             name="apiServer"
                             value={valueToShow.apiServer}
@@ -265,7 +262,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Serverless Address"
                             name="serverless"
                             value={valueToShow.serverless}
@@ -277,7 +273,6 @@ function SourceSettings(props: Props) {
                     <>
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Identifier"
                             name="identifier"
                             value={valueToShow.identifier}
@@ -287,7 +282,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Web Server Address"
                             name="webServer"
                             value={valueToShow.webServer}
@@ -297,7 +291,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Api Server Address"
                             name="apiServer"
                             value={valueToShow.apiServer}
@@ -307,7 +300,6 @@ function SourceSettings(props: Props) {
                         />
                         <TextInput
                             className={styles.input}
-                            labelContainerClassName={styles.label}
                             label="Serverless Address"
                             name="serverless"
                             value={valueToShow.serverless}

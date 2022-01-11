@@ -407,7 +407,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                         name="leadExtract"
                         variant="action"
                         onClick={handleLeadDataExtract}
-                        title="Auto-fill lead information"
+                        title="Auto-fill source information"
                         disabled={!value.url}
                     >
                         <IoEye />
@@ -430,6 +430,31 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 error={error?.title}
                 disabled={disabled}
             />
+            {selectedProjectData?.hasAssessmentTemplate && (
+                <LeadGroupSelectInput
+                    name="leadGroup"
+                    value={value.leadGroup}
+                    onChange={setFieldValue}
+                    options={leadGroupOptions}
+                    onOptionsChange={onLeadGroupOptionsChange}
+                    disabled={disabled}
+                    label="Source Group"
+                    error={error?.leadGroup}
+                    projectId={projectId}
+                    actions={(
+                        <QuickActionButton
+                            name={undefined}
+                            variant="transparent"
+                            onClick={handleAddLeadGroupClick}
+                            disabled={disabled}
+                            title="Add source group"
+                        >
+                            <IoAdd />
+
+                        </QuickActionButton>
+                    )}
+                />
+            )}
             <div className={styles.row}>
                 <DateInput
                     className={styles.rowInput}
@@ -505,32 +530,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
-            {selectedProjectData?.hasAssessmentTemplate && (
-                <LeadGroupSelectInput
-                    // FIXME: Filter this out based on if the project has assessment or not
-                    name="leadGroup"
-                    value={value.leadGroup}
-                    onChange={setFieldValue}
-                    options={leadGroupOptions}
-                    onOptionsChange={onLeadGroupOptionsChange}
-                    disabled={disabled}
-                    label="Source Group"
-                    error={error?.leadGroup}
-                    projectId={projectId}
-                    actions={(
-                        <QuickActionButton
-                            name={undefined}
-                            variant="transparent"
-                            onClick={handleAddLeadGroupClick}
-                            disabled={disabled}
-                            title="Add source group"
-                        >
-                            <IoAdd />
-
-                        </QuickActionButton>
-                    )}
-                />
-            )}
             <div className={styles.priorityRow}>
                 <SegmentInput
                     name="priority"

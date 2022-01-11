@@ -146,7 +146,6 @@ function AddOrganizationModal(props: Props) {
                 value={value?.title}
                 error={error?.title}
                 label="Title"
-                placeholder="Title"
                 autoFocus
             />
             <TextInput
@@ -155,8 +154,7 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.shortName}
                 error={error?.shortName}
-                label="ShortName"
-                placeholder="ShortName"
+                label="Short name"
             />
             <TextInput
                 name="url"
@@ -164,8 +162,7 @@ function AddOrganizationModal(props: Props) {
                 onChange={setFieldValue}
                 value={value?.url}
                 error={error?.url}
-                label="Url"
-                placeholder="Url"
+                label="URL"
             />
             <SelectInput
                 name="organizationType"
@@ -176,7 +173,6 @@ function AddOrganizationModal(props: Props) {
                 keySelector={organizationTypeKeySelector}
                 labelSelector={organizationTypeLabelSelector}
                 label="Organization Type"
-                placeholder="Type"
             />
         </Modal>
     );
