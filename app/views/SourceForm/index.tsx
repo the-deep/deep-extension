@@ -294,7 +294,7 @@ function SourceForm(props: Props) {
                     [internal]: errors.message,
                 });
                 alert.show(
-                    'There was an issue creating a new lead!',
+                    'There was an issue creating a new source!',
                     { variant: 'error' },
                 );
             },

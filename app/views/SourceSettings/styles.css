@@ -8,11 +8,6 @@
 
         .input {
             padding: var(--dui-spacing-medium);
-            font-size: var(--dui-font-size-large);
-
-            .label {
-                font-size: var(--dui-font-size-large);
-            }
         }
     }
 }
