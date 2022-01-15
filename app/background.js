@@ -8,7 +8,6 @@ const getWebsiteFromUrl = (url) => {
 
 const emptyObject = {};
 
-// TODO: make common constant for webpage as well
 const EXTENSION_GET_SCREENSHOT_MESSAGE = 'deep_extension_le_get-screenshot';
 const EXTENSION_SET_TOKEN_MESSAGE = 'deep_extension_le_set-token';
 const EXTENSION_SET_TOKEN_FG_MESSAGE = 'deep_extension_le_set-token-fg';

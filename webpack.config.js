@@ -43,6 +43,13 @@ const base = {
         64: 'icons/logo-64.png',
         128: 'icons/logo-128.png',
     },
+    background: {
+        scripts: ['background.js'],
+        persistent: false,
+    },
+    externally_connectable: {
+        matches: ['*://*.thedeep.io/*', isProduction ? undefined : '*://localhost:*/*'].filter(Boolean),
+    },
 };
 
 module.exports = () => {
@@ -177,6 +184,9 @@ module.exports = () => {
                 patterns: [{
                     from: getPath('app/icons/'),
                     to: 'icons/',
+                }, {
+                    from: getPath('app/background.js'),
+                    to: '.',
                 }],
             }),
             new WebpackExtensionManifest({
