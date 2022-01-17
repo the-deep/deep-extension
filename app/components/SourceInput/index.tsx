@@ -255,6 +255,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     const handleProjectChange = useCallback((projectVal) => {
         setProjectId(projectVal);
         setFieldValue(null, 'assignee');
+        setFieldValue(null, 'leadGroup');
     }, [setFieldValue, setProjectId]);
 
     const {
