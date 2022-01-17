@@ -1,5 +1,5 @@
 {
-    "name": "DEEP",
+    "name": "deep-browser-extension",
     "version": "1.0.2",
     "description": "Extension to add sources to the deep",
     "scripts": {
@@ -24,15 +24,15 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/togglecorp/base-react-app.git"
+        "url": "git+https://github.com/the-deep/deep-extension.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/togglecorp/base-react-app/issues"
+        "url": "https://github.com/the-deep/deep-extension/issues"
     },
-    "homepage": "https://github.com/togglecorp/base-react-app#readme",
+    "homepage": "https://github.com/the-deep/deep-extension#readme",
     "dependencies": {
         "@apollo/client": "^3.3.21",
         "@sentry/react": "^6.9.0",
