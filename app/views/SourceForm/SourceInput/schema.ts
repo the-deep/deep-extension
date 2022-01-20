@@ -12,7 +12,7 @@ import {
     leadSchema,
 } from './bulkUploadSchema';
 
-import { EnumFix } from '../../utils/types';
+import { EnumFix } from '#utils/types';
 
 export type EmmTrigger = LeadEmmTriggerInputType;
 

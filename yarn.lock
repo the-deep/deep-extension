@@ -1024,10 +1024,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.16.5":
-  version "7.16.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.5.tgz#7f3e34bf8bdbbadf03fbb7b1ea0d929569c9487a"
-  integrity sha512-TXWihFIS3Pyv5hzR7j6ihmeLkZfrXGxAr5UfSl8CHf+6q/wpiYDkUau0czckpYG8QmnCIuPpdLtuA9VmuGGyMA==
+"@babel/runtime@^7.16.7":
+  version "7.16.7"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.7.tgz#03ff99f64106588c9c403c6ecb8c3bafbbdff1fa"
+  integrity sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1977,29 +1977,28 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tanem/svg-injector@^10.1.12":
-  version "10.1.14"
-  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-10.1.14.tgz#e42f5defb524551770c1a583f950d4bc89e6fd73"
-  integrity sha512-VjcuoKb2jCyx7FeOoz+p3LfH+V2HYXpPPVbTqWdHNV4R8d6DtHYNfQWPivSVcNi0cAtkLnDuEE+2c714YA2l5A==
+"@tanem/svg-injector@^10.1.14":
+  version "10.1.15"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-10.1.15.tgz#b254eca61491ba111b824d7fa61392f0a3d98a9b"
+  integrity sha512-dR6iN4Ha6w9qcfEEgp3l8jcQHi2TDRjvfD38B6BJGBFObHbO8++/NujVUPlhM6ds5X8Lu5R1+MCig5LIw3bMrw==
   dependencies:
-    "@babel/runtime" "^7.16.5"
+    "@babel/runtime" "^7.16.7"
     content-type "^1.0.4"
     tslib "^2.3.1"
 
-"@the-deep/deep-ui@^1.5.18":
-  version "1.5.18"
-  resolved "https://registry.yarnpkg.com/@the-deep/deep-ui/-/deep-ui-1.5.18.tgz#3ea5601339ac6271802d57bbd8a81468b08af978"
-  integrity sha512-wwEnxgFz7Q121wvuj4GXEQqsLHMPoQvtwHmJASwX+2T4QmqH/nej60Otii/EU36TbvrwO5Y1AO61ENkvOt+wQQ==
+"@the-deep/deep-ui@^1.5.21":
+  version "1.5.21"
+  resolved "https://registry.yarnpkg.com/@the-deep/deep-ui/-/deep-ui-1.5.21.tgz#7dafe54eb13287d2331e37b72117ebc413069fe6"
+  integrity sha512-c9i2ptWJYLXwG0skjruK0VJW+O4s2+sz4y+GwcYJ4rDlXFxY5kzOffUzTzc2fZS26OuOcvIOT1fmoGCaDGUd5A==
   dependencies:
-    "@babel/runtime-corejs3" "^7.11.2"
-    "@tanem/svg-injector" "^10.1.12"
-    "@togglecorp/fujs" "^1.9.2-beta.0"
-    "@types/react-color" "^3.0.5"
-    "@types/requestidlecallback" "^0.3.1"
-    d3-shape "^2.1.0"
+    "@tanem/svg-injector" "^10.1.14"
+    "@togglecorp/fujs" "^1.9.3"
+    "@types/react-color" "^3.0.6"
+    "@types/requestidlecallback" "^0.3.4"
+    d3-shape "^3.0.1"
     react-color "^2.19.3"
-    react-icons "^4.2.0"
-    react-zoom-pan-pinch "^1.6.1"
+    react-icons "^4.3.1"
+    react-zoom-pan-pinch "^2.1.3"
     resize-observer-polyfill "^1.5.1"
 
 "@togglecorp/fujs@^1.9.2":
@@ -2015,6 +2014,11 @@
   integrity sha512-Zdo3XBkJftTJ0GUESbONeHlFDLxZe29eMdIU5J6SIedOSD1LLgYu3mCw/tvmncikw0z4uhW7sMs+X3+L0FqeSw==
   dependencies:
     "@babel/runtime" "^7.7.7"
+
+"@togglecorp/fujs@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@togglecorp/fujs/-/fujs-1.9.3.tgz#d795d7dedc1ae7ee81437cdec78e272f6b871c2f"
+  integrity sha512-gPoQwZ5+CbDxXrLyHhGIAHq2HNba1ifZQizpspyWO8cOuhYyCihOAlBS3fH+WewlCvPiQiOD/FkxCnNQAG3lOg==
 
 "@togglecorp/toggle-form@^1.2.1":
   version "1.2.1"
@@ -2215,7 +2219,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-color@^3.0.5":
+"@types/react-color@^3.0.6":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@types/react-color/-/react-color-3.0.6.tgz#602fed023802b2424e7cd6ff3594ccd3d5055f9a"
   integrity sha512-OzPIO5AyRmLA7PlOyISlgabpYUa3En74LP8mTMa0veCA719SvYQov4WLMsHvCgXP+L+KI9yGhYnqZafVGG0P4w==
@@ -2263,7 +2267,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/requestidlecallback@^0.3.1":
+"@types/requestidlecallback@^0.3.4":
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/@types/requestidlecallback/-/requestidlecallback-0.3.4.tgz#819e22b8994cf547e1f17f9cb79805a5a3bb1db5"
   integrity sha512-aTSyiZuRemRLTQkJPb25L7A4/eR2Teo5l4yJ1V6P3+MFxEZckTDkNKNtr/V1zEOMzS6H8DgxF22U6jPAPrzQvw==
@@ -2287,11 +2291,6 @@
   dependencies:
     globby "11.x.x"
     postcss "7.x.x"
-
-"@types/svg-injector@^0.0.29":
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/@types/svg-injector/-/svg-injector-0.0.29.tgz#308477f6ef0eeb80d6370e2e9c766d438efa0c26"
-  integrity sha512-tNvoN0Xk2si6IfxQI/PqInipOuCyXkDZhCh9Vc4aFv/l1DhIBfTFbXRXYUHBAGXaUNMOCHEtg9475O9J+4NXOg==
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.6"
@@ -4105,17 +4104,17 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
-"d3-path@1 - 2":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-2.0.0.tgz#55d86ac131a0548adae241eebfb56b4582dd09d8"
-  integrity sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==
+"d3-path@1 - 3":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-3.0.1.tgz#f09dec0aaffd770b7995f1a399152bf93052321e"
+  integrity sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==
 
-d3-shape@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-2.1.0.tgz#3b6a82ccafbc45de55b57fcf956c584ded3b666f"
-  integrity sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==
+d3-shape@^3.0.1:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-3.1.0.tgz#c8a495652d83ea6f524e482fca57aa3f8bc32556"
+  integrity sha512-tGDh1Muf8kWjEDT/LswZJ8WF85yDZLvVJpYU9Nq+8+yW1Z5enxrmXOhTArlkaElU+CTn0OTVNli+/i+HP45QEQ==
   dependencies:
-    d3-path "1 - 2"
+    d3-path "1 - 3"
 
 damerau-levenshtein@^1.0.6:
   version "1.0.7"
@@ -8958,11 +8957,6 @@ react-ga@^3.3.0:
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-3.3.0.tgz#c91f407198adcb3b49e2bc5c12b3fe460039b3ca"
   integrity sha512-o8RScHj6Lb8cwy3GMrVH6NJvL+y0zpJvKtc0+wmH7Bt23rszJmnqEQxRbyrqUzk9DTJIHoP42bfO5rswC9SWBQ==
 
-react-icons@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.2.0.tgz#6dda80c8a8f338ff96a1851424d63083282630d0"
-  integrity sha512-rmzEDFt+AVXRzD7zDE21gcxyBizD/3NqjbX6cmViAgdqfJ2UiLer8927/QhhrXQV7dEj/1EGuOTPp7JnLYVJKQ==
-
 react-icons@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
@@ -9012,10 +9006,10 @@ react-router@5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-zoom-pan-pinch@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/react-zoom-pan-pinch/-/react-zoom-pan-pinch-1.6.1.tgz#da16267c258ab37e8ebcdc7c252794a9633e91ec"
-  integrity sha512-J2eM0gZ04XiUWvmKZrOhSAB2zjyoK7kw2POIeN1X0yTTlmp6HPGV0zYfjnlkhgt8nQwpvXAbsF/oAnkuiwk1kA==
+react-zoom-pan-pinch@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/react-zoom-pan-pinch/-/react-zoom-pan-pinch-2.1.3.tgz#3b84594200343136c0d4397c33fec38dc0ee06ad"
+  integrity sha512-a5AChOWhjo0RmxsNZXGQIlNh3e3nLU6m4V6M+6dlbPNk5d+MtMxgKWyA5zpR06Lp3OZkZVF9nR8JeWSvKwck9g==
 
 react@^17.0.2:
   version "17.0.2"
@@ -10306,11 +10300,6 @@ supports-color@^8.0.0:
   integrity sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==
   dependencies:
     has-flag "^4.0.0"
-
-svg-injector@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/svg-injector/-/svg-injector-1.1.3.tgz#8fba18d7419e5f818e712c4f82d83ee357610e61"
-  integrity sha1-j7oY10GeX4GOcSxPgtg+41dhDmE=
 
 svg-tags@^1.0.0:
   version "1.0.0"

@@ -14,7 +14,7 @@ import { LeadInputType } from '#generated/types';
 import {
     DeepMandatory,
     EnumFix,
-} from '../../utils/types';
+} from '#utils/types';
 
 export type Lead = EnumFix<LeadInputType, 'priority'>;
 

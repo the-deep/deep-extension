@@ -9,7 +9,7 @@ import {
     LeadGroupsQuery,
     LeadGroupsQueryVariables,
 } from '#generated/types';
-import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
+import useDebouncedValue from '#base/hooks/useDebouncedValue';
 
 const LEAD_GROUPS = gql`
     query LeadGroups($search: String, $projectId: ID!) {

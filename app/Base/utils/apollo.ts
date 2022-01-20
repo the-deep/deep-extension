@@ -10,17 +10,3 @@ export function checkErrorCode(errors: ApolloError['graphQLErrors'], path: (stri
         && isArrayEqual(error.path, path) && code === error.extensions.code
     ));
 }
-
-export const productionValues = {
-    webServer: 'https://app.thedeep.io',
-    apiServer: 'https://prod-api.thedeep.io',
-    serverless: 'https://services.thedeep.io',
-    identifier: 'prod',
-};
-
-export const alphaValues = {
-    webServer: 'https://staging.thedeep.io',
-    apiServer: 'https://staging-api.thedeep.io',
-    serverless: 'https://services-alpha.thedeep.io',
-    identifier: 'staging',
-};

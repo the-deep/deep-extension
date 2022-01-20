@@ -62,6 +62,7 @@ function Init(props: Props) {
         },
         onError: () => {
             /*
+            FIXME: why comment this out? is this handled later on?
             const { graphQLErrors } = error;
             const authError = checkErrorCode(
                 graphQLErrors,

@@ -19,11 +19,9 @@ import {
     ServerContextInterface,
     defaultServerConfig,
     SelectedConfigType,
-} from '#base/context/serverContext';
-import useStoredState from './hooks/useLocalStorage';
+} from '#base/context/ServerContext';
+import useLocalStorage from './hooks/useLocalStorage';
 import { NavbarContext, NavbarContextInterface } from '#base/context/NavbarContext';
-import AuthPopup from '#base/components/AuthPopup';
-import { sync } from '#base/hooks/useAuthSync';
 import Routes from '#base/components/Routes';
 import { User } from '#base/types/user';
 import apolloConfig from '#base/configs/apollo';
@@ -68,7 +66,7 @@ function Base() {
     const [
         selectedConfig,
         setSelectedConfig,
-    ] = useStoredState<SelectedConfigType>('serverConfig', defaultServerConfig);
+    ] = useLocalStorage<SelectedConfigType>('serverConfig', defaultServerConfig);
 
     const authenticated = !!user;
 
@@ -79,14 +77,12 @@ function Base() {
                     const newUser = u(oldUser);
 
                     const sanitizedUser = newUser;
-                    sync(!!sanitizedUser, sanitizedUser?.id);
                     setUserOnSentry(sanitizedUser ?? null);
 
                     return newUser;
                 });
             } else {
                 const sanitizedUser = u;
-                sync(!!sanitizedUser, sanitizedUser?.id);
                 setUserOnSentry(sanitizedUser ?? null);
                 setUser(u);
             }
@@ -206,7 +202,6 @@ function Base() {
                                 <ServerContext.Provider value={serverContext}>
                                     <NavbarContext.Provider value={navbarContext}>
                                         <AlertContext.Provider value={alertContext}>
-                                            <AuthPopup />
                                             <AlertContainer className={styles.alertContainer} />
                                             <Router history={browserHistory}>
                                                 <Init

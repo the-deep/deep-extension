@@ -1,3 +1,3 @@
 # DEEP Extension
 
-Browser extension to add leads to DEEP platform.
+Browser extension to add sources to DEEP platform.

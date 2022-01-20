@@ -10,7 +10,7 @@ import {
     ProjectUserQueryVariables,
 } from '#generated/types';
 
-import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
+import useDebouncedValue from '#base/hooks/useDebouncedValue';
 
 const PROJECT_USERS = gql`
     query ProjectUser($search: String, $projectId: ID!) {

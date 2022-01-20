@@ -18,7 +18,7 @@ import {
 } from '@togglecorp/toggle-form';
 import { useMutation, useQuery, gql } from '@apollo/client';
 import { useHistory } from 'react-router-dom';
-import { schema, PartialFormType } from '#components/SourceInput/schema';
+
 import {
     LeadOptionsQuery,
     LeadOptionsQueryVariables,
@@ -31,16 +31,18 @@ import {
 import { UserContext } from '#base/context/UserContext';
 import {
     ServerContext,
-} from '#base/context/serverContext';
-import { productionValues, alphaValues } from '#base/utils/apollo';
-import { BasicOrganization } from '#components/selections/NewOrganizationSelectInput';
-import { BasicProject } from '#components/selections/ProjectSelectInput';
-import { BasicLeadGroup } from '#components/selections/LeadGroupSelectInput';
-import { BasicProjectUser } from '#components/selections/ProjectUserSelectInput';
-import SourceInput from '#components/SourceInput';
+    productionValues,
+    alphaValues,
+} from '#base/context/ServerContext';
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
 import route from '#base/configs/routes';
 
+import { BasicOrganization } from './SourceInput/NewOrganizationSelectInput';
+import { BasicProject } from './SourceInput/ProjectSelectInput';
+import { BasicLeadGroup } from './SourceInput/LeadGroupSelectInput';
+import { BasicProjectUser } from './SourceInput/ProjectUserSelectInput';
+import { schema, PartialFormType } from './SourceInput/schema';
+import SourceInput from './SourceInput';
 import styles from './styles.css';
 
 // TODO: Show attachment's title and link if lead is attachment type
@@ -153,7 +155,7 @@ interface Props {
 }
 
 interface ConfigProps {
-    activeConfig: 'beta' | 'alpha' | 'custom';
+    activeConfig: 'production' | 'staging' | 'custom';
     webServerUrl?: string;
     apiServerUrl?: string;
     serverlessUrl?: string;
@@ -164,11 +166,11 @@ function getWebAddress(configMode: ConfigProps) {
     if (configMode.activeConfig === 'custom') {
         return configMode.webServerUrl;
     }
-    if (configMode.activeConfig === 'alpha') {
-        return alphaValues.webServer;
+    if (configMode.activeConfig === 'production') {
+        return alphaValues.webServerUrl;
     }
-    if (configMode.activeConfig === 'beta') {
-        return productionValues.webServer;
+    if (configMode.activeConfig === 'staging') {
+        return productionValues.webServerUrl;
     }
     return null;
 }
@@ -176,10 +178,10 @@ function getIdentifier(configMode: ConfigProps) {
     if (configMode.activeConfig === 'custom') {
         return configMode.identifier;
     }
-    if (configMode.activeConfig === 'alpha') {
+    if (configMode.activeConfig === 'production') {
         return alphaValues.identifier;
     }
-    if (configMode.activeConfig === 'beta') {
+    if (configMode.activeConfig === 'staging') {
         return productionValues.identifier;
     }
     return null;
@@ -374,7 +376,6 @@ function SourceForm(props: Props) {
             footerActions={(
                 <Button
                     name="save"
-                    // FIXME: Add disabled during pristine later
                     disabled={pending}
                     onClick={handleSubmit}
                 >
@@ -410,7 +411,7 @@ function SourceForm(props: Props) {
                 <Message
                     pending={pending}
                     pendingMessage="Fetching project options..."
-                    message="Failed to fetch project options. Please check your internet connection."
+                    message="Failed to fetch project options."
                 />
             )}
         </ContainerCard>

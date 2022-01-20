@@ -24,10 +24,10 @@ import {
 import {
     Organization,
     OrganizationType,
-} from '../../../types/organization';
+} from '#types/organization';
 import {
     MultiResponse,
-} from '../../../types/common';
+} from '#types/common';
 
 import styles from './styles.css';
 

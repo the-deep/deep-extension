@@ -28,33 +28,31 @@ import {
 } from 'react-icons/io5';
 
 import { useLazyRequest } from '#base/utils/restRequest';
-import ProjectSelectInput, { BasicProject } from '../selections/ProjectSelectInput';
-import NewOrganizationSelectInput, { BasicOrganization } from '../selections/NewOrganizationSelectInput';
-import AddLeadGroupModal from '#components/AddLeadGroupModal';
-import LeadGroupSelectInput, { BasicLeadGroup } from '#components/selections/LeadGroupSelectInput';
-import ProjectUserSelectInput, { BasicProjectUser } from '../selections/ProjectUserSelectInput';
-import NewOrganizationMultiSelectInput from '../selections/NewOrganizationMultiSelectInput';
-import AddOrganizationModal from '../general/AddOrganizationModal';
-import NonFieldError from '../NonFieldError';
+import NonFieldError from '#components/NonFieldError';
 import {
     enumKeySelector,
     enumLabelSelector,
-} from '../../utils/common';
+} from '#utils/common';
 import {
     OrganizationDetails,
-} from '../../types/organization';
+} from '#types/organization';
 import {
     TokenQuery,
     LeadOptionsQuery,
 } from '#generated/types';
 
-import { PartialFormType } from './schema';
+import LeadGroupSelectInput, { BasicLeadGroup } from './LeadGroupSelectInput';
+import ProjectSelectInput, { BasicProject } from './ProjectSelectInput';
+import NewOrganizationSelectInput, { BasicOrganization } from './NewOrganizationSelectInput';
+import ProjectUserSelectInput, { BasicProjectUser } from './ProjectUserSelectInput';
+import NewOrganizationMultiSelectInput from './NewOrganizationMultiSelectInput';
+import AddOrganizationModal from './AddOrganizationModal';
+import AddLeadGroupModal from './AddLeadGroupModal';
 import ConfidentialityInput from './ConfidentialityInput';
 import EmmStats from './EmmStats';
 
+import { PartialFormType } from './schema';
 import styles from './styles.css';
-
-// FIXME: Use translations throughout the page
 
 const TOKEN = gql`
     query Token {
@@ -214,7 +212,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     safeValues.source = String(webInfo.source.id);
                 }
                 if (webInfo.author) {
-                    // FIXME: we have to look into this
                     // eslint-disable-next-line no-param-reassign
                     safeValues.authors = [String(webInfo.author.id)].filter(isDefined);
                 }

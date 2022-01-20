@@ -1,16 +1,12 @@
 import React, { useState, useMemo } from 'react';
-
-import {
-    SearchMultiSelectInput,
-    SearchMultiSelectInputProps,
-} from '@the-deep/deep-ui';
+import { SearchSelectInput, SearchSelectInputProps } from '@the-deep/deep-ui';
 import { useQuery, gql } from '@apollo/client';
-
 import {
     OrganizationOptionsQuery,
     OrganizationOptionsQueryVariables,
 } from '#generated/types';
-import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
+
+import useDebouncedValue from '#base/hooks/useDebouncedValue';
 
 const ORGANIZATIONS = gql`
     query OrganizationOptions($search: String) {
@@ -31,7 +27,7 @@ const ORGANIZATIONS = gql`
 export type BasicOrganization = NonNullable<NonNullable<NonNullable<OrganizationOptionsQuery['organizations']>['results']>[number]>;
 
 type Def = { containerClassName?: string };
-type OrganizationMultiSelectInputProps<K extends string> = SearchMultiSelectInputProps<
+type NewOrganizationSelectInputProps<K extends string> = SearchSelectInputProps<
     string,
     K,
     BasicOrganization,
@@ -47,9 +43,7 @@ export function organizationTitleSelector(org: BasicOrganization) {
     return org.title;
 }
 
-function OrganizationSearchMultiSelectInput<K extends string>(
-    props: OrganizationMultiSelectInputProps<K>,
-) {
+function NewOrganizationSelectInput<K extends string>(props: NewOrganizationSelectInputProps<K>) {
     const {
         className,
         ...otherProps
@@ -72,7 +66,7 @@ function OrganizationSearchMultiSelectInput<K extends string>(
     );
 
     return (
-        <SearchMultiSelectInput
+        <SearchSelectInput
             {...otherProps}
             className={className}
             keySelector={keySelector}
@@ -86,4 +80,4 @@ function OrganizationSearchMultiSelectInput<K extends string>(
     );
 }
 
-export default OrganizationSearchMultiSelectInput;
+export default NewOrganizationSelectInput;
