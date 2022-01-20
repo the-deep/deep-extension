@@ -24,7 +24,7 @@ import {
     ActiveConfig,
     ServerContext,
     productionValues,
-    alphaValues,
+    stagingValues,
 } from '#base/context/ServerContext';
 import SmartButtonLikeLink from '#base/components/SmartButtonLikeLink';
 import NonFieldError from '#components/NonFieldError';
@@ -180,10 +180,10 @@ function SourceSettings(props: Props) {
             }
             if (activeView === 'staging') {
                 return {
-                    identifier: alphaValues.identifier,
-                    webServer: alphaValues.webServerUrl,
-                    apiServer: alphaValues.apiServerUrl,
-                    serverless: alphaValues.serverlessUrl,
+                    identifier: stagingValues.identifier,
+                    webServer: stagingValues.webServerUrl,
+                    apiServer: stagingValues.apiServerUrl,
+                    serverless: stagingValues.serverlessUrl,
                 };
             }
             return value;

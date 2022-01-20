@@ -32,7 +32,7 @@ import { UserContext } from '#base/context/UserContext';
 import {
     ServerContext,
     productionValues,
-    alphaValues,
+    stagingValues,
 } from '#base/context/ServerContext';
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
 import route from '#base/configs/routes';
@@ -167,10 +167,10 @@ function getWebAddress(configMode: ConfigProps) {
         return configMode.webServerUrl;
     }
     if (configMode.activeConfig === 'production') {
-        return alphaValues.webServerUrl;
+        return productionValues.webServerUrl;
     }
     if (configMode.activeConfig === 'staging') {
-        return productionValues.webServerUrl;
+        return stagingValues.webServerUrl;
     }
     return null;
 }
@@ -179,10 +179,10 @@ function getIdentifier(configMode: ConfigProps) {
         return configMode.identifier;
     }
     if (configMode.activeConfig === 'production') {
-        return alphaValues.identifier;
+        return productionValues.identifier;
     }
     if (configMode.activeConfig === 'staging') {
-        return productionValues.identifier;
+        return stagingValues.identifier;
     }
     return null;
 }

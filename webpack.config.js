@@ -33,8 +33,8 @@ const base = {
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
     // host_permissions: ['<all_urls>'],
     permissions: [
-        'cookies',
-        'activeTab',
+        'cookies', // to get deep's csrf token
+        'tabs', // to get screenshot and read active tab
         'https://*.thedeep.io/',
         isProduction ? undefined : 'http://localhost:*/',
     ].filter(Boolean),
@@ -48,7 +48,10 @@ const base = {
         persistent: false,
     },
     externally_connectable: {
-        matches: ['*://*.thedeep.io/*', isProduction ? undefined : '*://localhost:*/*'].filter(Boolean),
+        matches: [
+            '*://*.thedeep.io/*',
+            isProduction ? undefined : '*://localhost:*/*',
+        ].filter(Boolean),
     },
 };
 
