@@ -34,7 +34,8 @@ const base = {
     // host_permissions: ['<all_urls>'],
     permissions: [
         'cookies', // to get deep's csrf token
-        'tabs', // to get screenshot and read active tab
+        'tabs', // to get screenshot
+        'activeTab', // to read active tab
         'https://*.thedeep.io/',
         isProduction ? undefined : 'http://localhost:*/',
     ].filter(Boolean),

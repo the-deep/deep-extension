@@ -35,22 +35,25 @@ export const defaultServerConfig: SelectedConfigType = {
     ...productionValues,
 };
 
-export function getConfig() {
-    const storageDataText = localStorage.getItem('serverConfig');
+export function getConfig(): Omit<SelectedConfigType, 'activeConfig'> {
+    const storageDataText = localStorage.getItem('stored-config');
     const storageData: SelectedConfigType | undefined = storageDataText
         ? JSON.parse(storageDataText)
         : undefined;
 
-    const currentConfigMode = storageData?.activeConfig;
+    if (!storageData) {
+        return defaultServerConfig;
+    }
+    const currentConfigMode = storageData.activeConfig;
 
+    if (currentConfigMode === 'custom') {
+        return storageData;
+    }
     if (currentConfigMode === 'production') {
         return productionValues;
     }
     if (currentConfigMode === 'staging') {
         return stagingValues;
-    }
-    if (currentConfigMode === 'custom') {
-        return storageData;
     }
     return defaultServerConfig;
 }

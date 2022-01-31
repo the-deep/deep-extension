@@ -66,7 +66,7 @@ function Base() {
     const [
         selectedConfig,
         setSelectedConfig,
-    ] = useLocalStorage<SelectedConfigType>('serverConfig', defaultServerConfig);
+    ] = useLocalStorage<SelectedConfigType>('stored-config', defaultServerConfig);
 
     const authenticated = !!user;
 
