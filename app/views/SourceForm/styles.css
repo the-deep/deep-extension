@@ -1,7 +1,3 @@
 .lead-url-box {
     overflow-y: auto;
-
-    .content {
-        overflow: unset;
-    }
 }

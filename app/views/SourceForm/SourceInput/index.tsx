@@ -48,7 +48,6 @@ import ProjectUserSelectInput, { BasicProjectUser } from './ProjectUserSelectInp
 import NewOrganizationMultiSelectInput from './NewOrganizationMultiSelectInput';
 import AddOrganizationModal from './AddOrganizationModal';
 import AddLeadGroupModal from './AddLeadGroupModal';
-import ConfidentialityInput from './ConfidentialityInput';
 import EmmStats from './EmmStats';
 
 import { PartialFormType } from './schema';
@@ -110,6 +109,7 @@ interface Props<N extends string | number | undefined> {
     disabled?: boolean;
     defaultValue: PartialFormType;
     priorityOptions: NonNullable<LeadOptionsQuery['leadPriorityOptions']>['enumValues'] | undefined;
+    confidentialityOptions: NonNullable<LeadOptionsQuery['leadConfidentialityOptions']>['enumValues'] | undefined;
     sourceOrganizationOptions: BasicOrganization[] | undefined | null;
     // eslint-disable-next-line max-len
     onLeadGroupOptionsChange: React.Dispatch<React.SetStateAction<BasicLeadGroup[] | undefined | null>>;
@@ -142,6 +142,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setProjectId,
         disabled,
         priorityOptions,
+        confidentialityOptions,
         pendingLeadOptions,
         leadGroupOptions,
         sourceOrganizationOptions,
@@ -528,36 +529,38 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
+            <SegmentInput
+                name="confidentiality"
+                value={value.confidentiality}
+                options={confidentialityOptions ?? undefined}
+                onChange={setFieldValue}
+                label="Confidentiality"
+                keySelector={enumKeySelector}
+                labelSelector={enumLabelSelector}
+                error={error?.confidentiality}
+                disabled={disabled}
+            />
             <div className={styles.priorityRow}>
                 <SegmentInput
                     name="priority"
                     label="Priority"
                     value={value.priority}
-                    onChange={setFieldValue}
                     options={priorityOptions ?? undefined}
+                    onChange={setFieldValue}
                     keySelector={enumKeySelector}
                     labelSelector={enumLabelSelector}
                     error={error?.priority}
                     disabled={disabled}
                 />
-                <div className={styles.checkboxes}>
-                    <ConfidentialityInput
-                        name="confidentiality"
-                        value={value.confidentiality ?? undefined}
+                {selectedProjectData?.hasAssessmentTemplate && (
+                    <Checkbox
+                        name="isAssessmentLead"
+                        value={value.isAssessmentLead}
                         onChange={setFieldValue}
-                        label="Confidential"
+                        label="Is Assessment"
                         disabled={disabled}
                     />
-                    {selectedProjectData?.hasAssessmentTemplate && (
-                        <Checkbox
-                            name="isAssessmentLead"
-                            value={value.isAssessmentLead}
-                            onChange={setFieldValue}
-                            label="Is Assessment"
-                            disabled={disabled}
-                        />
-                    )}
-                </div>
+                )}
             </div>
             <EmmStats
                 emmTriggers={value.emmTriggers}

@@ -55,6 +55,12 @@ const SOURCE_OPTIONS = gql`
                 description
             }
         }
+        leadConfidentialityOptions: __type(name: "LeadConfidentialityEnum") {
+            enumValues {
+                name
+                description
+            }
+        }
     }
 `;
 
@@ -372,7 +378,6 @@ function SourceForm(props: Props) {
     return (
         <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
-            contentClassName={styles.content}
             footerActions={(
                 <Button
                     name="save"
@@ -398,6 +403,9 @@ function SourceForm(props: Props) {
                     error={riskyError}
                     defaultValue={initialValue}
                     priorityOptions={leadOptions?.leadPriorityOptions?.enumValues}
+                    confidentialityOptions={
+                        leadOptions?.leadConfidentialityOptions?.enumValues
+                    }
                     sourceOrganizationOptions={sourceOrganizationOptions}
                     onSourceOrganizationOptionsChange={setSourceOrganizationOptions}
                     authorOrganizationOptions={authorOrganizationOptions}
