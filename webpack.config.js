@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { HotModuleReplacementPlugin, EnvironmentPlugin } = require('webpack');
+const { EnvironmentPlugin } = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
 const WebpackExtensionManifest = require('webpack-extension-manifest-plugin');
@@ -12,7 +12,6 @@ const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const ResourceHintWebpackPlugin = require('resource-hints-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const pkg = require('./package.json');
@@ -26,17 +25,20 @@ const gitRevisionPlugin = new GitRevisionPlugin();
 const isProduction = process.env.NODE_ENV === 'production';
 
 const base = {
-    manifest_version: 2,
-    browser_action: {
+    manifest_version: 3,
+    action: {
         default_popup: 'index.html',
     },
-    content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
-    // host_permissions: ['<all_urls>'],
-    permissions: [
-        'cookies',
-        'activeTab',
+    // content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self';",
+    host_permissions: [
+        '<all_urls>',
         'https://*.thedeep.io/',
         isProduction ? undefined : 'http://localhost:*/',
+    ].filter(Boolean),
+    permissions: [
+        'cookies', // to get deep's csrf token
+        'tabs', // to get screenshot
+        'activeTab', // to read active tab
     ].filter(Boolean),
     icons: {
         32: 'icons/logo-32.png',
@@ -44,11 +46,13 @@ const base = {
         128: 'icons/logo-128.png',
     },
     background: {
-        scripts: ['background.js'],
-        persistent: false,
+        service_worker: 'background.js',
     },
     externally_connectable: {
-        matches: ['*://*.thedeep.io/*', isProduction ? undefined : '*://localhost:*/*'].filter(Boolean),
+        matches: [
+            '*://*.thedeep.io/*',
+            isProduction ? undefined : '*://localhost:*/*',
+        ].filter(Boolean),
     },
 };
 
@@ -60,7 +64,7 @@ module.exports = () => {
             : 'development',
         devtool: isProduction
             ? 'source-map'
-            : 'eval-cheap-source-map',
+            : 'cheap-module-source-map',
         entry: getPath('app/index.tsx'),
         node: false,
         resolve: {
@@ -89,11 +93,6 @@ module.exports = () => {
                     include: getPath('app/'),
                     exclude: /node_modules/,
                     loader: 'babel-loader',
-                    options: {
-                        plugins: [
-                            !isProduction && require.resolve('react-refresh/babel'),
-                        ].filter(Boolean),
-                    },
                 },
                 {
                     test: /\.css$/,
@@ -265,8 +264,6 @@ module.exports = () => {
                 port: 3080,
                 watchContentBase: true,
                 overlay: true,
-                hot: true,
-                liveReload: false,
                 historyApiFallback: true,
                 watchOptions: {
                     ignored: /node_modules/,
@@ -274,10 +271,7 @@ module.exports = () => {
                 clientLogLevel: 'none',
                 publicPath: '/',
             },
-            plugins: [
-                new HotModuleReplacementPlugin(),
-                new ReactRefreshWebpackPlugin(),
-            ],
+            plugins: [],
             /*
             // TODO: enable this later
             experiments: {

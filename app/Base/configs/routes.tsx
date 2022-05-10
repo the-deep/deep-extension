@@ -29,6 +29,15 @@ const home = wrap({
     navbarVisibility: true,
 });
 
+const successForm = wrap({
+    path: '/success/',
+    title: 'Source Saved',
+    navbarVisibility: true,
+    component: lazy(() => import('#views/SuccessForm')),
+    componentProps: {},
+    visibility: 'is-anything',
+});
+
 const leadSettings = wrap({
     path: '/lead-settings/',
     title: 'Settings',
@@ -37,18 +46,10 @@ const leadSettings = wrap({
     componentProps: {},
     visibility: 'is-anything',
 });
-const successForm = wrap({
-    path: '/success/',
-    title: 'Success Submission',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/SuccessForm')),
-    componentProps: {},
-    visibility: 'is-anything',
-});
 
 const settingsSuccessForm = wrap({
-    path: '/settingsSuccess/',
-    title: 'Url Settings Success',
+    path: '/lead-settings-sucess/',
+    title: 'Settings Saved',
     navbarVisibility: true,
     component: lazy(() => import('#views/SettingsSuccess')),
     componentProps: {},

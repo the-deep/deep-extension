@@ -1,8 +1,8 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 import { IoSettingsOutline } from 'react-icons/io5';
+import { Svg } from '@the-deep/deep-ui';
 
-import Svg from '#base/components/Svg';
 import deepLogo from '#base/resources/deep-logo-new.svg';
 import SmartLink from '#base/components/SmartLink';
 import route from '#base/configs/routes';

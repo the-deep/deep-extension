@@ -6,7 +6,7 @@ import {
     MyProjectsQueryVariables,
 } from '#generated/types';
 
-import useDebouncedValue from '../../../Base/hooks/useDebouncedValue';
+import useDebouncedValue from '#base/hooks/useDebouncedValue';
 
 const MY_PROJECTS = gql`
     query MyProjects($search: String) {

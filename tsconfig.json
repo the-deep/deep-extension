@@ -19,6 +19,8 @@
             "#components/*": ["./app/components/*"],
             "#views/*": ["./app/views/*"],
             "#base/*": ["./app/Base/*"],
+            "#types/*": ["./app/types/*"],
+            "#utils/*": ["./app/utils/*"],
         },
 
         "noFallthroughCasesInSwitch": true,

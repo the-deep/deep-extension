@@ -21,15 +21,17 @@ import { IoArrowBackCircleSharp } from 'react-icons/io5';
 
 import route from '#base/configs/routes';
 import {
+    ActiveConfig,
     ServerContext,
-} from '#base/context/serverContext';
-import { productionValues, alphaValues } from '#base/utils/apollo';
+    productionValues,
+    stagingValues,
+} from '#base/context/ServerContext';
 import SmartButtonLikeLink from '#base/components/SmartButtonLikeLink';
 import NonFieldError from '#components/NonFieldError';
 
 import styles from './styles.css';
 
-type ConfigKeys = 'beta' | 'alpha' | 'custom';
+type ConfigKeys = ActiveConfig;
 
 type ServerConfigFields = {
     webServer: string;
@@ -43,7 +45,7 @@ type FormSchemaFields = ReturnType<FormSchema['fields']>;
 
 const schema: FormSchema = {
     fields: (value): FormSchemaFields => {
-        if (value?.identifier !== 'alpha' && value?.identifier !== 'beta') {
+        if (value?.identifier !== 'staging' && value?.identifier !== 'production') {
             return ({
                 identifier: [requiredStringCondition],
                 webServer: [requiredStringCondition, urlCondition],
@@ -65,12 +67,12 @@ const segmentLabelSelector = (data: { name: string; }) => data.name;
 
 const serverOptions: { key: ConfigKeys; name: string }[] = [
     {
-        key: 'beta',
+        key: 'production',
         name: 'Production',
     },
     {
-        key: 'alpha',
-        name: 'Alpha',
+        key: 'staging',
+        name: 'Staging',
     },
     {
         key: 'custom',
@@ -168,20 +170,20 @@ function SourceSettings(props: Props) {
 
     const valueToShow = useMemo(
         () => {
-            if (activeView === 'beta') {
+            if (activeView === 'production') {
                 return {
                     identifier: productionValues.identifier,
-                    webServer: productionValues.webServer,
-                    apiServer: productionValues.apiServer,
-                    serverless: productionValues.serverless,
+                    webServer: productionValues.webServerUrl,
+                    apiServer: productionValues.apiServerUrl,
+                    serverless: productionValues.serverlessUrl,
                 };
             }
-            if (activeView === 'alpha') {
+            if (activeView === 'staging') {
                 return {
-                    identifier: alphaValues.identifier,
-                    webServer: alphaValues.webServer,
-                    apiServer: alphaValues.apiServer,
-                    serverless: alphaValues.serverless,
+                    identifier: stagingValues.identifier,
+                    webServer: stagingValues.webServerUrl,
+                    apiServer: stagingValues.apiServerUrl,
+                    serverless: stagingValues.serverlessUrl,
                 };
             }
             return value;
@@ -234,7 +236,7 @@ function SourceSettings(props: Props) {
             />
             <Card className={_cs(styles.alphaForm, className)}>
                 <NonFieldError error={error} />
-                {(activeView === 'alpha' || activeView === 'beta') ? (
+                {(activeView === 'production' || activeView === 'staging') ? (
                     <>
                         <TextInput
                             className={styles.input}

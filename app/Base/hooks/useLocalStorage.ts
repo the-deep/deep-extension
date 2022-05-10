@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { isNotDefined } from '@togglecorp/fujs';
 
-export default function useStoredState<T>(key: string, defaultValue: T) {
+export default function useLocalStorage<T>(key: string, defaultValue: T) {
     const [value, setValue] = useState<T>((): T => {
         const val = localStorage.getItem(key);
         return val === null || val === undefined

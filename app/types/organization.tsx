@@ -1,6 +1,6 @@
 import { BasicElement } from './common';
 
-export interface BasicOrganization {
+interface BasicOrganization {
     id: number;
     title: string;
     logoUrl?: string;
