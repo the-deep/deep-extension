@@ -19,10 +19,5 @@
         align-items: flex-end;
         flex-wrap: wrap;
         gap: var(--dui-spacing-medium);
-
-        .checkboxes {
-            display: flex;
-            flex-direction: column;
-        }
     }
 }
