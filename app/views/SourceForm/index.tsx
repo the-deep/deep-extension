@@ -5,6 +5,8 @@ import {
 } from '@togglecorp/fujs';
 import {
     Button,
+    Link,
+    Kraken,
     Message,
     useAlert,
     ContainerCard,
@@ -17,7 +19,7 @@ import {
     SetValueArg,
 } from '@togglecorp/toggle-form';
 import { useMutation, useQuery, gql } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+import { IoCheckmarkCircle } from 'react-icons/io5';
 
 import {
     LeadOptionsQuery,
@@ -35,7 +37,6 @@ import {
     stagingValues,
 } from '#base/context/ServerContext';
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
-import route from '#base/configs/routes';
 
 import { BasicOrganization } from './SourceInput/NewOrganizationSelectInput';
 import { BasicProject } from './SourceInput/ProjectSelectInput';
@@ -200,8 +201,6 @@ function SourceForm(props: Props) {
     const { user } = useContext(UserContext);
     const { selectedConfig } = useContext(ServerContext);
 
-    const history = useHistory();
-
     const initialValue: PartialFormType = useMemo(() => ({
         clientId: randomString(),
         sourceType: 'WEBSITE',
@@ -272,6 +271,8 @@ function SourceForm(props: Props) {
         },
     );
 
+    const [successLeadId, setSuccessLeadId] = useState<string | undefined>(undefined);
+
     const [
         createLead,
         {
@@ -287,13 +288,14 @@ function SourceForm(props: Props) {
                 const {
                     ok,
                     errors,
+                    result,
                 } = response.project.leadCreate;
 
                 if (errors) {
                     const formError = transformToFormError(removeNull(errors) as ObjectError[]);
                     setError(formError);
                 } else if (ok) {
-                    history.push(route.successForm.path);
+                    setSuccessLeadId(result?.id);
                 }
             },
             onError: (errors) => {
@@ -343,6 +345,7 @@ function SourceForm(props: Props) {
 
     useEffect(() => {
         const url = getWebAddress(selectedConfig);
+
         if (url) {
             chrome.cookies.get(
                 {
@@ -370,13 +373,49 @@ function SourceForm(props: Props) {
         });
     }, [selectedConfig.activeConfig, selectedConfig]);
 
+    const currentUrl = useMemo(() => (
+        getWebAddress(selectedConfig)
+    ), [selectedConfig]);
+
     if (!csrfTokenLoaded) {
         return null;
+    }
+
+    if (successLeadId) {
+        return (
+            <Message
+                message={(
+                    <>
+                        <p>
+                            Source created successfully!
+                            &nbsp;
+                            <IoCheckmarkCircle />
+                        </p>
+                    </>
+                )}
+                icon={(
+                    <Kraken
+                        size="extraLarge"
+                        variant="ballon"
+                    />
+                )}
+                actions={(
+                    <Link
+                        // NOTE: Undefined is set for entries, that will redirect
+                        // to entry tagging page without any entry selected
+                        to={`${currentUrl}/permalink/projects/${recentProjectId}/leads/${successLeadId}/entries/undefined`}
+                    >
+                        Add Entry
+                    </Link>
+                )}
+            />
+        );
     }
 
     return (
         <ContainerCard
             className={_cs(className, styles.leadUrlBox)}
+            contentClassName={styles.content}
             footerActions={(
                 <Button
                     name="save"

@@ -249,6 +249,10 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setFieldValue(null, 'leadGroup');
     }, [setFieldValue, setProjectId]);
 
+    const filteredConfidentialityOptions = useMemo(() => (
+        confidentialityOptions?.filter((item) => item.name !== 'CONFIDENTIAL')
+    ), [confidentialityOptions]);
+
     const {
         pending: webInfoPending,
         trigger: getWebInfo,
@@ -516,7 +520,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                         name="isAssessmentLead"
                         value={value.isAssessmentLead}
                         onChange={setFieldValue}
-                        label="Mark as assessment"
+                        label="Is assessment"
                         disabled={disabled}
                     />
                 </div>
@@ -525,7 +529,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 <SegmentInput
                     name="confidentiality"
                     value={value.confidentiality}
-                    options={confidentialityOptions ?? undefined}
+                    options={filteredConfidentialityOptions ?? undefined}
                     onChange={setFieldValue}
                     label="Confidentiality"
                     keySelector={enumKeySelector}

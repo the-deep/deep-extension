@@ -29,15 +29,6 @@ const home = wrap({
     navbarVisibility: true,
 });
 
-const successForm = wrap({
-    path: '/success/',
-    title: 'Source Saved',
-    navbarVisibility: true,
-    component: lazy(() => import('#views/SuccessForm')),
-    componentProps: {},
-    visibility: 'is-anything',
-});
-
 const leadSettings = wrap({
     path: '/lead-settings/',
     title: 'Settings',
@@ -71,7 +62,6 @@ const routes = {
     home,
     leadSettings,
     fourHundredFour,
-    successForm,
     settingsSuccessForm,
 };
 export default routes;

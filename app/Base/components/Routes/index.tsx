@@ -47,12 +47,6 @@ function Routes(props: Props) {
                 </Route>
                 <Route
                     exact
-                    path={routes.successForm.path}
-                >
-                    {routes.successForm.load({})}
-                </Route>
-                <Route
-                    exact
                     path={routes.settingsSuccessForm.path}
                 >
                     {routes.settingsSuccessForm.load({})}
