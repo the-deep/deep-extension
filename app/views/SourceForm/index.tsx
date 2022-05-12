@@ -81,7 +81,6 @@ const SOURCE_FRAGMENT = gql`
         publishedOn
         text
         url
-        website
         attachment {
             id
             title

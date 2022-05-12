@@ -63,7 +63,6 @@ export const leadSchema: LeadFormSchema = {
             baseSchema = {
                 ...baseSchema,
                 url: [requiredCondition, urlCondition],
-                website: [requiredCondition],
             };
         } else if (value?.sourceType === 'TEXT') {
             baseSchema = {

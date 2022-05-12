@@ -11,13 +11,9 @@
         .row-input {
             flex-basis: calc(50% - var(--dui-spacing-medium) / 2);
         }
-
     }
 
-    .priority-row {
-        display: flex;
+    .ary-row {
         align-items: flex-end;
-        flex-wrap: wrap;
-        gap: var(--dui-spacing-medium);
     }
 }
