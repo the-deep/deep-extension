@@ -68,7 +68,6 @@ const TOKEN = gql`
 interface RawWebInfo {
     title?: string;
     date?: string;
-    website?: string;
     country?: string;
     sourceRaw?: string;
     authorRaw?: string;
@@ -78,7 +77,6 @@ interface WebInfoBody {
     url?: string;
     title?: string;
     date?: string;
-    website?: string;
     country?: string;
     source?: string;
     author?: string;
@@ -88,7 +86,6 @@ interface WebInfoBody {
 
 interface WebInfo {
     date?: string;
-    website?: string;
     title?: string;
     url?: string;
     source?: OrganizationDetails;
@@ -196,10 +193,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     // eslint-disable-next-line no-param-reassign
                     safeValues.publishedOn = webInfo.date;
                 }
-                if (webInfo.website) {
-                    // eslint-disable-next-line no-param-reassign
-                    safeValues.website = webInfo.website;
-                }
                 if (webInfo.title) {
                     // eslint-disable-next-line no-param-reassign
                     safeValues.title = webInfo.title;
@@ -272,7 +265,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onSuccess: (response, ctx) => {
             handleInfoAutoFill({
                 date: ctx.date,
-                website: ctx.website,
                 title: ctx.title,
                 url: ctx.url,
                 ...response,
@@ -306,7 +298,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     url: ctx.url,
                     title: response.title,
                     date: response.date,
-                    website: response.website,
                     country: response.country,
                     sourceRaw: response.sourceRaw,
                     authorRaw: response.authorRaw,
@@ -414,14 +405,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 )}
             />
             <TextInput
-                label="Website"
-                name="website"
-                value={value.website}
-                onChange={setFieldValue}
-                error={error?.website}
-                disabled={disabled}
-            />
-            <TextInput
                 label="Title"
                 name="title"
                 value={value.title}
@@ -429,31 +412,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 error={error?.title}
                 disabled={disabled}
             />
-            {selectedProjectData?.hasAssessmentTemplate && (
-                <LeadGroupSelectInput
-                    name="leadGroup"
-                    value={value.leadGroup}
-                    onChange={setFieldValue}
-                    options={leadGroupOptions}
-                    onOptionsChange={onLeadGroupOptionsChange}
-                    disabled={disabled}
-                    label="Source Group"
-                    error={error?.leadGroup}
-                    projectId={projectId}
-                    actions={(
-                        <QuickActionButton
-                            name={undefined}
-                            variant="transparent"
-                            onClick={handleAddLeadGroupClick}
-                            disabled={disabled}
-                            title="Add source group"
-                        >
-                            <IoAdd />
-
-                        </QuickActionButton>
-                    )}
-                />
-            )}
             <div className={styles.row}>
                 <DateInput
                     className={styles.rowInput}
@@ -529,18 +487,53 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
-            <SegmentInput
-                name="confidentiality"
-                value={value.confidentiality}
-                options={confidentialityOptions ?? undefined}
-                onChange={setFieldValue}
-                label="Confidentiality"
-                keySelector={enumKeySelector}
-                labelSelector={enumLabelSelector}
-                error={error?.confidentiality}
-                disabled={disabled}
-            />
-            <div className={styles.priorityRow}>
+            {selectedProjectData?.hasAssessmentTemplate && (
+                <div className={_cs(styles.row, styles.aryRow)}>
+                    <LeadGroupSelectInput
+                        name="leadGroup"
+                        value={value.leadGroup}
+                        onChange={setFieldValue}
+                        options={leadGroupOptions}
+                        onOptionsChange={onLeadGroupOptionsChange}
+                        disabled={disabled}
+                        label="Source Group"
+                        error={error?.leadGroup}
+                        projectId={projectId}
+                        actions={(
+                            <QuickActionButton
+                                name={undefined}
+                                variant="transparent"
+                                onClick={handleAddLeadGroupClick}
+                                disabled={disabled}
+                                title="Add source group"
+                            >
+                                <IoAdd />
+
+                            </QuickActionButton>
+                        )}
+                    />
+                    <Checkbox
+                        name="isAssessmentLead"
+                        value={value.isAssessmentLead}
+                        onChange={setFieldValue}
+                        label="Mark as assessment"
+                        disabled={disabled}
+                    />
+                </div>
+            )}
+            <div className={styles.row}>
+                <SegmentInput
+                    name="confidentiality"
+                    value={value.confidentiality}
+                    options={confidentialityOptions ?? undefined}
+                    onChange={setFieldValue}
+                    label="Confidentiality"
+                    keySelector={enumKeySelector}
+                    labelSelector={enumLabelSelector}
+                    error={error?.confidentiality}
+                    disabled={disabled}
+                    spacing="compact"
+                />
                 <SegmentInput
                     name="priority"
                     label="Priority"
@@ -551,16 +544,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     labelSelector={enumLabelSelector}
                     error={error?.priority}
                     disabled={disabled}
+                    spacing="compact"
                 />
-                {selectedProjectData?.hasAssessmentTemplate && (
-                    <Checkbox
-                        name="isAssessmentLead"
-                        value={value.isAssessmentLead}
-                        onChange={setFieldValue}
-                        label="Is Assessment"
-                        disabled={disabled}
-                    />
-                )}
             </div>
             <EmmStats
                 emmTriggers={value.emmTriggers}
