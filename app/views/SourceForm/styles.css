@@ -1,3 +1,8 @@
 .lead-url-box {
     overflow-y: auto;
+
+    .content {
+        margin: calc(-1 * var(--dui-spacing-medium));
+        padding: 0 var(--dui-spacing-medium);
+    }
 }
