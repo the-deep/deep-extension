@@ -1,7 +1,7 @@
 .lead-edit-form {
     display: flex;
     flex-direction: column;
-    gap: var(--dui-spacing-medium);
+    gap: 1rem;
     padding: var(--dui-spacing-small);
 
     .row {
