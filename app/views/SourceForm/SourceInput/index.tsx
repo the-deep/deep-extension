@@ -182,10 +182,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setShowAddLeadGroupModalFalse,
     ] = useBooleanState(false);
 
-    const handleAddLeadGroupClick = useCallback(() => {
-        setShowAddLeadAddGroupModal();
-    }, [setShowAddLeadAddGroupModal]);
-
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
         onChange((oldValues = defaultValue) => {
             const newValues = produce(oldValues, (safeValues) => {
@@ -425,6 +421,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     onChange={setFieldValue}
                     error={error?.publishedOn}
                     disabled={disabled}
+                    showInModal
                 />
                 <ProjectUserSelectInput
                     className={styles.rowInput}
@@ -507,7 +504,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                             <QuickActionButton
                                 name={undefined}
                                 variant="transparent"
-                                onClick={handleAddLeadGroupClick}
+                                onClick={setShowAddLeadAddGroupModal}
                                 disabled={disabled}
                                 title="Add source group"
                             >
@@ -529,6 +526,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 <SegmentInput
                     name="confidentiality"
                     value={value.confidentiality}
+                    className={styles.rowInput}
                     options={filteredConfidentialityOptions ?? undefined}
                     onChange={setFieldValue}
                     label="Confidentiality"
@@ -541,6 +539,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 <SegmentInput
                     name="priority"
                     label="Priority"
+                    className={styles.rowInput}
                     value={value.priority}
                     options={priorityOptions ?? undefined}
                     onChange={setFieldValue}
