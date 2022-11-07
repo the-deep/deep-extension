@@ -1,16 +1,17 @@
-import React, { useState, useMemo } from 'react';
-
+import React, { useState, useMemo, useCallback } from 'react';
+import Highlighter from 'react-highlight-words';
 import {
     SearchMultiSelectInput,
     SearchMultiSelectInputProps,
 } from '@the-deep/deep-ui';
 import { useQuery, gql } from '@apollo/client';
-
 import {
     OrganizationOptionsQuery,
     OrganizationOptionsQueryVariables,
 } from '#generated/types';
 import useDebouncedValue from '#base/hooks/useDebouncedValue';
+
+import styles from './styles.css';
 
 const ORGANIZATIONS = gql`
     query OrganizationOptions($search: String) {
@@ -18,9 +19,11 @@ const ORGANIZATIONS = gql`
             results {
                 id
                 title
+                shortName
                 mergedAs {
                     id
                     title
+                    shortName
                 }
             }
             totalCount
@@ -28,7 +31,17 @@ const ORGANIZATIONS = gql`
     }
 `;
 
-export type BasicOrganization = NonNullable<NonNullable<NonNullable<OrganizationOptionsQuery['organizations']>['results']>[number]>;
+export type BasicOrganization = {
+    id: string;
+    title: string;
+    verified?: boolean;
+    shortName?: string;
+    mergedAs?: {
+        id: string;
+        title: string;
+        shortName?: string;
+    } | null | undefined;
+};
 
 type Def = { containerClassName?: string };
 type OrganizationMultiSelectInputProps<K extends string> = SearchMultiSelectInputProps<
@@ -71,12 +84,39 @@ function OrganizationSearchMultiSelectInput<K extends string>(
         },
     );
 
+    const organizationOptionLabelSelector = useCallback((org: BasicOrganization) => {
+        const title = org.mergedAs ? org.mergedAs.title : org.title;
+        const shortName = org.mergedAs ? org.mergedAs.shortName : org.shortName;
+
+        return (
+            <div className={styles.organization}>
+                <div className={styles.title}>
+                    <Highlighter
+                        searchWords={[debouncedSearchText]}
+                        autoEscape
+                        textToHighlight={title}
+                    />
+                </div>
+                <div className={styles.abbreviation}>
+                    {shortName && (
+                        <Highlighter
+                            searchWords={[debouncedSearchText]}
+                            autoEscape
+                            textToHighlight={shortName}
+                        />
+                    )}
+                </div>
+            </div>
+        );
+    }, [debouncedSearchText]);
+
     return (
         <SearchMultiSelectInput
             {...otherProps}
             className={className}
             keySelector={keySelector}
             labelSelector={organizationTitleSelector}
+            optionLabelSelector={organizationOptionLabelSelector}
             onSearchValueChange={setSearchText}
             searchOptions={data?.organizations?.results}
             optionsPending={loading}
