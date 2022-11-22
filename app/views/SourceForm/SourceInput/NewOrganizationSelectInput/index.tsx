@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Highlighter from 'react-highlight-words';
-import { SearchSelectInput, SearchSelectInputProps } from '@the-deep/deep-ui';
+import { SearchSelectInput, SearchSelectInputProps, Tag } from '@the-deep/deep-ui';
 import { useQuery, gql } from '@apollo/client';
 import {
     OrganizationOptionsQuery,
@@ -17,6 +17,7 @@ const ORGANIZATIONS = gql`
             results {
                 id
                 title
+                verified
                 shortName
                 mergedAs {
                     id
@@ -93,6 +94,14 @@ function NewOrganizationSelectInput<K extends string>(props: NewOrganizationSele
                         autoEscape
                         textToHighlight={title}
                     />
+                    {org.verified && (
+                        <Tag
+                            spacing="compact"
+                            variant="gradient1"
+                        >
+                            Verified
+                        </Tag>
+                    )}
                 </div>
                 <div className={styles.abbreviation}>
                     {shortName && (

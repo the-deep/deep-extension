@@ -3,6 +3,7 @@ import Highlighter from 'react-highlight-words';
 import {
     SearchMultiSelectInput,
     SearchMultiSelectInputProps,
+    Tag,
 } from '@the-deep/deep-ui';
 import { useQuery, gql } from '@apollo/client';
 import {
@@ -19,6 +20,7 @@ const ORGANIZATIONS = gql`
             results {
                 id
                 title
+                verified
                 shortName
                 mergedAs {
                     id
@@ -96,6 +98,14 @@ function OrganizationSearchMultiSelectInput<K extends string>(
                         autoEscape
                         textToHighlight={title}
                     />
+                    {org.verified && (
+                        <Tag
+                            spacing="compact"
+                            variant="gradient1"
+                        >
+                            Verified
+                        </Tag>
+                    )}
                 </div>
                 <div className={styles.abbreviation}>
                     {shortName && (
