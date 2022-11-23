@@ -1,6 +1,6 @@
 {
     "name": "deep-browser-extension",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Extension to add sources to the deep",
     "scripts": {
         "generate": "env-cmd -f .env graphql-codegen --config codegen.yml",
