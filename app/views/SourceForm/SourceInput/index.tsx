@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useLazyQuery, gql } from '@apollo/client';
 import {
     _cs,
@@ -121,7 +121,6 @@ interface Props<N extends string | number | undefined> {
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
     csrfToken: string | undefined;
-    currentTabInfo: { url: string, title?: string } | undefined;
 }
 
 function SourceInput<N extends string | number | undefined>(props: Props<N>) {
@@ -150,7 +149,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onLeadGroupOptionsChange,
         onAssigneeOptionChange,
         csrfToken,
-        currentTabInfo,
     } = props;
 
     const selectedProjectData = useMemo(() => {
@@ -361,15 +359,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     ]);
 
     const pending = pendingFromProps || pendingUserToken || webInfoPending || rawWebInfoPending;
-
-    useEffect(() => {
-        if (currentTabInfo) {
-            handleInfoAutoFill({
-                url: currentTabInfo.url,
-                title: currentTabInfo.title,
-            });
-        }
-    }, [currentTabInfo, handleInfoAutoFill]);
 
     return (
         <div className={_cs(styles.leadEditForm, className)}>
