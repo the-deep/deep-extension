@@ -1,8 +1,9 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import { useLazyQuery, gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import {
     _cs,
     isDefined,
+    isNotDefined,
 } from '@togglecorp/fujs';
 import produce from 'immer';
 import {
@@ -305,7 +306,10 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         failureHeader: 'Raw Web Info Extract',
     });
 
-    const [getUserToken, { loading: pendingUserToken }] = useLazyQuery<TokenQuery>(
+    const {
+        loading: userTokenPending,
+        refetch: refetchTokenAndExtract,
+    } = useQuery<TokenQuery>(
         TOKEN,
         {
             fetchPolicy: 'network-only',
@@ -322,6 +326,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     });
                 }
             },
+            skip: isNotDefined(value.url),
         },
     );
 
@@ -334,10 +339,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setShowAddOrganizationModalTrue();
         setOrganizationAddType('author');
     }, [setShowAddOrganizationModalTrue]);
-
-    const handleLeadDataExtract = useCallback(() => {
-        getUserToken();
-    }, [getUserToken]);
 
     const handleOrganizationAdd = useCallback((val: { id: number; title: string }) => {
         const transformedVal = {
@@ -358,7 +359,11 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onAuthorOrganizationOptionsChange,
     ]);
 
-    const pending = pendingFromProps || pendingUserToken || webInfoPending || rawWebInfoPending;
+    const handleLeadExtractClick = useCallback(() => {
+        refetchTokenAndExtract();
+    }, [refetchTokenAndExtract]);
+
+    const pending = pendingFromProps || userTokenPending || webInfoPending || rawWebInfoPending;
 
     return (
         <div className={_cs(styles.leadEditForm, className)}>
@@ -385,9 +390,9 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     <QuickActionButton
                         name="leadExtract"
                         variant="action"
-                        onClick={handleLeadDataExtract}
+                        onClick={handleLeadExtractClick}
                         title="Auto-fill source information"
-                        disabled={!value.url}
+                        disabled={!value.url || userTokenPending || rawWebInfoPending}
                     >
                         <IoEye />
                     </QuickActionButton>
