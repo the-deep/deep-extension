@@ -1,8 +1,9 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import { useLazyQuery, gql } from '@apollo/client';
+import React, { useMemo, useState, useCallback } from 'react';
+import { useQuery, gql } from '@apollo/client';
 import {
     _cs,
     isDefined,
+    isNotDefined,
 } from '@togglecorp/fujs';
 import produce from 'immer';
 import {
@@ -121,7 +122,6 @@ interface Props<N extends string | number | undefined> {
     onAssigneeOptionChange: React.Dispatch<React.SetStateAction<BasicProjectUser[] | undefined | null>>;
     pendingLeadOptions?: boolean;
     csrfToken: string | undefined;
-    currentTabInfo: { url: string, title?: string } | undefined;
 }
 
 function SourceInput<N extends string | number | undefined>(props: Props<N>) {
@@ -150,7 +150,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onLeadGroupOptionsChange,
         onAssigneeOptionChange,
         csrfToken,
-        currentTabInfo,
     } = props;
 
     const selectedProjectData = useMemo(() => {
@@ -307,7 +306,10 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         failureHeader: 'Raw Web Info Extract',
     });
 
-    const [getUserToken, { loading: pendingUserToken }] = useLazyQuery<TokenQuery>(
+    const {
+        loading: userTokenPending,
+        refetch: refetchTokenAndExtract,
+    } = useQuery<TokenQuery>(
         TOKEN,
         {
             fetchPolicy: 'network-only',
@@ -324,6 +326,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     });
                 }
             },
+            skip: isNotDefined(value.url),
         },
     );
 
@@ -336,10 +339,6 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setShowAddOrganizationModalTrue();
         setOrganizationAddType('author');
     }, [setShowAddOrganizationModalTrue]);
-
-    const handleLeadDataExtract = useCallback(() => {
-        getUserToken();
-    }, [getUserToken]);
 
     const handleOrganizationAdd = useCallback((val: { id: number; title: string }) => {
         const transformedVal = {
@@ -360,16 +359,11 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onAuthorOrganizationOptionsChange,
     ]);
 
-    const pending = pendingFromProps || pendingUserToken || webInfoPending || rawWebInfoPending;
+    const handleLeadExtractClick = useCallback(() => {
+        refetchTokenAndExtract();
+    }, [refetchTokenAndExtract]);
 
-    useEffect(() => {
-        if (currentTabInfo) {
-            handleInfoAutoFill({
-                url: currentTabInfo.url,
-                title: currentTabInfo.title,
-            });
-        }
-    }, [currentTabInfo, handleInfoAutoFill]);
+    const pending = pendingFromProps || userTokenPending || webInfoPending || rawWebInfoPending;
 
     return (
         <div className={_cs(styles.leadEditForm, className)}>
@@ -396,9 +390,9 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     <QuickActionButton
                         name="leadExtract"
                         variant="action"
-                        onClick={handleLeadDataExtract}
+                        onClick={handleLeadExtractClick}
                         title="Auto-fill source information"
-                        disabled={!value.url}
+                        disabled={!value.url || userTokenPending || rawWebInfoPending}
                     >
                         <IoEye />
                     </QuickActionButton>

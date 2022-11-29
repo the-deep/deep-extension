@@ -208,6 +208,8 @@ function SourceForm(props: Props) {
         confidentiality: 'UNPROTECTED',
         isAssessmentLead: false,
         assignee: user?.id,
+        url: '',
+        title: '',
     }), [user]);
 
     const [
@@ -243,6 +245,7 @@ function SourceForm(props: Props) {
     const {
         value,
         setValue,
+        setFieldValue,
         error: riskyError,
         validate,
         setError,
@@ -338,10 +341,6 @@ function SourceForm(props: Props) {
 
     const [csrfToken, setCsrfToken] = useState<string | undefined>();
     const [csrfTokenLoaded, setCsrfTokenLoaded] = useState(false);
-    const [
-        currentTabInfo,
-        setCurrentTabInfo,
-    ] = useState<{ url: string, title?: string } | undefined>();
 
     useEffect(() => {
         const url = getWebAddress(selectedConfig);
@@ -365,13 +364,11 @@ function SourceForm(props: Props) {
         }, (tabs) => {
             const activeTab = tabs && tabs[0];
             if (activeTab?.url) {
-                setCurrentTabInfo({
-                    url: activeTab?.url,
-                    title: activeTab?.title,
-                });
+                setFieldValue(activeTab.url, 'url');
+                setFieldValue(activeTab?.title, 'title');
             }
         });
-    }, [selectedConfig.activeConfig, selectedConfig]);
+    }, [selectedConfig.activeConfig, selectedConfig, setFieldValue]);
 
     const currentUrl = useMemo(() => (
         getWebAddress(selectedConfig)
@@ -429,7 +426,6 @@ function SourceForm(props: Props) {
             {projectOptions ? (
                 <SourceInput
                     csrfToken={csrfToken}
-                    currentTabInfo={currentTabInfo}
                     name={undefined}
                     pending={pending}
                     value={value}
