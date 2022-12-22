@@ -4,6 +4,10 @@
     gap: 1rem;
     padding: var(--dui-spacing-small);
 
+    .badge-input {
+        display: flex;
+        flex-direction: column;
+    }
     .row {
         display: flex;
         gap: var(--dui-spacing-medium);
