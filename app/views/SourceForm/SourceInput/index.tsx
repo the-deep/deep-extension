@@ -72,7 +72,7 @@ interface KeyValue {
     value: string;
 }
 const optionKeySelector = (option: KeyValue) => option.key;
-const optionLabelSelector = (option: KeyValue) => option.value;
+const optionLabelSelector = (option: KeyValue) => option.value.match(/(?:.+\/)(.+)/)?.[1] ?? option.value;
 
 interface RawWebInfo {
     title?: string;
@@ -173,7 +173,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     const error = getErrorObject(riskyError);
     const setFieldValue = useFormObject(name, onChange, defaultValue);
 
-    const [selectedPdf, setSelectedPdf] = useState();
+    const [selectedPdf, setSelectedPdf] = useState<string>();
     const [
         pdfUrlOptions,
         setPdfUrlOptions,
@@ -310,8 +310,8 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         }),
         onSuccess: (response, ctx) => {
             if (response) {
-                if (response?.pdfUrls.length > 0) {
-                    const options = response.pdfUrls.map((pdfUrl) => ({
+                if ((response?.pdfUrls?.length ?? 0) > 0) {
+                    const options = response.pdfUrls?.map((pdfUrl) => ({
                         key: pdfUrl,
                         value: pdfUrl,
                     }));
@@ -319,7 +319,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     const urlOption = { key: ctx.url, value: ctx.url };
 
                     setSelectedPdf(ctx.url);
-                    setPdfUrlOptions([urlOption, ...options]);
+                    setPdfUrlOptions([urlOption, ...(options ?? [])]);
                 }
 
                 getWebInfo({
@@ -437,12 +437,14 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     listClassName={styles.badgeInput}
                     value={selectedPdf}
                     name="selectedPdf"
+                    label="Other sources:"
                     options={pdfUrlOptions}
                     keySelector={optionKeySelector}
                     labelSelector={optionLabelSelector}
                     onChange={handlePdfSelect}
                     selectedButtonVariant="primary"
                     buttonVariant="tertiary"
+                    selectedValueHidden
                     smallButtons
                 />
             )}
