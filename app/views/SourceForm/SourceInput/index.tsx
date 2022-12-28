@@ -11,6 +11,7 @@ import {
     PendingMessage,
     TextInput,
     DateInput,
+    BadgeInput,
     SegmentInput,
     QuickActionButton,
     useBooleanState,
@@ -66,12 +67,20 @@ const TOKEN = gql`
     }
 `;
 
+interface KeyValue {
+    key: string;
+    value: string;
+}
+const optionKeySelector = (option: KeyValue) => option.key;
+const optionLabelSelector = (option: KeyValue) => option.value.match(/(?:.+\/)(.+)/)?.[1] ?? option.value;
+
 interface RawWebInfo {
     title?: string;
     date?: string;
     country?: string;
     sourceRaw?: string;
-    authorRaw?: string;
+    authorsRaw?: string[];
+    pdfUrls?: string[];
 }
 
 interface WebInfoBody {
@@ -82,15 +91,15 @@ interface WebInfoBody {
     source?: string;
     author?: string;
     sourceRaw?: string;
-    authorRaw?: string;
-}
+    authorsRaw?: string[];
+ }
 
 interface WebInfo {
     date?: string;
     title?: string;
     url?: string;
     source?: OrganizationDetails;
-    author?: OrganizationDetails;
+    authors?: OrganizationDetails[];
 }
 
 interface Props<N extends string | number | undefined> {
@@ -164,6 +173,12 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
     const error = getErrorObject(riskyError);
     const setFieldValue = useFormObject(name, onChange, defaultValue);
 
+    const [selectedPdf, setSelectedPdf] = useState<string>();
+    const [
+        pdfUrlOptions,
+        setPdfUrlOptions,
+    ] = useState<KeyValue[] | undefined>();
+
     const [
         organizationAddType,
         setOrganizationAddType,
@@ -200,9 +215,11 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     // eslint-disable-next-line no-param-reassign
                     safeValues.source = String(webInfo.source.id);
                 }
-                if (webInfo.author) {
+                if (webInfo.authors) {
+                    const authors = webInfo.authors.filter((author) => isDefined(author.id))
+                        .map((author) => String(author.id));
                     // eslint-disable-next-line no-param-reassign
-                    safeValues.authors = [String(webInfo.author.id)].filter(isDefined);
+                    safeValues.authors = authors;
                 }
             });
             return newValues;
@@ -216,13 +233,13 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                 (oldVal) => [...oldVal ?? [], transformedSource].filter(isDefined),
             );
         }
-        if (webInfo.author) {
-            const transformedAuthor = {
-                id: String(webInfo.author.id),
-                title: String(webInfo.author.title),
-            };
+        if (webInfo.authors) {
+            const transformedAuthors = webInfo.authors.map((author) => ({
+                id: String(author.id),
+                title: author.mergedAs ? author.mergedAs.title : author.title,
+            }));
             onAuthorOrganizationOptionsChange(
-                (oldVal) => [...oldVal ?? [], transformedAuthor].filter(isDefined),
+                (oldVal) => [...oldVal ?? [], ...transformedAuthors].filter(isDefined),
             );
         }
     }, [
@@ -293,13 +310,25 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         }),
         onSuccess: (response, ctx) => {
             if (response) {
+                if ((response?.pdfUrls?.length ?? 0) > 0) {
+                    const options = response.pdfUrls?.map((pdfUrl) => ({
+                        key: pdfUrl,
+                        value: pdfUrl,
+                    }));
+
+                    const urlOption = { key: ctx.url, value: ctx.url };
+
+                    setSelectedPdf(ctx.url);
+                    setPdfUrlOptions([urlOption, ...(options ?? [])]);
+                }
+
                 getWebInfo({
                     url: ctx.url,
                     title: response.title,
                     date: response.date,
                     country: response.country,
                     sourceRaw: response.sourceRaw,
-                    authorRaw: response.authorRaw,
+                    authorsRaw: response.authorsRaw,
                 });
             }
         },
@@ -363,6 +392,11 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         refetchTokenAndExtract();
     }, [refetchTokenAndExtract]);
 
+    const handlePdfSelect = useCallback((pdfUrl) => {
+        setSelectedPdf(pdfUrl);
+        setFieldValue(pdfUrl, 'url');
+    }, [setFieldValue]);
+
     const pending = pendingFromProps || userTokenPending || webInfoPending || rawWebInfoPending;
 
     return (
@@ -398,6 +432,22 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     </QuickActionButton>
                 )}
             />
+            {pdfUrlOptions && (
+                <BadgeInput
+                    listClassName={styles.badgeInput}
+                    value={selectedPdf}
+                    name="selectedPdf"
+                    label="Other sources:"
+                    options={pdfUrlOptions}
+                    keySelector={optionKeySelector}
+                    labelSelector={optionLabelSelector}
+                    onChange={handlePdfSelect}
+                    selectedButtonVariant="primary"
+                    buttonVariant="tertiary"
+                    selectedValueHidden
+                    smallButtons
+                />
+            )}
             <TextInput
                 label="Title"
                 name="title"
