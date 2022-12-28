@@ -26,6 +26,7 @@ import {
 } from '@togglecorp/toggle-form';
 import {
     IoAdd,
+    IoCopyOutline,
     IoEye,
 } from 'react-icons/io5';
 
@@ -369,6 +370,15 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setOrganizationAddType('author');
     }, [setShowAddOrganizationModalTrue]);
 
+    const handleAddPublisherAsAuthor = useCallback(() => {
+        if (value.source) {
+            onAuthorOrganizationOptionsChange((oldValue) => (
+                [...(oldValue ?? []), ...(sourceOrganizationOptions ?? [])]
+            ));
+            setFieldValue([value.source], 'authors');
+        }
+    }, [value, setFieldValue, onAuthorOrganizationOptionsChange, sourceOrganizationOptions]);
+
     const handleOrganizationAdd = useCallback((val: { id: number; title: string }) => {
         const transformedVal = {
             id: String(val.id),
@@ -519,16 +529,29 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     // hint={isTruthyString(value.authorRaw) && `Previous organization: ${value.authorRaw}`}
                     error={getErrorString(error?.authors)}
                     actions={(
-                        <QuickActionButton
-                            name="add organizations"
-                            title="Add new organization"
-                            variant="transparent"
-                            onClick={handleAddAuthorOrganizationsClick}
-                            disabled={pendingLeadOptions || disabled}
-                        >
-                            <IoAdd />
+                        <>
+                            <QuickActionButton
+                                name="add publishing organization"
+                                title="Add publishing organization as author"
+                                variant="transparent"
+                                onClick={handleAddPublisherAsAuthor}
+                                disabled={
+                                    pendingLeadOptions || disabled || isNotDefined(value.source)
+                                }
+                            >
+                                <IoCopyOutline />
+                            </QuickActionButton>
+                            <QuickActionButton
+                                name="add organizations"
+                                title="Add new organization"
+                                variant="transparent"
+                                onClick={handleAddAuthorOrganizationsClick}
+                                disabled={pendingLeadOptions || disabled}
+                            >
+                                <IoAdd />
 
-                        </QuickActionButton>
+                            </QuickActionButton>
+                        </>
                     )}
                 />
             </div>
