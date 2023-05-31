@@ -44,13 +44,13 @@ import {
     LeadOptionsQuery,
 } from '#generated/types';
 
-import LeadGroupSelectInput, { BasicLeadGroup } from './LeadGroupSelectInput';
+import { BasicLeadGroup } from './LeadGroupSelectInput';
 import ProjectSelectInput, { BasicProject } from './ProjectSelectInput';
 import NewOrganizationSelectInput, { BasicOrganization } from './NewOrganizationSelectInput';
 import ProjectUserSelectInput, { BasicProjectUser } from './ProjectUserSelectInput';
 import NewOrganizationMultiSelectInput from './NewOrganizationMultiSelectInput';
 import AddOrganizationModal from './AddOrganizationModal';
-import AddLeadGroupModal from './AddLeadGroupModal';
+// import AddLeadGroupModal from './AddLeadGroupModal';
 import EmmStats from './EmmStats';
 
 import { PartialFormType } from './schema';
@@ -119,8 +119,9 @@ interface Props<N extends string | number | undefined> {
     priorityOptions: NonNullable<LeadOptionsQuery['leadPriorityOptions']>['enumValues'] | undefined;
     confidentialityOptions: NonNullable<LeadOptionsQuery['leadConfidentialityOptions']>['enumValues'] | undefined;
     sourceOrganizationOptions: BasicOrganization[] | undefined | null;
-    // eslint-disable-next-line max-len
+    // eslint-disable-next-line max-len, react/no-unused-prop-types
     onLeadGroupOptionsChange: React.Dispatch<React.SetStateAction<BasicLeadGroup[] | undefined | null>>;
+    // eslint-disable-next-line react/no-unused-prop-types
     leadGroupOptions: BasicLeadGroup[] | undefined | null;
     // eslint-disable-next-line max-len
     onSourceOrganizationOptionsChange: React.Dispatch<React.SetStateAction<BasicOrganization[] | undefined | null>>;
@@ -151,13 +152,13 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         priorityOptions,
         confidentialityOptions,
         pendingLeadOptions,
-        leadGroupOptions,
         sourceOrganizationOptions,
         onSourceOrganizationOptionsChange,
         authorOrganizationOptions,
         onAuthorOrganizationOptionsChange,
         assigneeOptions,
-        onLeadGroupOptionsChange,
+        // leadGroupOptions,
+        // onLeadGroupOptionsChange,
         onAssigneeOptionChange,
         csrfToken,
     } = props;
@@ -191,11 +192,13 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         setShowAddOrganizationModalFalse,
     ] = useBooleanState(false);
 
+    /*
     const [
         showAddLeadGroupModal,
         setShowAddLeadAddGroupModal,
         setShowAddLeadGroupModalFalse,
     ] = useBooleanState(false);
+    */
 
     const handleInfoAutoFill = useCallback((webInfo: WebInfo) => {
         onChange((oldValues = defaultValue) => {
@@ -251,10 +254,12 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
         onAuthorOrganizationOptionsChange,
     ]);
 
+    /*
     const handleLeadGroupAdd = useCallback((val: BasicLeadGroup) => {
         setFieldValue(val.id, 'leadGroup');
         onLeadGroupOptionsChange((oldVal) => [...oldVal ?? [], val]);
     }, [setFieldValue, onLeadGroupOptionsChange]);
+    */
 
     const handleProjectChange = useCallback((projectVal) => {
         setProjectId(projectVal);
@@ -557,6 +562,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
             </div>
             {selectedProjectData?.hasAssessmentTemplate && (
                 <div className={_cs(styles.row, styles.aryRow)}>
+                    {/*
                     <LeadGroupSelectInput
                         name="leadGroup"
                         value={value.leadGroup}
@@ -580,6 +586,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                             </QuickActionButton>
                         )}
                     />
+                    */}
                     <Checkbox
                         name="isAssessmentLead"
                         value={value.isAssessmentLead}
@@ -627,14 +634,14 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     onOrganizationAdd={handleOrganizationAdd}
                 />
             )}
-            {showAddLeadGroupModal && projectId && (
+            {/* showAddLeadGroupModal && projectId && (
                 <AddLeadGroupModal
                     onModalClose={setShowAddLeadGroupModalFalse}
                     activeProject={+projectId}
                     onLeadGroupAdd={handleLeadGroupAdd}
                     csrfToken={csrfToken}
                 />
-            )}
+            ) */}
         </div>
     );
 }
