@@ -560,7 +560,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
                     )}
                 />
             </div>
-            {selectedProjectData?.hasAssessmentTemplate && (
+            {selectedProjectData?.isAssessmentEnabled && (
                 <div className={_cs(styles.row, styles.aryRow)}>
                     {/*
                     <LeadGroupSelectInput

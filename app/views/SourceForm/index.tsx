@@ -150,7 +150,7 @@ const RECENT_PROJECT = gql`
                 id
                 title
                 isPrivate
-                hasAssessmentTemplate
+                isAssessmentEnabled
             }
         }
     }
