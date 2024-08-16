@@ -409,7 +409,7 @@ function SourceInput<N extends string | number | undefined>(props: Props<N>) {
 
     const handlePdfSelect = useCallback((pdfUrl) => {
         setSelectedPdf(pdfUrl);
-        setFieldValue(pdfUrl, 'url');
+        setFieldValue(encodeURI(pdfUrl), 'url');
     }, [setFieldValue]);
 
     const pending = pendingFromProps || userTokenPending || webInfoPending || rawWebInfoPending;
